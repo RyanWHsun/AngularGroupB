@@ -7,11 +7,16 @@ import { EventComponent } from './components/event/event.component';
 import { ProductsComponent } from './components/products/products.component';
 import { SocialmediaComponent } from './components/socialmedia/socialmedia.component';
 import { UserComponent } from './components/user/user.component';
+import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
   },
   {
     path: 'attraction',
