@@ -74,3 +74,9 @@
 
 <p>TEST</p>
 <button (click)="get()">test</button>
+
+<div *ngIf="imageBase64List.length > 0">
+  <div *ngFor="let imageUrl of imageBase64List">
+    <img [src]="imageUrl" class="post-image" />
+  </div>
+</div>

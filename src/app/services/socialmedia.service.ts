@@ -13,4 +13,7 @@ export class SocialmediaService {
   getMyArticles(): Observable<any> {
     return this.httpClient.get(this.apiUrl, { withCredentials: true })
   }
+  getImages(postId: number): Observable<any> {
+    return this.httpClient.get(`${this.apiUrl}/GetImage/${postId}`, { withCredentials: true })
+  }
 }
