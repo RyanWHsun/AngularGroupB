@@ -1,0 +1,32 @@
+/* 卡片標題文字限制 */
+.product-title {
+  font-size: 18px;
+  /* 標題字體大小 */
+  font-weight: bold;
+  /* 粗體 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  /* 限制為 2 行 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  /* 允許換行 */
+}
+
+/* 卡片內容統一高度 */
+.package-item {
+  height: 100%;
+  /* 強制每個卡片統一高度 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.categorySelected {
+  cursor: pointer;
+}
+
+.text-dark.categorySelected.active {
+  font-weight: bold;
+}

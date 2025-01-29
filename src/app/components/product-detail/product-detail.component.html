@@ -1,0 +1,67 @@
+<div class="modal-header" *ngIf=" productDetail">
+  <h4 class="modal-title mx-3" id="productDetailModalLabel">{{productDetail.fProductName}}</h4>
+  <button type="button" class="close" aria-label="Close" data-dismiss="modal" (click)="closeModal()">
+    <span style="size:50px">&times;</span>
+  </button>
+</div>
+<div class="modal-body" *ngIf=" productDetail">
+  <!-- carousel -->
+  <div id="productCarousel" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div *ngFor="let image of productDetail.fImage; let i = index" class="carousel-item" [class.active]="i === 0">
+        <img [src]="'data:image/png;base64,' + image" class="d-block w-100 carousel-img" alt="商品圖片 {{ i + 1 }}">
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-target="#productCarousel" data-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+      <span class="sr-only">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-target="#productCarousel" data-slide="next">
+      <span class="carousel-control-next-icon"></span>
+      <span class="sr-only">Next</span>
+    </button>
+  </div>
+
+  <!-- 商品資訊 -->
+  <!-- <h4>{{productDetail.fProductName}}</h4> -->
+  <h4 class="mx-3">
+    <span class="text-primary">NT</span><i class="text-primary fa-solid fa-dollar-sign"></i>&ensp;{{
+    productDetail.fProductPrice | number:'1.0-0' }}
+  </h4>
+  <div class=" border-top mt-3 pt-3 mx-3">
+    <h5><strong><i class="text-primary fa-solid fa-circle-info"></i>&ensp;商品描述</strong></h5>
+    <p>{{productDetail.fProductDescription}}</p>
+    <div class="row mt-2">
+      <!-- 左欄 -->
+      <div class="col-md-6 px-3">
+        <h5><strong><i class="text-primary fas fa-box"></i>&ensp;庫存數量</strong></h5>
+        <p>{{productDetail.fStock}}</p>
+        <h5><strong><i class="text-primary fa-solid fa-marker"></i>&ensp;最後更新</strong></h5>
+        <p>{{ (productDetail.fProductUpdated ? productDetail.fProductUpdated : productDetail.fProductDateAdd )|
+          date:'yyyy-MM-dd HH:mm:ss' }}
+        </p>
+      </div>
+      <!-- 右欄 -->
+      <div class="col-md-6 px-2">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <!-- 數量選擇 -->
+  <div class="input-group quantity" style="width: 150px">
+    <div class="input-group-btn">
+      <button class="btn btn-sm btn-minus rounded-circle bg-primary border">
+        <i class="fa fa-minus" style="color: white;"></i>
+      </button>
+    </div>
+    <input type="text" class="form-control form-control-sm text-center border-0 mx-2" value="1">
+    <div class="input-group-btn">
+      <button class="btn btn-sm rounded-circle bg-primary border">
+        <i class="fa fa-plus" style="color: white;"></i>
+      </button>
+    </div>
+  </div>
+  <button class="btn btn-primary mx-3 fw-bold"><i class="fa-solid fa-cart-shopping"></i>&nbsp;&nbsp;加入購物車</button>
+  <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal()">關閉</button>
+</div>
