@@ -8,6 +8,8 @@ import { ProductsComponent } from './components/products/products.component';
 import { SocialmediaComponent } from './components/socialmedia/socialmedia.component';
 import { UserComponent } from './components/user/user.component';
 import { LoginComponent } from './components/login/login.component';
+import { MyarticlesComponent } from './components/myarticles/myarticles.component';
+import { LayoutComponent } from './components/layout/layout.component';
 
 const routes: Routes = [
   {
@@ -35,8 +37,15 @@ const routes: Routes = [
   },
   {
     path: 'socialmedia',
-    component: SocialmediaComponent,
-    children: []
+    component: LayoutComponent,
+    children: [{
+      path: '',
+      component: SocialmediaComponent
+    },
+    {
+      path: 'articles',
+      component: MyarticlesComponent
+    }]
   },
   {
     path: 'user',

@@ -8,19 +8,21 @@ import { SocialmediaService } from 'src/app/services/socialmedia.service';
   styleUrls: ['./socialmedia.component.css']
 })
 export class SocialmediaComponent {
-  imageBase64List = [];
+  datas = [];
+  imageData: { [key: number]: string[] } = {};
   constructor(private socialmediaService: SocialmediaService) { };
-  ngOnInit(): void {
-    this.loadImages(2014);
-  }
   loadImages(postId: number) {
     this.socialmediaService.getImages(postId).subscribe(data => {
-      this.imageBase64List = data.map((imageBase64: string) => 'data:image/jpeg;base64,' + imageBase64)
+      this.imageData[postId] = data.map((imageBase64: string) => 'data:image/jpeg;base64,' + imageBase64);
     })
   }
   get() {
     this.socialmediaService.getMyArticles().subscribe(data => {
       console.log('api', data);
+      this.datas = data;
+      this.datas.forEach(post => {
+        this.loadImages(post['fPostId']);
+      });
     })
   }
 }
