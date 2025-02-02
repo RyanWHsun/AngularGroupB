@@ -6,8 +6,6 @@
       <div class="d-inline-flex text-white">
         <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
         <i class="fa fa-angle-double-right pt-1 px-3"></i>
-        <p class="m-0 text-uppercase">商城中心</p>
-        <i class="fa fa-angle-double-right pt-1 px-3"></i>
         <p class="m-0 text-uppercase">賣家中心</p>
       </div>
     </div>
@@ -15,5 +13,178 @@
 </div>
 <!-- Header End -->
 
+<!-- Booking Start -->
+<div class="container-fluid booking mt-5 pb-5">
+  <div class="container pb-5">
+    <div class="bg-light shadow" style="padding: 30px;">
+      <div class="row align-items-center" style="min-height: 60px;">
+        <div class="col-md-10">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="mb-3 mb-md-0">
+                <select class="custom-select px-4" style="height: 47px;">
+                  <option selected>Destination</option>
+                  <option value="1">Destination 1</option>
+                  <option value="2">Destination 1</option>
+                  <option value="3">Destination 1</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3 mb-md-0">
+                <div class="date" id="date1" data-target-input="nearest">
+                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Depart Date"
+                    data-target="#date1" data-toggle="datetimepicker" />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3 mb-md-0">
+                <div class="date" id="date2" data-target-input="nearest">
+                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Return Date"
+                    data-target="#date2" data-toggle="datetimepicker" />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3 mb-md-0">
+                <select class="custom-select px-4" style="height: 47px;">
+                  <option selected>Duration</option>
+                  <option value="1">Duration 1</option>
+                  <option value="2">Duration 1</option>
+                  <option value="3">Duration 1</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-primary btn-block" type="submit"
+            style="height: 47px; margin-top: -2px;">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Booking End -->
+
+
 <!-- start your coding here-->
 <!-- Title -->
+<div class="text-center mb-1 pb-1">
+  <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Seller Center</h6>
+  <h1>我的商品列表</h1>
+</div>
+
+<!-- Content -->
+<div class="container-fluid py-5 ">
+  <div class="container bg-light shadow p-3 ">
+    <!--Navbar for Filtering -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm rounded mb-3">
+      <ul class="nav nav-tabs border-0">
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:void(0)" [ngClass]="{ 'active-tab': selectedFilter === 'all' }"
+            (click)="filterProductsByStatus('all')">
+            全部商品 <span class="badge badge-primary">{{ myProducts.length }}</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:void(0)" [ngClass]="{ 'active-tab': selectedFilter === 'onSale' }"
+            (click)="filterProductsByStatus('onSale')">
+            販售中 <span class="badge badge-primary">{{ onSaleCount }}</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:void(0)" [ngClass]="{ 'active-tab': selectedFilter === 'offSale' }"
+            (click)="filterProductsByStatus('offSale')">
+            未販售 <span class="badge badge-primary">{{ offSaleCount }}</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- filter & search -->
+    <div class="py-2 mb-3">
+      <div class="row mt-3 mb-3">
+        <!-- 新增商品btn -->
+        <div class="col-md-4 d-flex align-items-center">
+          <button class="btn btn-success w-50 fw-bold"><i class="fa fa-plus"></i>&nbsp;新增商品</button>
+          <button class="btn btn-primary w-50 fw-bold mx-1" (click)="logSelectedProducts()"><i
+              class="fa-solid fa-pencil"></i>&nbsp;批次修改狀態</button>
+        </div>
+        <!-- Category Select -->
+        <div class="col-md-3">
+          <select class="form-control" [(ngModel)]="selectedCategory" (change)="filterByCategory()">
+            <option value="">所有分類</option>
+            <option *ngFor="let category of categories" [value]="category.fProductCategoryId">{{category.fCategoryName}}
+            </option>
+          </select>
+        </div>
+        <!-- searchBar -->
+        <div class="col-md-5">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="輸入商品名稱" [(ngModel)]="searchKeyword">
+            <div class="input-group-append">
+              <button class="btn btn-success" (click)="searchProducts()">
+                <i class="fa fa-search"></i> 搜尋
+              </button>
+              <button class="btn btn-primary" (click)="resetFilters()">
+                <i class="fa fa-sync"></i> 重置
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- table -->
+      <table class="table table-striped text-center align-middle table-hover table-custom">
+        <thead>
+          <tr class=" table-success ">
+            <th>
+              <input type="checkbox" [checked]="isAllSelected" (change)="toggleSelectAll($event)" />
+            </th>
+            <th>圖片</th>
+            <th>名稱</th>
+            <th>價格</th>
+            <th>庫存</th>
+            <th>狀態</th>
+            <th>更新於</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of filteredProducts">
+            <!-- 選取方塊 -->
+            <td>
+              <input type="checkbox" [(ngModel)]="product.selected" />
+            </td>
+            <!-- 圖片 -->
+            <td>
+              <img *ngIf="product.fSingleImage" [src]="'data:image/png;base64,' + product.fSingleImage"
+                style="width: 56px; height: 56px;">
+            </td>
+            <td style="word-wrap: break-word; white-space: normal; max-width: 200px;">
+              <strong>{{product.fProductName}}</strong>
+            </td>
+            <td>NT$&nbsp;{{ product.fProductPrice | number:'1.0-0' }}</td>
+            <td>
+              <span *ngIf="product.fStock === 0" class="text-danger"><strong>無庫存</strong></span>
+              <span *ngIf="product.fStock > 0"><strong>{{ product.fStock }}</strong></span>
+            </td>
+            <td> <span class="badge rounded-pill badge-lg"
+                [ngClass]="product.fIsOnSales ? 'badge-success' : 'badge-primary'">
+                {{ product.fIsOnSales ? '販售中' : '未販售' }}
+              </span></td>
+            <td>{{ (product.fProductUpdated || product.fProductDateAdd) | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+            <!-- 操作按鈕 -->
+            <td>
+              <button class="btn btn-success btn-sm">
+                <i class="fa fa-edit"></i> 編輯
+              </button>&nbsp;
+              <button class="btn btn-danger btn-sm ml-2">
+                <i class="fa fa-trash"></i> 刪除
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>

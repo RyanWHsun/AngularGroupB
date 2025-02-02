@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { ProductDetail, Products } from '../interfaces/products';
+import { myProductList, ProductDetail, Products } from '../interfaces/products';
 
 @Injectable({
   providedIn: 'root'
@@ -40,4 +40,10 @@ export class ProductsService {
     const url = `${this.baseAddress}api/TProducts/${productId}`;
     return this.http.get<ProductDetail>(url);
   }
+
+  getMyProduct(): Observable<myProductList[]> {
+    const url = `${this.baseAddress}api/TProducts/myProduct`
+    return this.http.get<myProductList[]>(url, { withCredentials: true })
+  }
+
 }

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Products } from 'src/app/interfaces/products';
 import { ProductsService } from 'src/app/services/products.service';
-import * as $ from 'jquery';
 
 
 @Component({

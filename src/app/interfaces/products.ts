@@ -23,3 +23,17 @@ export interface ProductDetail {
   fProductUpdated: string | null;
   fImage: string[]; // 照片 Base64 陣列
 }
+
+export interface myProductList {
+  fProductId: number;
+  fProductCategoryId: number;
+  fProductName: string;
+  fProductPrice: number;
+  fIsOnSales: boolean;
+  fStock: number;
+  fProductDateAdd: string;
+  fProductUpdated: string | null;
+  fSingleImage: string;
+  selected?: boolean; // 用來追蹤 checkbox 是否被選取
+
+}

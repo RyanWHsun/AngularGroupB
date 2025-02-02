@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { ProductDetail } from 'src/app/interfaces/products';
 import { ProductsService } from 'src/app/services/products.service';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-product-detail',
