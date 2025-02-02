@@ -12,6 +12,10 @@ import { HomeComponent } from './components/home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './components/login/login.component';
 import { FormsModule } from '@angular/forms';
+import { UserAddComponent } from './components/user-add/user-add.component';
+import { UserLoginComponent } from './components/user-login/user-login.component';
+import { UserEditComponent } from './components/user-edit/user-edit.component';
+import { UserPageComponent } from './components/user-page/user-page.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +27,10 @@ import { FormsModule } from '@angular/forms';
     EventComponent,
     HomeComponent,
     LoginComponent,
+    UserAddComponent,
+    UserLoginComponent,
+    UserEditComponent,
+    UserPageComponent,
   ],
   imports: [
     BrowserModule,
