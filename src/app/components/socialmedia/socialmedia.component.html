@@ -69,16 +69,37 @@
 <!-- Booking End -->
 
 <!-- start your coding here-->
-<p>socialmedia works!</p>
-<p>測試測試</p>
+<div class="container" style="max-width: 35%;">
+  <div *ngFor="let data of datas">
+    <!-- Post Wrapper -->
+    <div class="post border rounded p-3 mb-4">
+      <!-- Header -->
+      <div class="d-flex align-items-center mb-2">
+        <img src="/assets/images/noImage.jpg" class="rounded-circle me-2" style="width: 5%;">
+        <strong>tytwowow</strong>
+      </div>
 
-<p>TEST</p>
-<button (click)="get()">test</button>
+      <!-- Image -->
+      <div *ngIf="imageData[data['fPostId']] && imageData[data['fPostId']].length > 0" class="mb-2">
+        <img [src]="imageData[data['fPostId']][0]" class="w-100" style='height: auto;object-fit: cover' />
+      </div>
 
-<div *ngFor="let data of datas">
-  <div *ngIf="imageData[data['fPostId']] && imageData[data['fPostId']].length > 0">
-    <div *ngFor="let image of imageData[data['fPostId']]">
-      <img [src]="image" class="post-image" />
+      <div *ngIf="!imageData[data['fPostId']] || imageData[data['fPostId']].length == 0" class="mb-2">
+        <img src="/assets/images/noImage.jpg" class="w-100" style='height: auto;object-fit: cover' />
+      </div>
+
+      <!-- Actions -->
+      <div class="d-flex justify-content-start mb-2">
+        <button class="btn mr-2 shadow-none"><i class="fa-regular fa-heart" style="color: #000000;"></i></button>
+        <button class="btn mr-2 shadow-none"><i class="fa-regular fa-comment" style="color: #000000;"></i></button>
+      </div>
+
+      <!-- Likes and Caption -->
+      <p class="mb-1"><strong>6萬個讚</strong></p>
+      <p><strong>tytwowow</strong> 點點點！</p>
+
+      <!-- Comment Section -->
+      <input type="text" class="form-control" placeholder="留言......">
     </div>
   </div>
 </div>

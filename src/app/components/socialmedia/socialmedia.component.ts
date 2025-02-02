@@ -11,13 +11,16 @@ export class SocialmediaComponent {
   datas = [];
   imageData: { [key: number]: string[] } = {};
   constructor(private socialmediaService: SocialmediaService) { };
+  ngOnInit(): void {
+    this.get();
+  }
   loadImages(postId: number) {
-    this.socialmediaService.getImages(postId).subscribe(data => {
+    this.socialmediaService.getPublicImages(postId).subscribe(data => {
       this.imageData[postId] = data.map((imageBase64: string) => 'data:image/jpeg;base64,' + imageBase64);
     })
   }
   get() {
-    this.socialmediaService.getMyArticles().subscribe(data => {
+    this.socialmediaService.getPublicArticles().subscribe(data => {
       console.log('api', data);
       this.datas = data;
       this.datas.forEach(post => {

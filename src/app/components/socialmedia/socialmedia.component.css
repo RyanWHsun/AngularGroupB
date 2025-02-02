@@ -1,0 +1,8 @@
+button:hover i {
+  color: gray !important;
+}
+
+.post p,
+strong {
+  color: black;
+}

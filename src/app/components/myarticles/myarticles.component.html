@@ -2,11 +2,11 @@
 <div class="container-fluid page-header">
   <div class="container">
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
-      <h3 class="display-4 text-white text-uppercase">社群</h3>
+      <h3 class="display-4 text-white text-uppercase">文章</h3>
       <div class="d-inline-flex text-white">
-        <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
+        <p class="m-0 text-uppercase"><a class="text-white" routerLink="/socialmedia">社群</a></p>
         <i class="fa fa-angle-double-right pt-1 px-3"></i>
-        <p class="m-0 text-uppercase">社群</p>
+        <p class="m-0 text-uppercase">文章</p>
       </div>
     </div>
   </div>
@@ -69,4 +69,23 @@
 <!-- Booking End -->
 
 <!-- start your coding here-->
-<p>articles works!</p>
+<div class="container mt-4">
+  <div class="row">
+    <div *ngFor="let data of datas" class="col-4" style="padding:0 10px 10px 10px;">
+      <div *ngIf="imageData[data['fPostId']] && imageData[data['fPostId']].length > 0" class="image-container">
+        <img [src]="imageData[data['fPostId']][0]" />
+        <div class="overlay">
+          <p><i class="fas fa-heart"></i> 120</p>
+          <p><i class="fas fa-comment"></i> 45</p>
+        </div>
+      </div>
+      <div *ngIf="!imageData[data['fPostId']] || imageData[data['fPostId']].length == 0" class="image-container">
+        <img src="/assets/images/noImage.jpg" />
+        <div class="overlay">
+          <p><i class="fas fa-heart"></i> 10</p>
+          <p><i class="fas fa-comment"></i> 10</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

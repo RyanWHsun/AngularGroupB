@@ -6,14 +6,20 @@ import { Observable } from 'rxjs/internal/Observable';
   providedIn: 'root'
 })
 export class SocialmediaService {
-  private apiUrl = 'https://localhost:7112/api/TPosts';
   constructor(private httpClient: HttpClient) { }
 
 
   getMyArticles(): Observable<any> {
-    return this.httpClient.get(this.apiUrl, { withCredentials: true })
+    return this.httpClient.get('https://localhost:7112/api/TPosts', { withCredentials: true })
   }
-  getImages(postId: number): Observable<any> {
-    return this.httpClient.get(`${this.apiUrl}/GetImage/${postId}`, { withCredentials: true })
+  getMyImages(postId: number): Observable<any> {
+    return this.httpClient.get(`https://localhost:7112/api/TPostImages/${postId}`, { withCredentials: true })
+  }
+
+  getPublicArticles(): Observable<any> {
+    return this.httpClient.get('https://localhost:7112/api/TPosts/GetPublicPosts', { withCredentials: true })
+  }
+  getPublicImages(postId: number): Observable<any> {
+    return this.httpClient.get(`https://localhost:7112/api/TPostImages/getPublicImages/${postId}`, { withCredentials: true })
   }
 }
