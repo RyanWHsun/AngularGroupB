@@ -29,6 +29,10 @@ const routes: Routes = [
     children: []
   },
   {
+    path: '**',
+    redirectTo: ''
+  },
+  {
     path: 'products',
     component: ProductsComponent,
     children: []
