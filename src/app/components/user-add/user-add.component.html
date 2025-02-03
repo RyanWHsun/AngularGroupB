@@ -1,0 +1,73 @@
+<!-- Header Start -->
+<div class="container-fluid page-header">
+  <div class="container">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+      <h3 class="display-4 text-white text-uppercase">帳戶</h3>
+      <div class="d-inline-flex text-white">
+        <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase">帳戶</p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase">帳戶註冊</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Header End -->
+
+<!-- Booking Start -->
+<!-- Booking End -->
+
+<!-- start your coding here-->
+
+<div class="container-fluid py-5">
+  <div class="container py-5">
+    <div class="text-center mb-3 pb-3">
+      <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">帳戶註冊</h6>
+      <h1>建立帳戶</h1>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="contact-form bg-white" style="padding: 30px;">
+          <div id="success"></div>
+
+          <form name="sentMessage" id="contactForm" novalidate="novalidate">
+
+            <div class="control-group">
+              <!-- 用戶名稱輸入 -->
+              <h5 class="text-uppercase">用戶名稱</h5>
+              <input type="text" class="form-control p-4" id="userName" placeholder="用戶名稱並不是你的帳戶" required="required"
+                data-validation-required-message="請輸入用戶名稱" />
+              <p class="help-block text-danger"></p>
+
+
+              <!-- 帳號(email)輸入 -->
+              <h5 class="text-uppercase">帳號</h5>
+              <input type="email" class="form-control p-4" id="userEmail" placeholder="請輸入電子郵件" required="required"
+                data-validation-required-message="請輸入電子郵件" />
+              <p class="help-block text-danger"></p>
+
+              <!-- 密碼輸入 -->
+              <h5 class="text-uppercase">密碼</h5>
+              <input type="password" class="form-control p-4" id="userPassword" placeholder="請輸入密碼" required="required"
+                data-validation-required-message="Please enter a password" />
+              <p class="help-block text-danger"></p>
+
+              <!-- 創建日期 -->
+              <h5 class="text-uppercase">創建日期</h5>
+              <input type="text" class="form-control p-4" id="userComeDate" placeholder="創建日期" required="required" />
+              <p class="help-block text-danger"></p>
+            </div>
+
+            <!-- 送出按鈕 -->
+            <div class="text-center">
+              <button class="btn btn-primary py-3 px-4" type="submit" id="sendMessageButton">創建帳號</button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

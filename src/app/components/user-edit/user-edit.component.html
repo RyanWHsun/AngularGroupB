@@ -1,0 +1,111 @@
+<!-- Header Start -->
+<div class="container-fluid page-header">
+  <div class="container">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+      <h3 class="display-4 text-white text-uppercase">帳戶</h3>
+      <div class="d-inline-flex text-white">
+        <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase">帳戶</p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase">帳戶修改</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Header End -->
+
+<!-- Booking Start -->
+<!-- Booking End -->
+
+<!-- start your coding here-->
+
+<div class="container-fluid py-5">
+  <div class="container py-5">
+    <div class="text-center mb-3 pb-3">
+      <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">帳戶修改</h6>
+      <h1>修改帳戶</h1>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="contact-form bg-white" style="padding: 30px;">
+          <div id="success"></div>
+
+          <form name="sentMessage" id="contactForm" novalidate="novalidate">
+
+            <div class="control-group">
+
+
+              <!-- 用戶頭像輸入 -->
+              <h5 class="text-uppercase">用戶頭像</h5>
+              <div class="col-lg-4 col-md-6 mb-4">
+                <div class="destination-item position-relative overflow-hidden mb-2">
+
+                  <img class="img-fluid" src="~/images/noImage.jpg" alt="">
+                  <input type="file" id="userImage" />
+
+                </div>
+              </div>
+
+
+
+              <!-- 用戶頭像輸入 -->
+              <!-- <h5 class="text-uppercase">用戶頭像</h5>
+              <input type="file" class="form-control p-4" id="userImage" placeholder="請輸入用戶頭像" required="required"
+                data-validation-required-message="請輸入用戶名稱" />
+              <p class="help-block text-danger"></p> -->
+
+              <!-- 用戶名稱輸入 -->
+              <h5 class="text-uppercase">用戶名稱</h5>
+              <input type="text" class="form-control p-4" id="userName" placeholder="請輸入用戶名稱" required="required"
+                data-validation-required-message="請輸入用戶名稱" />
+              <p class="help-block text-danger"></p>
+
+              <!-- 暱稱輸入 -->
+              <h5 class="text-uppercase">暱稱</h5>
+              <input type="text" class="form-control p-4" id="userName" placeholder="請輸入用戶暱稱" required="required"
+                data-validation-required-message="請輸入用戶名暱稱" />
+              <p class="help-block text-danger"></p>
+
+              <!-- 性別輸入 -->
+              <h5 class="text-uppercase">性別</h5>
+              <select type="text" class=" w-100 p-3" id="userSex" placeholder="請輸入用戶性別" required="required"
+                data-validation-required-message="請輸入用戶性別">
+                <option value="不願透露">不願透露</option>
+                <option value="男">男</option>
+                <option value="女">女</option>
+              </select>
+              <p class="help-block text-danger"></p>
+
+              <!-- 生日輸入 -->
+              <h5 class="text-uppercase">生日</h5>
+              <input type="datetime" class="w-100 p-3" id="userBirthday" placeholder="請輸入用戶生日" required="required"
+                data-validation-required-message="請輸入用戶生日" />
+              <p class="help-block text-danger"></p>
+
+              <!-- 電話輸入 -->
+              <h5 class="text-uppercase">電話</h5>
+              <input type="text" class="form-control p-4" id="userPhone" placeholder="請輸入用戶電話" required="required"
+                data-validation-required-message="請輸入用戶電話" />
+              <p class="help-block text-danger"></p>
+
+              <!-- 地址輸入 -->
+              <h5 class="text-uppercase">地址</h5>
+              <input type="text" class="form-control p-4" id="userName" placeholder="請輸入用戶地址" required="required"
+                data-validation-required-message="請輸入用戶地址" />
+              <p class="help-block text-danger"></p>
+
+            </div>
+
+            <!-- 送出按鈕 -->
+            <div class="text-center">
+              <button class="btn btn-primary py-3 px-4" type="submit" id="sendMessageButton">創建帳號</button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
