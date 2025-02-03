@@ -407,6 +407,8 @@
     [pagination]="pagination"
     [paginationPageSize]="paginationPageSize"
     [paginationPageSizeSelector]="paginationPageSizeSelector"
+    (gridReady)="onGridReady($event)"
+    [getRowId]="getRowId"
   >
   </ag-grid-angular>
   <div class="row">

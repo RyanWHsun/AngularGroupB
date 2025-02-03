@@ -19,7 +19,7 @@ import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 export class AttractionComponent {
   attractionCategories: IAttractionCategory[] = [];
 
-  @ViewChild(AgGridAngular)agGrid!:AgGridAngular;
+  @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
   gridApi!: GridApi;
 
   columnDefs: ColDef[] = [
@@ -54,9 +54,18 @@ export class AttractionComponent {
   paginationPageSize = 10;
   paginationPageSizeSelector = [10, 30, 50];
 
-  onGridReady(params:GridReadyEvent){
+  onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
   }
+
+  // 這段程式碼不需要手動呼叫，而是由 AG Grid 自動在內部調用的
+  // 當你在 ag-grid-angular 元件上設置 [getRowId] 屬性時，Grid 會在以下情況下自動調用 getRowId：
+
+  // 初始化 Grid 時：當 rowData 第一次被載入時。
+  // 更新資料時：當你使用方法如 applyTransaction 或 setRowData 時，Grid 會自動根據 getRowId 返回的值，來判斷需要更新哪一行。
+  getRowId = (params: any): string => {
+    return params.data.fAttractionId; // 使用 fAttractionId 作為唯一鍵
+  };
 
   selectedFiles: File[] = [];
 
@@ -82,8 +91,13 @@ export class AttractionComponent {
     const deleteButton = document.createElement('button');
     deleteButton.innerText = '刪除';
     deleteButton.classList.add('btn', 'btn-outline-danger', 'btn-sm', 'ms-2');
-    deleteButton.addEventListener('click', function () {
-      //console.log(params.data);
+    deleteButton.addEventListener('click', () => {
+      // 使用箭頭函式，確保 this 指向 Angular 組件上下文
+      // 改成用 function，this 會指向 deleteButton
+      console.log(`Data:${JSON.stringify(params.data)}`);
+      console.log(`ID:${JSON.stringify(params.data.fAttractionId)}`);
+      this.deleteAttraction(params.data.fAttractionId);
+      this.deleteImages(params.data.fAttractionId);
     });
 
     // 將按鈕加入 div
@@ -588,10 +602,48 @@ export class AttractionComponent {
           },
         });
     }
+    this.updateGrid(editedAttraction);
+  }
 
-    // this.rowData.
-    // editedAttraction;
-    // this.gridApi.setRowData(this.rowData);
+  updateGrid(editedAttraction: IAttraction){
+    if (!this.gridApi) {
+      console.error('Grid API 未初始化，無法更新資料');
+      return;
+    }
+    const existingItem = this.rowData.find(
+      (item) => item.fAttractionId === editedAttraction.fAttractionId
+    );
 
+    if (existingItem) {
+      // 更新 Grid 內的資料
+      this.gridApi.applyTransaction({ update: [editedAttraction] });
+    } else {
+      // 新增新資料
+      this.gridApi.applyTransaction({ add: [editedAttraction] });
+    }
+  }
+
+  deleteAttraction(id:number){
+    // id is attraciton id
+    this.attractionService.deleteAttractionById(id).subscribe({
+      next:()=>{
+        console.log(`刪除景點成功`);
+      },
+      error:(error)=>{
+        console.log(`刪除景點失敗 ${JSON.stringify(error)}`);
+      }
+    });
+  }
+
+  deleteImages(id:number){
+    // id is attraciton id
+    this.attractionImageService.deleteAttractionImagesById(id).subscribe({
+      next:()=>{
+        console.log(`刪除圖片成功`);
+      },
+      error:(error)=>{
+        console.log(`刪除圖片失敗 ${JSON.stringify(error)}`);
+      }
+    })
   }
 }

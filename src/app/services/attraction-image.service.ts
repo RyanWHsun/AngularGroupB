@@ -26,4 +26,9 @@ export class AttractionImageService {
 
     return this.client.post("https://localhost:7112/api/TAttractionImages", formData);
   }
+
+  // id is attraction id
+  deleteAttractionImagesById(id:number){
+    return this.client.delete<void>(`https://localhost:7112/api/TAttractionImages/${id}`);
+  }
 }
