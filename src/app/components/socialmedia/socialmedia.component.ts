@@ -21,7 +21,7 @@ export class SocialmediaComponent {
   }
   get() {
     this.socialmediaService.getPublicArticles().subscribe(data => {
-      console.log('api', data);
+      // console.log('api', data);
       this.datas = data;
       this.datas.forEach(post => {
         this.loadImages(post['fPostId']);

@@ -20,7 +20,7 @@ export class MyarticlesComponent {
   }
   get() {
     this.socialmediaService.getMyArticles().subscribe(data => {
-      console.log('api', data);
+      // console.log('api', data);
       this.datas = data;
       this.datas.forEach(post => {
         this.loadImages(post['fPostId']);
