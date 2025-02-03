@@ -1,6 +1,6 @@
 <div class="modal-header" *ngIf=" productDetail">
   <h4 class="modal-title mx-3" id="productDetailModalLabel">{{productDetail.fProductName}}</h4>
-  <button type="button" class="close" aria-label="Close" data-dismiss="modal" (click)="closeModal()">
+  <button type="button" class="close" aria-label="Close" data-dismiss="modal">
     <span style="size:50px">&times;</span>
   </button>
 </div>
@@ -63,5 +63,5 @@
     </div>
   </div>
   <button class="btn btn-primary mx-3 fw-bold"><i class="fa-solid fa-cart-shopping"></i>&nbsp;&nbsp;加入購物車</button>
-  <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal()">關閉</button>
+  <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
 </div>

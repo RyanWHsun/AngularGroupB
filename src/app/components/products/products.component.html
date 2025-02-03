@@ -129,10 +129,10 @@
                 <div class="rounded-circle overflow-hidden" style="width: 32px; height: 32px;">
                   <img *ngIf="product.fUserImage" [src]="'data:image/png;base64,' + product.fUserImage"
                     alt="{{product.fUserNickName}}" class="img-fluid">
-                  <img *ngIf="!product.fUserImage" src="../../../assets/images/noImage.jpg"
-                    alt="{{product.fUserNickName}}" class="img-fluid" />
+                  <img *ngIf="!product.fUserImage" src="assets/images/noImage.jpg" alt="{{product.fUserNickName}}"
+                    class="img-fluid" />
                 </div>
-                <p class="h3 m-0 ms-2 text-center flex-grow-1 fw-bold" style="font-size: 16px;">
+                <p class="h3 m-0 ms-2 flex-grow-1 fw-bold" style="font-size: 16px;">
                   {{product.fUserNickName}}
                 </p>
               </div>
