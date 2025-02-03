@@ -1,0 +1,19 @@
+export interface IAttraction {
+  fAttractionId?: number | null;
+  fAttractionName?: string | null;
+  fCategoryId?: number | null;
+  fCategoryName?: string | null;
+  fDescription?: string | null;
+  fRegion?: string | null;
+  fAddress?: string | null;
+  fStatus?: string | null;
+  fOpeningTime?: string | null;
+  fClosingTime?: string | null;
+  fPhoneNumber?: string | null;
+  fWebsiteUrl?: string | null;
+  fCreatedDate?: string | null;
+  fUpdatedDate?: string | null;
+  fTrafficInformation?: string | null;
+  fLongitude?: string | null;
+  fLatitude?: string | null;
+}

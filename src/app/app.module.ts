@@ -12,6 +12,8 @@ import { HomeComponent } from './components/home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './components/login/login.component';
 import { FormsModule } from '@angular/forms';
+// 引入 AgGridModule
+import { AgGridModule } from 'ag-grid-angular';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { MyProductComponent } from './components/my-product/my-product.component';
 import { UserAddComponent } from './components/user-add/user-add.component';
@@ -44,7 +46,8 @@ import { LayoutComponent } from './components/layout/layout.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    AgGridModule
   ],
   providers: [],
   bootstrap: [AppComponent]

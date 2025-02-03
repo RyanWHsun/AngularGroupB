@@ -1,10 +1,15 @@
 <!-- Header Start -->
 <div class="container-fluid page-header">
   <div class="container">
-    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+    <div
+      class="d-flex flex-column align-items-center justify-content-center"
+      style="min-height: 400px"
+    >
       <h3 class="display-4 text-white text-uppercase">景點</h3>
       <div class="d-inline-flex text-white">
-        <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
+        <p class="m-0 text-uppercase">
+          <a class="text-white" routerLink="">首頁</a>
+        </p>
         <i class="fa fa-angle-double-right pt-1 px-3"></i>
         <p class="m-0 text-uppercase">景點</p>
       </div>
@@ -16,13 +21,13 @@
 <!-- Booking Start -->
 <div class="container-fluid booking mt-5 pb-5">
   <div class="container pb-5">
-    <div class="bg-light shadow" style="padding: 30px;">
-      <div class="row align-items-center" style="min-height: 60px;">
+    <div class="bg-light shadow" style="padding: 30px">
+      <div class="row align-items-center" style="min-height: 60px">
         <div class="col-md-10">
           <div class="row">
             <div class="col-md-3">
               <div class="mb-3 mb-md-0">
-                <select class="custom-select px-4" style="height: 47px;">
+                <select class="custom-select px-4" style="height: 47px">
                   <option selected>Destination</option>
                   <option value="1">Destination 1</option>
                   <option value="2">Destination 1</option>
@@ -33,22 +38,32 @@
             <div class="col-md-3">
               <div class="mb-3 mb-md-0">
                 <div class="date" id="date1" data-target-input="nearest">
-                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Depart Date"
-                    data-target="#date1" data-toggle="datetimepicker" />
+                  <input
+                    type="text"
+                    class="form-control p-4 datetimepicker-input"
+                    placeholder="Depart Date"
+                    data-target="#date1"
+                    data-toggle="datetimepicker"
+                  />
                 </div>
               </div>
             </div>
             <div class="col-md-3">
               <div class="mb-3 mb-md-0">
                 <div class="date" id="date2" data-target-input="nearest">
-                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Return Date"
-                    data-target="#date2" data-toggle="datetimepicker" />
+                  <input
+                    type="text"
+                    class="form-control p-4 datetimepicker-input"
+                    placeholder="Return Date"
+                    data-target="#date2"
+                    data-toggle="datetimepicker"
+                  />
                 </div>
               </div>
             </div>
             <div class="col-md-3">
               <div class="mb-3 mb-md-0">
-                <select class="custom-select px-4" style="height: 47px;">
+                <select class="custom-select px-4" style="height: 47px">
                   <option selected>Duration</option>
                   <option value="1">Duration 1</option>
                   <option value="2">Duration 1</option>
@@ -59,8 +74,13 @@
           </div>
         </div>
         <div class="col-md-2">
-          <button class="btn btn-primary btn-block" type="submit"
-            style="height: 47px; margin-top: -2px;">Submit</button>
+          <button
+            class="btn btn-primary btn-block"
+            type="submit"
+            style="height: 47px; margin-top: -2px"
+          >
+            Submit
+          </button>
         </div>
       </div>
     </div>
@@ -69,4 +89,375 @@
 <!-- Booking End -->
 
 <!-- start your coding here-->
-<p>attraction works!</p>
+<!-- Button trigger modal -->
+<button
+  type="button"
+  class="btn btn-primary"
+  data-toggle="modal"
+  data-target="#exampleModalCenter"
+>
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModalCenter"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">...</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="mixModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <!-- 隱藏的輸入欄位:景點ID -->
+        <input id="hiddenFAttractionId" name="FAttractionId" type="hidden" />
+        <h5 class="modal-title w-100" id="FAttractionName"></h5>
+        <!-- 隱藏的輸入欄位:景點名稱 -->
+        <input
+          id="hiddenFAttractionName"
+          name="FAttractionName"
+          type="hidden"
+        />
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- carousel 顯示已經存進的圖片 -->
+        <div
+          id="carouselExampleInterval"
+          class="carousel slide carousel-fade"
+          data-ride="carousel"
+        >
+          <div id="displayImageContainer" class="carousel-inner">
+            <!-- 這裡生成圖片 -->
+          </div>
+          <a
+            class="carousel-control-prev"
+            href="#carouselExampleInterval"
+            role="button"
+            data-slide="prev"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a
+            class="carousel-control-next"
+            href="#carouselExampleInterval"
+            role="button"
+            data-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+        <div class="mb-3 edit-button-container">
+          <button id="btnEdit" type="button" class="btn btn-outline-success">
+            編輯
+          </button>
+        </div>
+        <div class="mb-3">
+          <label for="FCategoryId" class="form-label">分類</label>
+          <select
+            id="FCategoryId"
+            name="FCategoryId"
+            class="form-control"
+            disabled
+          >
+            <option value="">請選擇分類</option>
+            <option
+              *ngFor="let category of attractionCategories"
+              [value]="category.fAttractionCategoryId"
+            >
+              {{ category.fAttractionCategoryName }}
+            </option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="FDescription" class="form-label">景點介紹</label>
+          <textarea
+            id="FDescription"
+            name="FDescription"
+            class="form-control"
+            rows="3"
+            disabled
+          ></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="FRegion" class="form-label">地區</label>
+          <select id="FRegion" name="FRegion" class="form-control" disabled>
+            <option value="">請選擇區域</option>
+            <option value="北部">北部</option>
+            <option value="中部">中部</option>
+            <option value="南部">南部</option>
+            <option value="東部">東部</option>
+            <option value="離島">離島</option>
+            <option value="國外">國外</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="FAddress" class="form-label">地址</label>
+          <input
+            id="FAddress"
+            name="FAddress"
+            type="text"
+            class="form-control"
+            disabled
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="FStatus" class="form-label">狀態</label>
+          <select id="FStatus" name="FStatus" class="form-control" disabled>
+            <option value="">請選擇狀態</option>
+            <option value="開放中">開放中</option>
+            <option value="開放時間和平日不同">開放時間和平日不同</option>
+            <option value="已打烊">已打烊</option>
+            <option value="24小時營業">24小時營業</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="FOpeningTime" class="form-label">開放時間</label>
+          <input
+            id="FOpeningTime"
+            name="FOpeningTime"
+            type="time"
+            class="form-control"
+            disabled
+          />
+        </div>
+        <div class="mb-3">
+          <label for="FClosingTime" class="form-label">關閉時間</label>
+          <input
+            id="FClosingTime"
+            name="FClosingTime"
+            type="time"
+            class="form-control"
+            disabled
+          />
+        </div>
+        <div class="mb-3">
+          <label for="FPhoneNumber" class="form-label">電話</label>
+          <input
+            id="FPhoneNumber"
+            name="FPhoneNumber"
+            type="tel"
+            class="form-control"
+            disabled
+          />
+        </div>
+        <div class="mb-3">
+          <label for="FWebsiteUrl" class="form-label">網址</label>
+          <input
+            id="FWebsiteUrl"
+            name="FWebsiteUrl"
+            type="text"
+            class="form-control"
+            disabled
+          />
+        </div>
+        <div class="mb-3">
+          <label for="FCreatedDate" class="form-label">建立日期</label>
+          <input
+            id="FCreatedDate"
+            name="FCreatedDate"
+            type="text"
+            class="form-control"
+            disabled
+          />
+        </div>
+        <div class="mb-3">
+          <label for="FUpdatedDate" class="form-label">更新日期</label>
+          <input
+            id="FUpdatedDate"
+            name="FUpdatedDate"
+            type="text"
+            class="form-control"
+            disabled
+          />
+        </div>
+        <div class="mb-3">
+          <label for="FTrafficInformation" class="form-label">交通資訊</label>
+          <textarea
+            id="FTrafficInformation"
+            name="FTrafficInformation"
+            class="form-control"
+            rows="3"
+            disabled
+          ></textarea>
+        </div>
+        <div class="mb-3">
+          <div
+            id="previewCarouselExampleInterval"
+            class="carousel slide carousel-fade"
+            data-ride="carousel"
+          >
+            <div id="previewImageContainer" class="carousel-inner">
+              <!-- 這裡生成圖片 -->
+            </div>
+            <a
+              class="carousel-control-prev"
+              href="#previewCarouselExampleInterval"
+              role="button"
+              data-slide="prev"
+            >
+              <span
+                class="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a
+              class="carousel-control-next"
+              href="#previewCarouselExampleInterval"
+              role="button"
+              data-slide="next"
+            >
+              <span
+                class="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="sr-only">Next</span>
+            </a>
+          </div>
+        </div>
+        <div class="mb-3">
+          <input
+            id="FImages"
+            name="FImages"
+            type="file"
+            accept="image/*"
+            class="form-control"
+            multiple
+            disabled
+          />
+        </div>
+        <div class="mb-3">
+          <div class="image-name-container" id="imageNameContainer"></div>
+        </div>
+        <div class="d-flex justify-content-between mt-4">
+          <button
+            id="btnCancel"
+            type="button"
+            class="btn btn-outline-warning"
+            data-dismiss="modal"
+            style="display: none"
+          >
+            取消
+          </button>
+          <button
+            id="btnSave"
+            type="submit"
+            class="btn btn-outline-primary"
+            style="display: none"
+          >
+            儲存
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-4">
+  <ag-grid-angular
+    style="width: 100%; height: 400px"
+    class="ag-theme-alpine"
+    [rowData]="rowData"
+    [columnDefs]="columnDefs"
+    [pagination]="pagination"
+    [paginationPageSize]="paginationPageSize"
+    [paginationPageSizeSelector]="paginationPageSizeSelector"
+    (gridReady)="onGridReady($event)"
+    [getRowId]="getRowId"
+  >
+  </ag-grid-angular>
+  <div class="row">
+    <!-- Card -->
+    <div class="col-md-3">
+      <div class="card">
+        <div class="views">1378518 <i class="fas fa-eye"></i></div>
+        <img src="shilin.jpg" class="card-img-top" alt="士林夜市" />
+        <div class="card-body">
+          <h5 class="card-title">士林夜市</h5>
+          <div class="tags">
+            <span>#打卡熱點</span>
+            <span>#非吃不可</span>
+            <span>#逛夜市</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Repeat Cards for Other Locations -->
+    <div class="col-md-3">
+      <div class="card">
+        <div class="views">1067830 <i class="fas fa-eye"></i></div>
+        <img src="yangmingshan.jpg" class="card-img-top" alt="陽明山國家公園" />
+        <div class="card-body">
+          <h5 class="card-title">陽明山國家公園</h5>
+          <div class="tags">
+            <span>#賞花</span>
+            <span>#生態體驗</span>
+            <span>#登山步道</span>
+            <span>#國家公園</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- More cards -->
+    <div class="col-md-3">
+      <div class="card">
+        <div class="views">957171 <i class="fas fa-eye"></i></div>
+        <img src="longshan.jpg" class="card-img-top" alt="臺北龍山寺" />
+        <div class="card-body">
+          <h5 class="card-title">臺北龍山寺</h5>
+          <div class="tags">
+            <span>#寺廟祈福</span>
+            <span>#打卡熱點</span>
+            <span>#古蹟巡禮</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Add more cards as needed -->
+  </div>
+</div>
