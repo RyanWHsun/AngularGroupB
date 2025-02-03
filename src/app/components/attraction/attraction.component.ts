@@ -4,7 +4,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IAttraction } from 'src/app/interfaces/IAttraction';
 import { AttractionService } from 'src/app/services/attraction.service';
 import * as $ from 'jquery';
-import 'bootstrap';
+// import 'bootstrap';
 import { IAttractionCategory } from 'src/app/interfaces/IAttractionCategory';
 import { AttractionCategoryService } from 'src/app/services/attraction-category.service';
 import { IAttractionImage } from 'src/app/interfaces/IAttractionImage';
@@ -109,13 +109,13 @@ export class AttractionComponent {
     private attractionService: AttractionService,
     private attractionCategoryService: AttractionCategoryService,
     private attractionImageService: AttractionImageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     $('#btnSave').on('click', async (e) => {
       e.preventDefault(); // 防止表單預設提交行為
       await this.editItem();
-      $('#mixModal').modal('hide'); // 關閉 modal
+      ($('#mixModal') as any).modal('hide'); // 關閉 modal
     });
 
     $('#FImages').on('change', (event) => {
@@ -605,7 +605,7 @@ export class AttractionComponent {
     this.updateGrid(editedAttraction);
   }
 
-  updateGrid(editedAttraction: IAttraction){
+  updateGrid(editedAttraction: IAttraction) {
     if (!this.gridApi) {
       console.error('Grid API 未初始化，無法更新資料');
       return;
@@ -623,25 +623,25 @@ export class AttractionComponent {
     }
   }
 
-  deleteAttraction(id:number){
+  deleteAttraction(id: number) {
     // id is attraciton id
     this.attractionService.deleteAttractionById(id).subscribe({
-      next:()=>{
+      next: () => {
         console.log(`刪除景點成功`);
       },
-      error:(error)=>{
+      error: (error) => {
         console.log(`刪除景點失敗 ${JSON.stringify(error)}`);
       }
     });
   }
 
-  deleteImages(id:number){
+  deleteImages(id: number) {
     // id is attraciton id
     this.attractionImageService.deleteAttractionImagesById(id).subscribe({
-      next:()=>{
+      next: () => {
         console.log(`刪除圖片成功`);
       },
-      error:(error)=>{
+      error: (error) => {
         console.log(`刪除圖片失敗 ${JSON.stringify(error)}`);
       }
     })
