@@ -32,17 +32,23 @@ const routes: Routes = [
   },
   {
     path: 'event',
-    component: EventComponent,
-    children: []
+    component: LayoutComponent,
+    children: [{
+      path: '',
+      component: EventComponent
+    }]
   },
   {
     path: 'products',
-    component: ProductsComponent,
-    children: []
-  },
-  {
-    path: 'myProduct',
-    component: MyProductComponent
+    component: LayoutComponent,
+    children: [{
+      path: '',
+      component: ProductsComponent
+    },
+    {
+      path: 'myProduct',
+      component: MyProductComponent
+    }]
   },
   {
     path: 'socialmedia',
@@ -58,22 +64,26 @@ const routes: Routes = [
   },
   {
     path: 'user',
-    component: UserComponent,
+    component: LayoutComponent,
     children: [{
+      path: '',
+      component: UserLoginComponent
+    },
+    {
       path: 'add',
       component: UserAddComponent
-    }, {
+    },
+    {
       path: 'edit',
       component: UserEditComponent
-    }, {
+    },
+    {
       path: 'login',
       component: UserLoginComponent
-    }, {
+    },
+    {
       path: 'page',
       component: UserPageComponent
-    }, {
-      path: '**',
-      component: UserLoginComponent
     }]
   },
   {
