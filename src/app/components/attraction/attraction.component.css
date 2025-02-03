@@ -1,0 +1,65 @@
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-alpine.css';
+
+.card {
+  margin-bottom: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.card img {
+  height: 200px;
+  object-fit: cover;
+}
+.card-body {
+  text-align: center;
+}
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.views {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+}
+.tags {
+  margin-top: 10px;
+}
+.tags span {
+  display: inline-block;
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  margin: 2px;
+}
+
+.modal-content {
+  border-radius: 20px;
+}
+
+.edit-button-container {
+  margin-top: 20px;
+}
+
+.carousel-inner {
+  border: solid 3px;
+  border-color: rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+}
+
+.btn-detail, .btn-delete {
+  margin: 10px 5px;
+}
+
+#FCategoryId, #FRegion, #FStatus {
+  width: 38%;
+  height: 40px;
+  border-radius: 10px;
+}
