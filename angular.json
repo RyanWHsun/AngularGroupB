@@ -42,6 +42,9 @@
               "src/assets/template/mail/jqBootstrapValidation.min.js",
               "src/assets/template/mail/contact.js",
               "src/assets/template/js/main.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "jquery"
             ]
           },
           "configurations": {
