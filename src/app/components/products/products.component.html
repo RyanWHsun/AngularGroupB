@@ -2,11 +2,11 @@
 <div class="container-fluid page-header">
   <div class="container">
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
-      <h3 class="display-4 text-white text-uppercase">商品</h3>
+      <h3 class="display-4 text-white text-uppercase">商城中心</h3>
       <div class="d-inline-flex text-white">
         <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
         <i class="fa fa-angle-double-right pt-1 px-3"></i>
-        <p class="m-0 text-uppercase">商品</p>
+        <p class="m-0 text-uppercase">商城中心</p>
       </div>
     </div>
   </div>
@@ -69,4 +69,138 @@
 <!-- Booking End -->
 
 <!-- start your coding here-->
-<p>products works!</p>
+<!-- Title -->
+<div class="text-center mb-1 pb-1">
+  <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Products</h6>
+  <h1>{{ selectedCategoryName }}</h1>
+</div>
+
+<!-- Content -->
+<div class="container-fluid py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3 mt-5 mt-lg-0">
+        <!-- Search Form -->
+        <div class="mb-4">
+          <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">關鍵字搜尋</h4>
+          <div class="bg-light shadow" style="padding: 15px;">
+            <div class="input-group">
+              <input type="text" [(ngModel)]="keyword" class="form-control p-4" placeholder="Keyword">
+              <div class="input-group-append">
+                <span class="input-group-text btn btn-primary bg-primary" style="cursor: pointer;"
+                  (click)="searchProducts()"><i class="fa fa-search"></i></span>
+                <span class="input-group-text btn btn-primary bg-primary" style="cursor: pointer;"
+                  (click)="resetFilters()"><i class="fa-solid fa-rotate-right"></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Category List -->
+        <div class=" mb-5">
+          <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">商品類別</h4>
+          <div class="bg-light shadow" style="padding: 30px;">
+            <ul class="list-inline m-0">
+              <li class="mb-3 d-flex justify-content-between align-items-center">
+                <a class="text-dark categorySelected" [ngClass]="{ 'active': selectedCategoryId === null }"
+                  (click)="filterByCategory(null)"><i class="fa fa-angle-right text-primary mr-2"></i>全部商品</a>
+                <span class="badge badge-primary badge-pill">{{totalProductCount}}</span>
+              </li>
+              <li class="mb-3 d-flex justify-content-between align-items-center" *ngFor="let category of categories">
+                <a class="text-dark categorySelected"
+                  [ngClass]="{ 'active': selectedCategoryId === category.fProductCategoryId }"
+                  (click)="filterByCategory(category.fProductCategoryId)"><i
+                    class="fa fa-angle-right text-primary mr-2"></i>{{category.fCategoryName}}</a>
+                <span
+                  class="badge badge-primary badge-pill d-flex align-items-center justify-content-center">{{category.productCount}}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- productList -->
+      <div class="col-lg-9">
+        <div class="row pb-3">
+          <div *ngFor="let product of products" class="col-lg-4 col-md-6 mb-4">
+            <div class="package-item bg-light shadow   mb-2"
+              style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+              <!-- 頭像與會員暱稱 -->
+              <div class="d-flex align-items-center p-2 border-bottom">
+                <div class="rounded-circle overflow-hidden" style="width: 32px; height: 32px;">
+                  <img *ngIf="product.fUserImage" [src]="'data:image/png;base64,' + product.fUserImage"
+                    alt="{{product.fUserNickName}}" class="img-fluid">
+                  <img *ngIf="!product.fUserImage" src="../../../assets/images/noImage.jpg"
+                    alt="{{product.fUserNickName}}" class="img-fluid" />
+                </div>
+                <p class="h3 m-0 ms-2 text-center flex-grow-1 fw-bold" style="font-size: 16px;">
+                  {{product.fUserNickName}}
+                </p>
+              </div>
+              <!-- 圖片 -->
+              <div style="height: 200px; width: 100%; overflow: hidden;">
+                <img *ngIf="product.fImage" class="img-fluid w-100 h-100"
+                  [src]="'data:image/png;base64,' + product.fImage" alt="{{ product.fProductName }}"
+                  style="object-fit: cover;">
+                <img *ngIf="!product.fImage" src="../../../assets/images/noImage.jpg" alt="{{product.fProductName}}"
+                  class="img-fluid w-100 h-100" style="object-fit: cover;" />
+              </div>
+              <!-- 卡片內容 -->
+              <div class="px-4 pt-4 flex-grow-1">
+                <!-- 卡片標題 -->
+                <a class="h4 text-decoration-none d-block mb-3 product-title" href="javascript:void(0)"
+                  data-toggle="modal" data-target="#productDetailModal" (click)="openProductDetail(product.fProductId)"
+                  style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{product.fProductName}}</a>
+                <div class="d-flex justify-content-between mb-2">
+                  <h5 class="m-0"><i class="text-primary fas fa-box"></i> &nbsp; {{product.fStock}}</h5>
+                  <h5 class="m-0 ">NT$ &nbsp;{{ product.fProductPrice | number:'1.0-0' }}</h5>
+                </div>
+              </div>
+              <!-- 卡片底部資訊 -->
+              <div class="border-top px-4 py-2">
+                <div class="d-flex justify-content-between">
+                  <div></div>
+                  <button class="btn btn-primary me-2 fw-bold"><i
+                      class="fa-solid fa-cart-shopping"></i>&nbsp;&nbsp;加入購物車</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- page navigation -->
+          <div class="col-12">
+            <nav aria-label="Page navigation">
+              <ul class="pagination pagination-lg justify-content-center bg-white mb-0" style="padding: 30px;">
+                <!-- 上一頁 -->
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                  <a class="page-link" aria-label="Previous" (click)="prevPage()">
+                    <span aria-hidden="true">«</span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                </li>
+
+                <!-- 當前頁數 -->
+                <li class="page-item active">
+                  <a class="page-link">{{ currentPage }}</a>
+                </li>
+                <!-- 下一頁 -->
+                <li class="page-item" [class.disabled]="!hasMorePages">
+                  <a class="page-link" aria-label="Next" (click)="nextPage()">
+                    <span aria-hidden="true">»</span>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <!-- Bootstrap Modal -->
+      <div class="modal fade" id="productDetailModal" tabindex="-1" role="dialog"
+        aria-labelledby="productDetailModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <app-product-detail *ngIf="selectedProductId !== null" [productId]="selectedProductId"
+              (close)="closeProductDetail()"></app-product-detail>
+          </div>
+        </div>
+      </div>

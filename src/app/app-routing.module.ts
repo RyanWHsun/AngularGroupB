@@ -8,6 +8,7 @@ import { ProductsComponent } from './components/products/products.component';
 import { SocialmediaComponent } from './components/socialmedia/socialmedia.component';
 import { UserComponent } from './components/user/user.component';
 import { LoginComponent } from './components/login/login.component';
+import { MyProductComponent } from './components/my-product/my-product.component';
 import { UserAddComponent } from './components/user-add/user-add.component';
 import { UserLoginComponent } from './components/user-login/user-login.component';
 import { UserEditComponent } from './components/user-edit/user-edit.component';
@@ -38,6 +39,10 @@ const routes: Routes = [
     path: 'products',
     component: ProductsComponent,
     children: []
+  },
+  {
+    path: 'myProduct',
+    component: MyProductComponent
   },
   {
     path: 'socialmedia',

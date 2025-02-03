@@ -1,0 +1,76 @@
+td {
+  vertical-align: middle !important;
+  text-align: center;
+}
+
+.nav-tabs .nav-link {
+  color: black;
+  font-weight: bold;
+  position: relative;
+  border: none;
+  padding-bottom: 10px;
+}
+
+.nav-tabs .nav-link.active-tab {
+  color: green;
+  /* 紅色字體 */
+}
+
+.nav-tabs .nav-link.active-tab::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: green;
+  /* 紅色底線 */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+
+.badge-lg {
+  font-size: 14px;
+  padding: 10px 15px;
+}
+
+/* 設定條紋行為淡綠色 */
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #eafaea !important;
+  /* 這裡使用淡綠色 */
+}
+
+/* 調整條紋 hover 效果 */
+.table-striped tbody tr:hover {
+  background-color: rgb(195, 230, 203) !important;
+  /* 深一點的綠色 */
+}
+
+/* 讓 table 具有陰影效果 */
+.table-custom {
+  border-radius: 12px;
+  /* 圓角 */
+  overflow: hidden;
+  /* 確保圓角生效 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* 陰影 */
+  background-color: white;
+  /* 確保背景色 */
+}
+
+/* 讓 thead 也具有圓角效果 */
+.table-custom thead {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+/* 設定 table-striped 行的陰影與圓角 */
+.table-custom tbody tr {
+  transition: all 0.3s ease-in-out;
+}
+
+.table-custom tbody tr:hover {
+  background-color: #f8f9fa;
+  /* 滑鼠移過時的背景顏色 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,77 @@
+.modal-header {
+  background-color: rgb(243, 243, 243);
+  border-bottom: 1px solid #dee2e6;
+}
+
+h5 {
+  color: rgb(122, 183, 48);
+  font-weight: bold;
+}
+
+.modal-footer {
+  background-color: rgb(243, 243, 243);
+  border-top: 1px solid #dee2e6;
+}
+
+.modal-body img {
+  max-width: 100%;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.modal-body p {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.carousel-img {
+  height: 400px;
+  /* 固定高度 */
+  width: 100%;
+  /* 確保圖片寬度佔滿容器 */
+  object-fit: contain;
+  /* 縮放圖片並保持比例，無裁剪 */
+  background-color: white
+    /* 可選：為空白部分添加背景顏色 */
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  outline: none;
+  /* 移除焦點時的邊框 */
+  border: none;
+  /* 移除按鍵本身的邊框 */
+  box-shadow: none;
+  /* 確保不會有陰影 */
+  background-color: transparent;
+  /* 確保背景透明 */
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: rgb(122, 183, 48);
+  /* 深色背景 */
+  border: 2px solid rgb(122, 183, 48);
+  /* 深色邊框 */
+  border-radius: 50%;
+  /* 圓形按鈕 */
+  width: 30px;
+  /* 圓形的寬度 */
+  height: 30px;
+  /* 圓形的高度 */
+  display: flex;
+  /* 使用 Flexbox */
+  justify-content: center;
+  /* 水平居中 */
+  align-items: center;
+  /* 垂直居中 */
+  box-shadow: 0 0 10px lightgreen;
+  /* 發光效果 */
+}
+
+
+.carousel-control-prev-icon:hover,
+.carousel-control-next-icon:hover {
+  box-shadow: 0 0 15px rgb(122, 183, 48);
+  /* 懸停增強發光效果 */
+}
