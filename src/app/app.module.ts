@@ -22,6 +22,7 @@ import { UserEditComponent } from './components/user-edit/user-edit.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { MyarticlesComponent } from './components/myarticles/myarticles.component';
 import { LayoutComponent } from './components/layout/layout.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { LayoutComponent } from './components/layout/layout.component';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    AgGridModule
+    AgGridModule,
+    CKEditorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { SocialmediaService } from 'src/app/services/socialmedia.service';
 
 @Component({
@@ -7,6 +8,11 @@ import { SocialmediaService } from 'src/app/services/socialmedia.service';
   styleUrls: ['./myarticles.component.css']
 })
 export class MyarticlesComponent {
+  Editor = ClassicEditor;
+  editorData = '<p>這是 CKEditor 內容</p>';
+  editorConfig = {
+    licenseKey: 'GPL'
+  };
   datas = [];
   imageData: { [key: number]: string[] } = {};
   constructor(private socialmediaService: SocialmediaService) { };
