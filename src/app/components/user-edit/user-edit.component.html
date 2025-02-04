@@ -41,8 +41,8 @@
               <div class="col-lg-4 col-md-6 mb-4">
                 <div class="destination-item position-relative overflow-hidden mb-2">
 
-                  <img class="img-fluid" src="~/images/noImage.jpg" alt="">
-                  <input type="file" id="userImage" />
+                  <img class="img-fluid mb-5" [src]="img" alt="">
+                  <input type="file" (change)="changeImg($event)" id="userImage" accept="image/*" />
 
                 </div>
               </div>
