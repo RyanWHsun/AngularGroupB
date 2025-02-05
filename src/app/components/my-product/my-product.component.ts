@@ -30,9 +30,8 @@ export class MyProductComponent {
 
   loadMyProduct() {
     this.productsService.getMyProduct().subscribe({
-      //console.log('myProduct', data);
       next: (data) => {
-        //console.log(data);
+        console.log(data);
         this.myProducts = data;
         this.updateProductCounts();
         this.filterProductsByStatus('all') //預設顯示全部商品

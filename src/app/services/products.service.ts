@@ -1,8 +1,7 @@
-import { createProduct } from './../interfaces/products';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { myProductList, ProductDetail, Products } from '../interfaces/products';
+import { myProductList, ProductDetail, Products, createProduct } from '../interfaces/products';
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +48,7 @@ export class ProductsService {
 
   createProduct(product: createProduct): Observable<string> {
     const url = `${this.baseAddress}api/TProducts/`
-    return this.http.post<string>(url, product);
+    return this.http.post<string>(url, product, { withCredentials: true });
   }
 
 }

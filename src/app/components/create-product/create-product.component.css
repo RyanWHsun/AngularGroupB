@@ -1,0 +1,19 @@
+.upload-area {
+  border-radius: 10px;
+  border: dotted 2px forestgreen;
+  background-color: ghostwhite;
+}
+
+.icon {
+  color: rgb(122, 183, 48);
+  font-weight: bold;
+}
+
+label {
+  font-weight: bold;
+}
+
+input[type="radio"] {
+  accent-color: #28a745;
+  /* 綠色 */
+}

@@ -77,63 +77,108 @@
   <h1>新增商品</h1>
 </div>
 
-<div class="container mt-5">
-  <h2 class="mb-4">新增商品</h2>
+<div class="container-fluid py-1">
+  <div class="container">
+    <form [formGroup]="productForm" (ngSubmit)="submitForm()">
+      <div class="row mt-3 mb-3 justify-content-center">
+        <div class="col-5 bg-light shadow mx-3 p-4">
+          <!-- 商品名稱 -->
+          <div class=" form-group">
+            <label for="productName"><i class="fa-solid fa-cube icon"></i>&nbsp;&nbsp;商品名稱</label>
+            <input type="text" id="productName" class="form-control" formControlName="fProductName" required />
+            <small *ngIf="productForm.get('fProductName')?.invalid && productForm.get('fProductName')?.touched"
+              class="text-danger">
+              商品名稱至少需要 3 個字元
+            </small>
+          </div>
+          <!-- 商品類別 -->
+          <div class="form-group">
+            <label for="productCategoryId"><i class="fa-solid fa-cube icon"></i>&nbsp;&nbsp;商品類別</label>
+            <select class="form-control" id="productCategory" formControlName="fProductCategoryId" required>
+              <option *ngFor=" let category of categories" [value]="category.fProductCategoryId">
+                {{category.fCategoryName}}
+              </option>
+            </select>
+          </div>
+          <!-- 商品價格 -->
+          <div class="form-group">
+            <label for="productPrice"><i class="fa-solid fa-cube icon"></i>&nbsp;&nbsp;價格</label>
+            <input type="number" id="productPrice" class="form-control" formControlName="fProductPrice" required />
+            <small *ngIf="productForm.get('fProductPrice')?.invalid && productForm.get('fProductPrice')?.touched"
+              class="text-danger">
+              請填寫正確價格
+            </small>
+          </div>
 
-  <form [formGroup]="productForm" (ngSubmit)="submitForm()">
-    <!-- 商品名稱 -->
-    <div class="form-group">
-      <label for="productName">商品名稱</label>
-      <input type="text" id="productName" class="form-control" formControlName="fProductName" required />
-      <small *ngIf="productForm.get('fProductName')?.invalid && productForm.get('fProductName')?.touched"
-        class="text-danger">
-        商品名稱至少需要 3 個字元
-      </small>
-    </div>
+          <!-- 商品描述 -->
+          <div class="form-group">
+            <label for="productDescription"><i class="fa-solid fa-cube icon"></i>&nbsp;&nbsp;商品描述</label>
+            <textarea id="productDescription" class="form-control" rows="3" formControlName="fProductDescription"
+              placeholder="請描述產品狀況並包含買家可能感興趣的任何細節。"></textarea>
+          </div>
 
-    <!-- 商品價格 -->
-    <div class="form-group">
-      <label for="productPrice">價格</label>
-      <input type="number" id="productPrice" class="form-control" formControlName="fProductPrice" required />
-    </div>
+          <!-- 商品狀態 -->
+          <div class="form-group">
+            <label><i class="fa-solid fa-cube icon"></i>&nbsp;&nbsp;是否上架</label>
+            <div>
+              <input type="radio" id="onSale" formControlName="fIsOnSales" [value]="true" />
+              <label for="onSale">&nbsp;販售中&nbsp;&nbsp;</label>
 
-    <!-- 商品描述 -->
-    <div class="form-group">
-      <label for="productDescription">商品描述</label>
-      <textarea id="productDescription" class="form-control" rows="3" formControlName="fProductDescription"></textarea>
-    </div>
+              <input type="radio" id="offSale" formControlName="fIsOnSales" [value]="false" />
+              <label for="offSale">&nbsp;未販售</label>
+            </div>
+          </div>
 
-    <!-- 商品狀態 -->
-    <div class="form-group">
-      <label>是否上架</label>
-      <div>
-        <input type="radio" id="onSale" formControlName="fIsOnSales" [value]="true" />
-        <label for="onSale">販售中</label>
+          <!-- 商品庫存 -->
+          <div class="form-group">
+            <label for="productStock"><i class="fa-solid fa-cube icon"></i>&nbsp;&nbsp;庫存數量</label>
+            <input type="number" id="productStock" class="form-control" formControlName="fStock" required />
+            <small *ngIf="productForm.get('fStock')?.invalid && productForm.get('fStock')?.touched" class="text-danger">
+              數量至少1個
+            </small>
+          </div>
+          <!-- 送出按鈕 -->
+          <button type="submit" class="btn btn-success " [disabled]="productForm.invalid"><i
+              class="fa-solid fa-square-check"></i>&nbsp;新增商品</button>
+          <button class="btn btn-primary m-3" [routerLink]="['/products', 'myProduct']"><i
+              class="fa-solid fa-square-xmark"></i>&nbsp;返回</button>
+        </div>
+        <!-- 圖片上傳 -->
+        <div class="col-md-6 d-flex flex-column align-items-center bg-light shadow p-3">
+          <div class="upload-area mb-2 p-3 w-100 h-200 text-center" (dragover)="onDragOver($event)"
+            (drop)="onDrop($event)">
+            <i class="fa-regular fa-image fa-2xl mt-5"></i>
+            <p class="text-muted mt-2">拖曳圖片到這裡或點擊選擇圖片</p>
+            <!-- 顯示錯誤訊息 -->
+            <button type="button" class="btn btn-success" (click)="fileInput.click()"
+              [disabled]="imagePreviews.length >= 6"><i class="fa-regular fa-circle-check"></i>&nbsp;選擇圖片</button>
+            <p class="text-info mt-2"><i class="fa-regular fa-lightbulb"></i>&nbsp;最多上傳 6 張圖片</p>
+            <input type="file" class="form-control-file d-none" #fileInput (change)="onImageSelected($event)"
+              multiple />
+          </div>
 
-        <input type="radio" id="offSale" formControlName="fIsOnSales" [value]="false" />
-        <label for="offSale">未販售</label>
+          <!-- 預覽圖片區域 -->
+          <div class="container">
+            <div class="row d-flex row-cols-3 flex-wrap justify-content-start">
+              <div *ngFor="let image of imagePreviews; let i = index" class="col-auto position-relative p-2">
+                <div class="position-absolute top-0 start-0" style="top: 4px; left: 8px;">
+                  <!-- 封面標籤 -->
+                  <span *ngIf="i === 0" class="badge badge-success ">封面</span>
+                </div>
+                <div class="position-absolute top-0 end-0" style="top: 10px; right: 10px;">
+                  <!-- 刪除按鈕 -->
+                  <button type="button" class="btn btn-primary rounded-pill btn-sm " (click)="removeImage(i)">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+                <!-- 預覽圖片 -->
+                <img [src]="image" class="" style="width: 160px; height:160px; object-fit: contain;">
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
-    </div>
-
-    <!-- 商品庫存 -->
-    <div class="form-group">
-      <label for="productStock">庫存數量</label>
-      <input type="number" id="productStock" class="form-control" formControlName="fStock" required />
-    </div>
-
-    <!-- 圖片上傳 -->
-    <div class="form-group">
-      <label for="productImage">商品圖片</label>
-      <input type="file" class="form-control-file" (change)="onImageSelected($event)" />
-
-      <!-- 預覽圖片 -->
-      <div *ngIf="imagePreview" class="mt-3">
-        <p>圖片預覽:</p>
-        <img [src]="imagePreview" class="img-thumbnail" style="max-width: 200px" />
-      </div>
-    </div>
-
-    <!-- 送出按鈕 -->
-    <button type="submit" class="btn btn-primary mt-3" [disabled]="productForm.invalid">新增商品</button>
-  </form>
+    </form>
+  </div>
 </div>
