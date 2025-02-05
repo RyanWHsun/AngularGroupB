@@ -15,6 +15,7 @@ import { UserEditComponent } from './components/user-edit/user-edit.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { MyarticlesComponent } from './components/myarticles/myarticles.component';
 import { LayoutComponent } from './components/layout/layout.component';
+import { CreateProductComponent } from './components/create-product/create-product.component';
 
 const routes: Routes = [
   {
@@ -48,6 +49,9 @@ const routes: Routes = [
     {
       path: 'myProduct',
       component: MyProductComponent
+    }, {
+      path: 'createProduct',
+      component: CreateProductComponent
     }]
   },
   {

@@ -107,7 +107,8 @@
       <div class="row mt-3 mb-3">
         <!-- 新增商品btn -->
         <div class="col-md-4 d-flex align-items-center">
-          <button class="btn btn-success w-50 fw-bold"><i class="fa fa-plus"></i>&nbsp;新增商品</button>
+          <button class="btn btn-success w-50 fw-bold" [routerLink]="['/products', 'createProduct']"><i
+              class="fa fa-plus"></i>&nbsp;新增商品</button>
           <button class="btn btn-primary w-50 fw-bold mx-1" (click)="logSelectedProducts()"><i
               class="fa-solid fa-pencil"></i>&nbsp;批次修改狀態</button>
         </div>

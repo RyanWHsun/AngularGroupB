@@ -1,0 +1,139 @@
+<!-- Header Start -->
+<div class="container-fluid page-header">
+  <div class="container">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+      <h3 class="display-4 text-white text-uppercase">新增商品</h3>
+      <div class="d-inline-flex text-white">
+        <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase"><a class="text-white" [routerLink]="['/products', 'myProduct']">賣家中心</a></p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase">新增商品</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Header End -->
+
+<!-- Booking Start -->
+<div class="container-fluid booking mt-5 pb-5">
+  <div class="container pb-5">
+    <div class="bg-light shadow" style="padding: 30px;">
+      <div class="row align-items-center" style="min-height: 60px;">
+        <div class="col-md-10">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="mb-3 mb-md-0">
+                <!-- <select class="custom-select px-4" style="height: 47px;">
+                  <option selected>Destination</option>
+                  <option value="1">Destination 1</option>
+                  <option value="2">Destination 1</option>
+                  <option value="3">Destination 1</option>
+                </select> -->
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3 mb-md-0">
+                <!-- <div class="date" id="date1" data-target-input="nearest">
+                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Depart Date"
+                    data-target="#date1" data-toggle="datetimepicker" />
+                </div> -->
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3 mb-md-0">
+                <!-- <div class="date" id="date2" data-target-input="nearest">
+                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Return Date"
+                    data-target="#date2" data-toggle="datetimepicker" />
+                </div> -->
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3 mb-md-0">
+                <!-- <select class="custom-select px-4" style="height: 47px;">
+                  <option selected>Duration</option>
+                  <option value="1">Duration 1</option>
+                  <option value="2">Duration 1</option>
+                  <option value="3">Duration 1</option>
+                </select> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="col-md-2">
+          <button class="btn btn-primary btn-block" type="submit"
+            style="height: 47px; margin-top: -2px;">Submit</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Booking End-->
+
+<!-- start your coding here-->
+<!-- Title -->
+<div class="text-center mb-1 pb-1">
+  <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Create Product</h6>
+  <h1>新增商品</h1>
+</div>
+
+<div class="container mt-5">
+  <h2 class="mb-4">新增商品</h2>
+
+  <form [formGroup]="productForm" (ngSubmit)="submitForm()">
+    <!-- 商品名稱 -->
+    <div class="form-group">
+      <label for="productName">商品名稱</label>
+      <input type="text" id="productName" class="form-control" formControlName="fProductName" required />
+      <small *ngIf="productForm.get('fProductName')?.invalid && productForm.get('fProductName')?.touched"
+        class="text-danger">
+        商品名稱至少需要 3 個字元
+      </small>
+    </div>
+
+    <!-- 商品價格 -->
+    <div class="form-group">
+      <label for="productPrice">價格</label>
+      <input type="number" id="productPrice" class="form-control" formControlName="fProductPrice" required />
+    </div>
+
+    <!-- 商品描述 -->
+    <div class="form-group">
+      <label for="productDescription">商品描述</label>
+      <textarea id="productDescription" class="form-control" rows="3" formControlName="fProductDescription"></textarea>
+    </div>
+
+    <!-- 商品狀態 -->
+    <div class="form-group">
+      <label>是否上架</label>
+      <div>
+        <input type="radio" id="onSale" formControlName="fIsOnSales" [value]="true" />
+        <label for="onSale">販售中</label>
+
+        <input type="radio" id="offSale" formControlName="fIsOnSales" [value]="false" />
+        <label for="offSale">未販售</label>
+      </div>
+    </div>
+
+    <!-- 商品庫存 -->
+    <div class="form-group">
+      <label for="productStock">庫存數量</label>
+      <input type="number" id="productStock" class="form-control" formControlName="fStock" required />
+    </div>
+
+    <!-- 圖片上傳 -->
+    <div class="form-group">
+      <label for="productImage">商品圖片</label>
+      <input type="file" class="form-control-file" (change)="onImageSelected($event)" />
+
+      <!-- 預覽圖片 -->
+      <div *ngIf="imagePreview" class="mt-3">
+        <p>圖片預覽:</p>
+        <img [src]="imagePreview" class="img-thumbnail" style="max-width: 200px" />
+      </div>
+    </div>
+
+    <!-- 送出按鈕 -->
+    <button type="submit" class="btn btn-primary mt-3" [disabled]="productForm.invalid">新增商品</button>
+  </form>
+</div>

@@ -35,5 +35,15 @@ export interface myProductList {
   fProductUpdated: string | null;
   fSingleImage: string;
   selected?: boolean; // 用來追蹤 checkbox 是否被選取
+}
 
+export interface createProduct {
+  fProductId?: number;
+  fProductCategoryId: number;
+  fProductName: string;
+  fProductPrice: number;
+  fProductDescription: string;
+  fIsOnSales: boolean;
+  fStock: number;
+  fImage: string[]; // Base64 圖片陣列
 }

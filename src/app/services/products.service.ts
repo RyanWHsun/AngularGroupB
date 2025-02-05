@@ -1,3 +1,4 @@
+import { createProduct } from './../interfaces/products';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
@@ -44,6 +45,11 @@ export class ProductsService {
   getMyProduct(): Observable<myProductList[]> {
     const url = `${this.baseAddress}api/TProducts/myProduct`
     return this.http.get<myProductList[]>(url, { withCredentials: true })
+  }
+
+  createProduct(product: createProduct): Observable<string> {
+    const url = `${this.baseAddress}api/TProducts/`
+    return this.http.post<string>(url, product);
   }
 
 }

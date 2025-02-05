@@ -22,6 +22,8 @@ import { UserEditComponent } from './components/user-edit/user-edit.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { MyarticlesComponent } from './components/myarticles/myarticles.component';
 import { LayoutComponent } from './components/layout/layout.component';
+import { CreateProductComponent } from './components/create-product/create-product.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -41,13 +43,15 @@ import { LayoutComponent } from './components/layout/layout.component';
     UserPageComponent,
     MyarticlesComponent,
     LayoutComponent,
+    CreateProductComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    AgGridModule
+    AgGridModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
