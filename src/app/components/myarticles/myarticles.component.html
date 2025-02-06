@@ -87,7 +87,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="modal" tabindex="-1">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
@@ -96,7 +96,16 @@
         </button>
       </div>
       <div class="modal-body">
-        <ckeditor [editor]="Editor" [(ngModel)]="editorData" [config]="editorConfig"></ckeditor>
+        <div class="main-container">
+          <div class="editor-container editor-container_classic-editor" #editorContainerElement>
+            <div class="editor-container__editor">
+              <div #editorElement>
+                <ckeditor [editor]="Editor" [config]="config" [(ngModel)]="editorData" *ngIf="Editor && config" />
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
