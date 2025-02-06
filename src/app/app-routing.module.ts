@@ -52,6 +52,9 @@ const routes: Routes = [
     }, {
       path: 'createProduct',
       component: CreateProductComponent
+    }, {
+      path: 'editProduct/:id',
+      component: CreateProductComponent
     }]
   },
   {

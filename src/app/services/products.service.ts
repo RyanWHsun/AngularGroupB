@@ -55,4 +55,9 @@ export class ProductsService {
     const url = `${this.baseAddress}api/TProducts/${productId}`
     return this.http.delete<{ message: string }>(url);
   }
+
+  getProductWithUserId(productId: number): Observable<ProductDetail> {
+    const url = `${this.baseAddress}api/TProducts/myProductWithUserId?id=${productId}`
+    return this.http.get<ProductDetail>(url, { withCredentials: true })
+  }
 }

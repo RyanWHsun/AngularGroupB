@@ -1,8 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { myProductList } from './../../interfaces/products';
+import { myProductList, ProductDetail } from './../../interfaces/products';
 import { ProductsService } from './../../services/products.service';
 import { Component } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-product',
@@ -12,6 +13,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export class MyProductComponent {
   myProducts: myProductList[] = []; // 存放 API 回傳的商品列表
   selectedProducts: number[] = []; // 存放選取的商品 ID
+  selectedProduct: ProductDetail | null = null; //單筆商品
   categories: { fProductCategoryId: number; fCategoryName: string; }[] = [];
   selectedFilter: string = 'all';
   filteredProducts: myProductList[] = [];
@@ -22,7 +24,7 @@ export class MyProductComponent {
   isAllSelected: boolean = false; // 預設未全選
 
 
-  constructor(private productsService: ProductsService, private authService: AuthService) { };
+  constructor(private productsService: ProductsService, private authService: AuthService, private router: Router) { };
 
   ngOnInit(): void {
     this.loadMyProduct();
@@ -124,6 +126,17 @@ export class MyProductComponent {
         }
       });
     }
+  }
+
+  editProduct(productId: number): void {
+    this.productsService.getProductWithUserId(productId).subscribe({
+      next: (product) => {
+        this.router.navigate(['/products/editProduct', productId]);
+        console.log(productId);
+      }, error: (error) => {
+        console.error('商品獲取失敗:', error);
+      }
+    });
   }
 
   // 測試回傳選中的商品 ID

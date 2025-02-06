@@ -1,7 +1,8 @@
+import { ProductDetail } from './../../interfaces/products';
 import { ProductsService } from 'src/app/services/products.service';
-import { ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { createProduct } from 'src/app/interfaces/products';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -15,7 +16,8 @@ export class CreateProductComponent implements OnInit {
   imagePreviews: string[] = []; //預覽圖片
   categories: { fProductCategoryId: number; fCategoryName: string; }[] = [];
   maxImages: number = 6;
-
+  isEditMode = false;
+  productId!: number; //存要編輯的商品ID
 
   @ViewChild('fileInput') fileInput!: ElementRef;
 
@@ -23,11 +25,25 @@ export class CreateProductComponent implements OnInit {
     private fb: FormBuilder,
     private productService: ProductsService,
     private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.loadCategories();
-    // 初始化表單
+    this.initForm();
+
+    //取得參數(productId)
+    this.route.paramMap.subscribe(param => {
+      const id = param.get('id');
+      if (id) {
+        this.isEditMode = true;
+        this.productId = parseInt(id, 10);
+        this.loadProductDetails(this.productId);
+      }
+    })
+  }
+  // 初始化表單
+  initForm(): void {
     this.productForm = this.fb.group({
       fProductCategoryId: [1, Validators.required], // 預設類別 ID
       fProductName: ['', [Validators.required, Validators.minLength(3)]],
@@ -38,6 +54,18 @@ export class CreateProductComponent implements OnInit {
       fImage: [[]], // 存放圖片 Base64
     });
   }
+
+  loadProductDetails(productId: number): void {
+    this.productService.getProductWithUserId(productId).subscribe({
+      next: (product) => {
+        console.log("API 回傳的商品資料:", product);
+      },
+      error: (error) => {
+        console.error('獲取商品失敗', error);
+      }
+    })
+  }
+
 
   loadCategories(): void {
     this.productService.getCategories().subscribe({
@@ -118,7 +146,6 @@ export class CreateProductComponent implements OnInit {
     // 發送 API
     const productData: createProduct = this.productForm.value as createProduct;
     console.log("即將發送的商品資料:", productData);
-
     this.productService.createProduct(productData).subscribe({
       next: (response: any) => {
         alert(response.message);

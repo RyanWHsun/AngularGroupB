@@ -177,7 +177,7 @@
             <td>{{ (product.fProductUpdated || product.fProductDateAdd) | date:'yyyy-MM-dd HH:mm:ss' }}</td>
             <!-- 操作按鈕 -->
             <td>
-              <button class="btn btn-success btn-sm">
+              <button class="btn btn-success btn-sm" (click)="editProduct(product.fProductId)">
                 <i class="fa fa-edit"></i> 編輯
               </button>&nbsp;
               <button class="btn btn-danger btn-sm ml-2" (click)="deleteProduct(product.fProductId)">
