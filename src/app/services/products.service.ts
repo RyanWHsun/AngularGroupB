@@ -51,4 +51,8 @@ export class ProductsService {
     return this.http.post<string>(url, product, { withCredentials: true });
   }
 
+  deleteProduct(productId: number): Observable<{ message: string }> {
+    const url = `${this.baseAddress}api/TProducts/${productId}`
+    return this.http.delete<{ message: string }>(url);
+  }
 }

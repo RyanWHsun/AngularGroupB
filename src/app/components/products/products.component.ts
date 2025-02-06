@@ -37,7 +37,6 @@ export class ProductsComponent {
         this.categories = data;
         // 計算總商品數量
         this.totalProductCount = this.categories.reduce((sum, category) => sum + category.productCount, 0);
-
       },
       error: (error) => {
         console.error('沒載到類別哦', error);

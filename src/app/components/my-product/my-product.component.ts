@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { myProductList } from './../../interfaces/products';
 import { ProductsService } from './../../services/products.service';
 import { Component } from '@angular/core';
@@ -31,7 +32,7 @@ export class MyProductComponent {
   loadMyProduct() {
     this.productsService.getMyProduct().subscribe({
       next: (data) => {
-        console.log(data);
+        //console.log(data);
         this.myProducts = data;
         this.updateProductCounts();
         this.filterProductsByStatus('all') //預設顯示全部商品
@@ -108,6 +109,21 @@ export class MyProductComponent {
   // 取得所有被選中的商品 ID
   getSelectedProductIds(): number[] {
     return this.myProducts.filter(product => product.selected).map(product => product.fProductId);
+  }
+
+  deleteProduct(productId: number): void {
+    if (confirm('確定要刪除這個商品嗎?')) {
+      this.productsService.deleteProduct(productId).subscribe({
+        next: (response) => {
+          alert(response.message);
+          this.loadMyProduct(); // 重新載入商品列表
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log('刪除商品失敗:', error);
+          alert(error.error.message || '刪除失敗!');
+        }
+      });
+    }
   }
 
   // 測試回傳選中的商品 ID
