@@ -1,1 +1,116 @@
-<p>user-page works!</p>
+<!-- Header Start -->
+<div class="container-fluid page-header">
+  <div class="container">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+      <h3 class="display-4 text-white text-uppercase">帳戶</h3>
+      <div class="d-inline-flex text-white">
+        <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase">帳戶</p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase">帳戶主頁</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Header End -->
+
+<!-- Booking Start -->
+<!-- Booking End -->
+
+<!-- start your coding here-->
+<div class="container-fluid py-5">
+  <div class="container pt-5 pb-3">
+    <div class="text-center mb-3 pb-3">
+      <h1>會員中心</h1>
+    </div>
+    <!-- 設定行 -->
+    <div class="d-flex flex-row-reverse">
+      <i class="fa-solid fa-gear" style="font-size:30px;color: #5cc1a3;"></i>
+      &nbsp;
+      <i class="fa-solid fa-pen-to-square" style="font-size:30px;color: #5cc1a3;"></i>
+    </div>
+    <hr class="mb-5">
+
+    <!-- 頭像與顯示資料 -->
+    <div class="row mb-3">
+      <div class="col-lg-3 col-md-4 col-sm-6 w-50 mb-3">
+        <img class="img-fluid w-100" [src]="fUserImage" alt="">
+      </div>
+      <div class=" w-50  mb-3">
+        <div class="d-flex align-items-start flex-column h-100">
+          <div class="mb-auto">
+            <h4 class="h4 text-truncate">{{fUserNickName}}</h4>
+            <h5 class="h5 text-primary ">{{fUserName}}</h5>
+          </div>
+          <div>
+            <h6 class="text-truncate">性別:{{fUserSex}}</h6>
+            <h6 class="text-truncate">生日:{{fUserBirthday}}</h6>
+            <h6 class="text-truncate">到來日期:{{fUserComeDate}}</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 導覽頁 -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-white " style="border-radius: 30px 30px 0 0;">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">導覽頁</a>
+        <a class="navbar-brand" href="#">導覽頁</a>
+        <a class="navbar-brand" href="#">導覽頁</a>
+        <a class="navbar-brand" href="#">導覽頁</a>
+
+      </div>
+    </nav>
+
+
+
+    <!-- 主頁內文頁-我的文章標題 -->
+    <div class="w-100">
+      <div class="team-item bg-white mb-4">
+        <div class="team-img position-relative overflow-hidden">
+          <div class="text-center py-4">
+            <h5 class="text-truncate">我的文章</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- 主頁頭像與名字 -->
+      <div class="col-lg-3 col-md-4 col-sm-6 pb-2">
+        <div class="team-item bg-white mb-4">
+          <div class="team-img position-relative overflow-hidden">
+            <img class="img-fluid w-100" [src]="fUserImage" alt="">
+          </div>
+          <div class="text-center py-4">
+            <h5 class="text-truncate">{{fUserName}}</h5>
+            <p class="m-0">{{fUserNickName}}</p>
+          </div>
+        </div>
+      </div>
+      <!-- 與其他頁面的連結 -->
+      <div class="col-lg-3 col-md-4 col-sm-6 pb-2">
+        <div class="team-item bg-white mb-4">
+          <div class="team-img position-relative overflow-hidden">
+            <img class="img-fluid w-100" [src]="fUserImage" alt="">
+          </div>
+          <div class="text-center py-4">
+            <h5 class="text-truncate">{{fUserName}}</h5>
+            <p class="m-0">{{fUserNickName}}</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+  </div>
+</div>

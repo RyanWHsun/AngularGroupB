@@ -1,3 +1,4 @@
+import { NgForm } from '@angular/forms';
 import { UserService } from './../../services/user.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -8,44 +9,29 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserAddComponent {
 
-  ComeDate = "";
 
   // 存放輸入的表單資料
   user = {
-    fUserName: '',
-    fUserNickName: '',
+    fUserName: null,
+    fUserNickName: null,
     fUserRankId: 1,
-    fUserEmail: '',
-    fUserPassword: '',
-    fUserComeDate: '',
-    fUserBirthday: '',
-    fUserPhone: '',
-    fUserSex: '',
-    fUserAddress: '',
-    fUserImage: ''
+    fUserEmail: null,
+    fUserPassword: null,
   };
 
 
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    this.setTodayDate();
-  }
-
-  //設置創建日期
-  setTodayDate() {
-    const nowDate = new Date;
-
-    const year = nowDate.getFullYear();
-    const month = (nowDate.getMonth() + 1).toString().padStart(2, '0');
-    const day = nowDate.getDate().toString().padStart(2, '0');
-
-    this.ComeDate = `${year}-${month}-${day}`;
-    this.user.fUserComeDate = this.ComeDate;
   }
 
   // 送出表單資料
-  submit() {
+  submit(form: NgForm) {
+    if (form.invalid) {  // 檢查表單是否有效
+      console.log('表單驗證不通過');
+      alert('請確保所有欄位都正確填寫！');
+      return;  // 如果表單無效，阻止提交
+    }
     console.log('送出的資料:', this.user);
     this.userService.adduser(this.user).subscribe({
       next: (response) => {
