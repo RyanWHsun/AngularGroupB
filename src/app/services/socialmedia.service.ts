@@ -12,6 +12,9 @@ export class SocialmediaService {
   getMyArticles(): Observable<any> {
     return this.httpClient.get('https://localhost:7112/api/TPosts', { withCredentials: true })
   }
+  postArticle(articleData: any): Observable<any> {
+    return this.httpClient.post('https://localhost:7112/api/TPosts', articleData, { withCredentials: true })
+  }
   getMyImages(postId: number): Observable<any> {
     return this.httpClient.get(`https://localhost:7112/api/TPostImages/${postId}`, { withCredentials: true })
   }

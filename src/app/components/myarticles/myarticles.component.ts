@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { SocialmediaService } from 'src/app/services/socialmedia.service';
 import { loadCKEditorCloud, CKEditorModule, type CKEditorCloudResult, type CKEditorCloudConfig } from '@ckeditor/ckeditor5-angular';
 
 import type { ClassicEditor, EditorConfig } from 'https://cdn.ckeditor.com/typings/ckeditor5.d.ts';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 const LICENSE_KEY =
-  'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NDAwOTU5OTksImp0aSI6IjAyNDhiMTFhLTU0ZDQtNDIzZi04NTFmLWEyYTA2ODIzY2FiZCIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImEwOWU3ZDIwIn0.vxr1VsfKg7W4Q58SL66gRKE3eqcERkRaMXA4AZyywVzwS9vx0O6WLlIkuNrWFTBn1Q34TeRofuRdm-Z1mDRlqw';
+  'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NzA0MjIzOTksImp0aSI6ImExZTliZjBiLWVjMGQtNDk2NC1hODViLTVjNmIyMmU4OGNhOCIsImxpY2Vuc2VkSG9zdHMiOlsiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJ1c2FnZUVuZHBvaW50IjoiaHR0cHM6Ly9wcm94eS1ldmVudC5ja2VkaXRvci5jb20iLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIl0sImxpY2Vuc2VUeXBlIjoiZGV2ZWxvcG1lbnQiLCJmZWF0dXJlcyI6WyJEUlVQIl0sInZjIjoiMGUxZDNiNzEifQ.4G8fSCo115sDjTwTgDE4jCCoH6KEZTd3nmdDQsh0KjNYEFUyc5eG-WJ430tGqEHkw3m9lIkwE_2pOfkeWetb8g';
 const cloudConfig = {
   version: '44.1.0'
 } satisfies CKEditorCloudConfig;
@@ -17,14 +18,23 @@ const cloudConfig = {
 export class MyarticlesComponent {
   Editor: typeof ClassicEditor | null = null;
   config: EditorConfig | null = null;
+  articleTitle = '';
   editorData = '';
   datas = [];
+  finalData: SafeHtml = '';
   imageData: { [key: number]: string[] } = {};
-  constructor(private socialmediaService: SocialmediaService) { };
+  constructor(private socialmediaService: SocialmediaService, private cdr: ChangeDetectorRef, private sanitizer: DomSanitizer) { };
   ngOnInit(): void {
     this.get();
     loadCKEditorCloud(cloudConfig).then(this._setupEditor.bind(this));
   }
+  ngAfterViewInit() {
+    $('#modal').on('hide.bs.modal', () => {
+      this.editorData = '';
+      this.cdr.detectChanges();
+    });
+  }
+
   loadImages(postId: number) {
     this.socialmediaService.getMyImages(postId).subscribe(data => {
       this.imageData[postId] = data.map((imageBase64: string) => 'data:image/jpeg;base64,' + imageBase64);
@@ -32,11 +42,19 @@ export class MyarticlesComponent {
   }
   get() {
     this.socialmediaService.getMyArticles().subscribe(data => {
-      // console.log('api', data);
+      console.log('api', data);
       this.datas = data;
       this.datas.forEach(post => {
         this.loadImages(post['fPostId']);
       });
+    });
+  }
+  save() {
+    this.finalData = this.sanitizer.bypassSecurityTrustHtml(this.editorData);
+    this.socialmediaService.postArticle({
+      FContent: this.editorData
+    }).subscribe(response => {
+      console.log('文章發佈成功', response)
     })
   }
   //
@@ -49,10 +67,8 @@ export class MyarticlesComponent {
       Essentials,
       FontBackgroundColor,
       FontColor,
-      FontFamily,
       FontSize,
       Heading,
-      Highlight,
       HorizontalLine,
       Indent,
       IndentBlock,
@@ -71,7 +87,6 @@ export class MyarticlesComponent {
           'heading',
           '|',
           'fontSize',
-          'fontFamily',
           'fontColor',
           'fontBackgroundColor',
           '|',
@@ -81,8 +96,6 @@ export class MyarticlesComponent {
           'strikethrough',
           '|',
           'horizontalLine',
-          'highlight',
-          '|',
           'alignment',
           '|',
           'bulletedList',
@@ -100,10 +113,8 @@ export class MyarticlesComponent {
         Essentials,
         FontBackgroundColor,
         FontColor,
-        FontFamily,
         FontSize,
         Heading,
-        Highlight,
         HorizontalLine,
         Indent,
         IndentBlock,
@@ -170,5 +181,4 @@ export class MyarticlesComponent {
       placeholder: '請輸入內容!'
     };
   }
-  //
 }
