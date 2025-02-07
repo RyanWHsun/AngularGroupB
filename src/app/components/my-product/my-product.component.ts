@@ -38,11 +38,18 @@ export class MyProductComponent {
         this.myProducts = data;
         this.updateProductCounts();
         this.filterProductsByStatus('all') //預設顯示全部商品
+        console.log(this.myProducts);
       },
       error: (error) => {
         console.log('沒抓到商品哦', error);
+        alert('請先登入會員!')
+        this.router.navigate(['user/login']);
       }
     })
+    setTimeout(() => {
+      const scrollY = window.innerHeight * 0.6; //視窗高度百分比
+      window.scrollTo({ top: scrollY, behavior: 'smooth' });
+    }, 200);
   }
 
   loadCategories(): void {
@@ -57,6 +64,9 @@ export class MyProductComponent {
   }
 
   filterByCategory() {
+    // 清空所有選中的商品
+    this.myProducts.forEach(product => product.selected = false);
+    this.isAllSelected = false; // 取消全選
     if (this.selectedCategory) {
       //console.log(this.selectedCategory);
       this.filteredProducts = this.myProducts.filter(p => p.fProductCategoryId == this.selectedCategory)
@@ -66,6 +76,9 @@ export class MyProductComponent {
   }
 
   searchProducts(): void {
+    // 清空所有選中的商品
+    this.myProducts.forEach(product => product.selected = false);
+    this.isAllSelected = false; // 取消全選
     if (this.searchKeyword.trim() !== '') {
       this.filteredProducts = this.myProducts.filter(p =>
         p.fProductName.toLowerCase().includes(this.searchKeyword.toLowerCase())
@@ -82,6 +95,9 @@ export class MyProductComponent {
 
   filterProductsByStatus(filterType: string): void {
     this.selectedFilter = filterType;
+    // 清空所有選中的商品
+    this.myProducts.forEach(product => product.selected = false);
+    this.isAllSelected = false; // 取消全選
     if (filterType === 'all') {
       this.filteredProducts = [...this.myProducts]; // 重新賦值，確保畫面更新
     } else if (filterType === 'onSale') {
@@ -92,25 +108,12 @@ export class MyProductComponent {
   }
 
   resetFilters(): void {
+    // 清空所有選中的商品
+    this.myProducts.forEach(product => product.selected = false);
+    this.isAllSelected = false; // 取消全選
     this.selectedCategory = '';
     this.searchKeyword = '';
     this.filteredProducts = [...this.myProducts]; // 重置為全部
-  }
-
-  // 切換全選狀態
-  toggleSelectAll(event: Event): void {
-    this.isAllSelected = (event.target as HTMLInputElement).checked;
-    this.myProducts.forEach(product => product.selected = this.isAllSelected);
-  }
-  // 監聽個別 checkbox 變化
-  updateSelectAllStatus(): void {
-    this.isAllSelected = this.myProducts.every(product => product.selected);
-    console.log();
-  }
-
-  // 取得所有被選中的商品 ID
-  getSelectedProductIds(): number[] {
-    return this.myProducts.filter(product => product.selected).map(product => product.fProductId);
   }
 
   deleteProduct(productId: number): void {
@@ -139,7 +142,41 @@ export class MyProductComponent {
     });
   }
 
-  // 測試回傳選中的商品 ID
+  //批次切換狀態
+  batchChangeStatus(): void {
+    const selectedIds = this.getSelectedProductIds();
+    if (selectedIds.length === 0) {
+      alert('請至少選擇一筆商品!');
+      return;
+    }
+    this.productsService.batchUpdateStatus(selectedIds).subscribe({
+      next: (response) => {
+        alert(response.message);
+        this.loadMyProduct();
+      },
+      error: (error) => {
+        console.log('批次更新失敗', error);
+        alert('批次更新失敗');
+      }
+    });
+  }
+
+  // 切換全選狀態
+  toggleSelectAll(event: Event): void {
+    this.isAllSelected = (event.target as HTMLInputElement).checked;
+    this.filteredProducts.forEach(product => product.selected = this.isAllSelected);
+  }
+  // 監聽個別 checkbox 變化
+  updateSelectAllStatus(): void {
+    this.isAllSelected = this.filteredProducts.every(product => product.selected);
+  }
+
+  // 取得所有被選中的商品 ID
+  getSelectedProductIds(): number[] {
+    return this.filteredProducts.filter(product => product.selected).map(product => product.fProductId);
+  }
+
+  // 測試回傳選中的商品 I D
   logSelectedProducts(): void {
     console.log(this.getSelectedProductIds());
   }

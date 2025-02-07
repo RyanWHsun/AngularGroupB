@@ -109,7 +109,7 @@
         <div class="col-md-4 d-flex align-items-center">
           <button class="btn btn-success w-50 fw-bold" [routerLink]="['/products', 'createProduct']"><i
               class="fa fa-plus"></i>&nbsp;新增商品</button>
-          <button class="btn btn-primary w-50 fw-bold mx-1" (click)="logSelectedProducts()"><i
+          <button class="btn btn-primary w-50 fw-bold mx-1" (click)="batchChangeStatus()"><i
               class="fa-solid fa-pencil"></i>&nbsp;批次修改狀態</button>
         </div>
         <!-- Category Select -->
@@ -155,7 +155,7 @@
           <tr *ngFor="let product of filteredProducts">
             <!-- 選取方塊 -->
             <td>
-              <input type="checkbox" [(ngModel)]="product.selected" />
+              <input type="checkbox" (change)="updateSelectAllStatus()" [(ngModel)]="product.selected" />
             </td>
             <!-- 圖片 -->
             <td>
@@ -187,7 +187,6 @@
           </tr>
         </tbody>
       </table>
-
     </div>
   </div>
 </div>

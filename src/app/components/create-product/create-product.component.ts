@@ -80,8 +80,8 @@ export class CreateProductComponent implements OnInit {
 
       },
       error: (error) => {
-        alert('獲取商品失敗,請聯繫客服')
-        console.error('獲取商品失敗', error);
+        alert(error.error)
+        //console.error('獲取商品失敗', error);
       }
     })
   }
@@ -129,7 +129,7 @@ export class CreateProductComponent implements OnInit {
         const reader = new FileReader();
         reader.onload = () => {
           this.imagePreviews.push(reader.result as string);
-          console.log("目前預覽圖片:", this.imagePreviews);
+          //console.log("目前預覽圖片:", this.imagePreviews);
         };
         reader.readAsDataURL(file);
       }
@@ -161,7 +161,7 @@ export class CreateProductComponent implements OnInit {
 
     // 發送 API
     const productData: createProduct = this.productForm.value as createProduct;
-    console.log("即將發送的商品資料:", productData);
+    //console.log("即將發送的商品資料:", productData);
 
     if (this.isEditMode) {
       productData.fProductId = this.productId;
@@ -199,11 +199,11 @@ export class CreateProductComponent implements OnInit {
         return new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
           reader.onload = () => {
-            console.log("圖片讀取成功:", file.name);
+            //console.log("圖片讀取成功:", file.name);
             resolve((reader.result as string).split(',')[1]); // 只取 Base64
           };
           reader.onerror = () => {
-            console.error("讀取圖片失敗:", file.name);
+            //console.error("讀取圖片失敗:", file.name);
             reject("讀取失敗");
           };
           reader.readAsDataURL(file);

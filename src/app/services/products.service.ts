@@ -65,4 +65,9 @@ export class ProductsService {
     const url = `${this.baseAddress}api/TProducts/${product.fProductId}`;
     return this.http.put<string>(url, product);
   }
+
+  batchUpdateStatus(productIds: number[]): Observable<any> {
+    const url = `${this.baseAddress}api/TProducts/batchUpdateStatus`;
+    return this.http.put(url, productIds, { withCredentials: true });
+  }
 }
