@@ -2,86 +2,28 @@
 <div class="container-fluid page-header">
   <div class="container">
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
-      <h3 class="display-4 text-white text-uppercase">新增商品</h3>
+      <h3 class="display-4 text-white text-uppercase">{{titleName}}</h3>
       <div class="d-inline-flex text-white">
         <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
         <i class="fa fa-angle-double-right pt-1 px-3"></i>
         <p class="m-0 text-uppercase"><a class="text-white" [routerLink]="['/products', 'myProduct']">賣家中心</a></p>
         <i class="fa fa-angle-double-right pt-1 px-3"></i>
-        <p class="m-0 text-uppercase">新增商品</p>
+        <p class="m-0 text-uppercase">{{titleName}}</p>
       </div>
     </div>
   </div>
 </div>
 <!-- Header End -->
 
-<!-- Booking Start -->
-<div class="container-fluid booking mt-5 pb-5">
-  <div class="container pb-5">
-    <div class="bg-light shadow" style="padding: 30px;">
-      <div class="row align-items-center" style="min-height: 60px;">
-        <div class="col-md-10">
-          <div class="row">
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <!-- <select class="custom-select px-4" style="height: 47px;">
-                  <option selected>Destination</option>
-                  <option value="1">Destination 1</option>
-                  <option value="2">Destination 1</option>
-                  <option value="3">Destination 1</option>
-                </select> -->
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <!-- <div class="date" id="date1" data-target-input="nearest">
-                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Depart Date"
-                    data-target="#date1" data-toggle="datetimepicker" />
-                </div> -->
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <!-- <div class="date" id="date2" data-target-input="nearest">
-                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Return Date"
-                    data-target="#date2" data-toggle="datetimepicker" />
-                </div> -->
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <!-- <select class="custom-select px-4" style="height: 47px;">
-                  <option selected>Duration</option>
-                  <option value="1">Duration 1</option>
-                  <option value="2">Duration 1</option>
-                  <option value="3">Duration 1</option>
-                </select> -->
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- <div class="col-md-2">
-          <button class="btn btn-primary btn-block" type="submit"
-            style="height: 47px; margin-top: -2px;">Submit</button>
-        </div> -->
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Booking End-->
 
 <!-- start your coding here-->
 <!-- Title -->
-<div class="text-center mb-1 pb-1">
-  <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Create Product</h6>
-  <h1>新增商品</h1>
-</div>
 
-<div class="container-fluid py-1">
+<div class="container-fluid mt-5 py-1">
   <div class="container">
     <form [formGroup]="productForm" (ngSubmit)="submitForm()">
       <div class="row mt-3 mb-3 justify-content-center">
-        <div class="col-5 bg-light shadow mx-3 p-4">
+        <div class="col-5 bg-light shadow mx-4 p-4">
           <!-- 商品名稱 -->
           <div class=" form-group">
             <label for="productName"><i class="fa-solid fa-cube icon"></i>&nbsp;&nbsp;商品名稱</label>
@@ -139,7 +81,7 @@
           </div>
           <!-- 送出按鈕 -->
           <button type="submit" class="btn btn-success " [disabled]="productForm.invalid"><i
-              class="fa-solid fa-square-check"></i>&nbsp;新增商品</button>
+              class="fa-solid fa-square-check"></i>&nbsp;{{titleName}}</button>
           <button class="btn btn-primary m-3" [routerLink]="['/products', 'myProduct']"><i
               class="fa-solid fa-square-xmark"></i>&nbsp;返回</button>
         </div>

@@ -60,4 +60,9 @@ export class ProductsService {
     const url = `${this.baseAddress}api/TProducts/myProductWithUserId?id=${productId}`
     return this.http.get<ProductDetail>(url, { withCredentials: true })
   }
+
+  updateProduct(product: createProduct): Observable<string> {
+    const url = `${this.baseAddress}api/TProducts/${product.fProductId}`;
+    return this.http.put<string>(url, product);
+  }
 }

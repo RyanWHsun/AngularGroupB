@@ -1,4 +1,3 @@
-import { ProductDetail } from './../../interfaces/products';
 import { ProductsService } from 'src/app/services/products.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { createProduct } from 'src/app/interfaces/products';
@@ -18,6 +17,8 @@ export class CreateProductComponent implements OnInit {
   maxImages: number = 6;
   isEditMode = false;
   productId!: number; //存要編輯的商品ID
+  titleName = '新增商品'
+
 
   @ViewChild('fileInput') fileInput!: ElementRef;
 
@@ -37,10 +38,15 @@ export class CreateProductComponent implements OnInit {
       const id = param.get('id');
       if (id) {
         this.isEditMode = true;
+        this.titleName = '編輯商品'
         this.productId = parseInt(id, 10);
         this.loadProductDetails(this.productId);
       }
     })
+    setTimeout(() => {
+      const scrollY = window.innerHeight * 0.2; //視窗高度百分比
+      window.scrollTo({ top: scrollY, behavior: 'smooth' });
+    }, 200);
   }
   // 初始化表單
   initForm(): void {
@@ -58,14 +64,27 @@ export class CreateProductComponent implements OnInit {
   loadProductDetails(productId: number): void {
     this.productService.getProductWithUserId(productId).subscribe({
       next: (product) => {
-        console.log("API 回傳的商品資料:", product);
+        //console.log("API 回傳的商品資料:", product);
+        this.productForm.patchValue({
+          fProductCategoryId: product.fProductCategoryId,
+          fProductName: product.fProductName,
+          fProductPrice: product.fProductPrice,
+          fProductDescription: product.fProductDescription,
+          fIsOnSales: product.fIsOnSales,
+          fStock: product.fStock
+        });
+        //圖片
+        if (product.fImage && product.fImage.length > 0) {
+          this.imagePreviews = product.fImage.map(img => `data:image/png;base64,${img}`);
+        }
+
       },
       error: (error) => {
+        alert('獲取商品失敗,請聯繫客服')
         console.error('獲取商品失敗', error);
       }
     })
   }
-
 
   loadCategories(): void {
     this.productService.getCategories().subscribe({
@@ -123,22 +142,19 @@ export class CreateProductComponent implements OnInit {
     this.imagePreviews.splice(index, 1);
   }
 
+
   // 送出表單
   async submitForm(): Promise<void> {
     if (this.productForm.invalid) {
       alert('請填寫完整的商品資訊');
       return;
     }
-
-    console.log("開始轉換圖片為 Base64...");
     const base64Images = await this.convertImagesToBase64();
-    console.log("轉換完成的 Base64 圖片:", base64Images);
-
-    if (base64Images.length === 0) {
+    //console.log("轉換完成的 Base64 圖片:", base64Images);
+    if (base64Images.length === 0 && this.imagePreviews.length === 0) {
       alert('請至少上傳一張圖片');
       return;
     }
-
     this.productForm.patchValue({
       fImage: base64Images
     });
@@ -146,27 +162,38 @@ export class CreateProductComponent implements OnInit {
     // 發送 API
     const productData: createProduct = this.productForm.value as createProduct;
     console.log("即將發送的商品資料:", productData);
-    this.productService.createProduct(productData).subscribe({
-      next: (response: any) => {
-        alert(response.message);
-        this.router.navigate(['/products/myProduct']);
-      },
-      error: (error) => {
-        console.error('新增商品失敗:', error);
-        alert(error.message);
-      },
-    });
-  }
 
+    if (this.isEditMode) {
+      productData.fProductId = this.productId;
+      this.productService.updateProduct(productData).subscribe({
+        next: (response: any) => {
+          alert(response.message);
+          this.router.navigate(['/products/myProduct']);
+        }, error: (error) => {
+          alert(error.message);
+          console.error('修改商品失敗', error);
+        }
+      });
+    } else {
+      this.productService.createProduct(productData).subscribe({
+        next: (response: any) => {
+          alert(response.message);
+          this.router.navigate(['/products/myProduct']);
+        },
+        error: (error) => {
+          alert(error.message);
+          console.error('新增商品失敗:', error);
+        },
+      });
+    }
+  }
 
   private async convertImagesToBase64(): Promise<string[]> {
     if (this.selectedImages.length === 0) {
       console.warn("沒有圖片可轉換");
       return [];
     }
-
     console.log("開始轉換 Base64，圖片數量:", this.selectedImages.length);
-
     return Promise.all(
       this.selectedImages.map(file => {
         return new Promise<string>((resolve, reject) => {
