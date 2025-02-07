@@ -19,65 +19,7 @@
 <!-- Booking End -->
 
 <!-- start your coding here-->
-<!-- <div class="container-fluid booking mt-5 pb-5">
-  <div class="container pb-5">
-    <div class="bg-light shadow" style="padding: 30px;">
-      <div class="row align-items-center" style="min-height: 60px;">
-        <div class="col-md-10">
-          <div class="row">
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <select class="custom-select px-4" style="height: 47px;">
-                  <option selected>Destination</option>
-                  <option value="1">Destination 1</option>
-                  <option value="2">Destination 1</option>
-                  <option value="3">Destination 1</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <div class="date" id="date1" data-target-input="nearest">
-                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Depart Date"
-                    data-target="#date1" data-toggle="datetimepicker" />
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <div class="date" id="date2" data-target-input="nearest">
-                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Return Date"
-                    data-target="#date2" data-toggle="datetimepicker" />
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <select class="custom-select px-4" style="height: 47px;">
-                  <option selected>Duration</option>
-                  <option value="1">Duration 1</option>
-                  <option value="2">Duration 1</option>
-                  <option value="3">Duration 1</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <button class="btn btn-primary btn-block" type="submit"
-            style="height: 47px; margin-top: -2px;">Submit</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
- -->
-
-
-
-<!-- 測試完畢 -->
 <div class="container-fluid booking mt-5 pb-5">
-  <!-- <div class="container-fluid booking py-5"> -->
   <div class="container pt-5 pb-3">
     <!-- <div class="text-center mb-3 pb-3">
       <h1>會員中心</h1>
@@ -87,7 +29,7 @@
     <!-- 頭像 -->
     <div class="container-fluid booking mb-3">
       <div class="container col-lg-4 col-md-4 col-sm-6 w-75 mb-3">
-        <img class="img-fluid w-100" [src]="fUserImage" alt="">
+        <img class="img-fluid w-100" style="border-radius: 15px;" [src]="fUserImage" alt="">
       </div>
     </div>
 
@@ -95,75 +37,157 @@
     <div class="container-fluid mb-3">
       <div class="d-flex align-items-start flex-column h-100">
         <div class="container">
-          <h4 class="text-truncate text-center">{{fUserNickName}}&nbsp;<i class="fa-solid fa-pen-to-square"
-              style="font-size:30px;color: #5cc1a3;"></i></h4>
-          <h5 class="text-primary  text-center">{{fUserName}}</h5>
+          <h4 class="text-truncate text-center">{{fUserNickName}}</h4>
+          <h5 class="text-primary  text-center">{{user?.FUserName}}</h5>
+          <hr>
+          <div class="w-100 d-flex justify-content-evenly">
+            <h5 class="text-primary  text-center mx-auto">性別：{{fUserSex}}</h5>
+            <h5 class="text-primary  text-center mx-auto">生日：{{fUserBirthday}}</h5>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- 三常用 -->
     <div class=" container-fluid mb-3">
-      <div class="container row justify-content-center">
+      <div class="container d-flex justify-content-evenly w-100">
 
-        <button type="button" class="mx-auto btn btn-outline-light" style="border-radius: 15px;border:solid 0px;">
+        <button type="button" class="mx-auto btn btn-outline-secondary">
           <div class="bg-white p-3" style="border-radius: 15px; border:solid 3px; border-color: #BAD8A8;">
-            <i class="fa-solid fa-sack-dollar" style="color: #56bda9;font-size:50px"></i>
+            <i class="fa-solid fa-cart-shopping" style="color: #56bda9;font-size:40px"></i>
           </div>
+          <p class="mb-0">購物車</p>
+
         </button>
 
-        <button type="button" class="mx-auto btn btn-outline-light" style="border-radius: 15px;border:solid 0px;">
+        <button type="button" class="mx-auto btn btn-outline-secondary">
           <div class="bg-white p-3" style="border-radius: 15px; border:solid 3px; border-color: #BAD8A8;">
-            <i class="fa-solid fa-sack-dollar" style="color: #56bda9;font-size:50px"></i>
+            <i class="fa-solid fa-sack-dollar" style="color: #56bda9;font-size:40px"></i>
           </div>
+          <p class="mb-0">點數</p>
         </button>
 
-        <button type="button" class="mx-auto btn btn-outline-light" style="border-radius: 15px;border:solid 0px;">
+        <button type="button" class="mx-auto btn btn-outline-secondary">
           <div class="bg-white p-3" style="border-radius: 15px; border:solid 3px; border-color: #BAD8A8;">
-            <i class="fa-solid fa-sack-dollar" style="color: #56bda9;font-size:50px"></i>
+            <i class="fa-solid fa-pen" style="color: #56bda9;font-size:40px"></i>
           </div>
+          <p class="mb-0">修改資料</p>
         </button>
 
       </div>
     </div>
 
-    <!-- 導覽頁 -->
-    <div class="bg-white rounded-4">
-      <div class="bg-white mb-3 d-flex justify-content-evenly ">
-        <a class="navbar-brand mx-auto nav-item nav-link" href="#">會員中心</a>
-        <a class="navbar-brand mx-auto nav-item nav-link" href="#">我的點數</a>
-      </div>
-    </div>
 
     <!-- 按鈕們 -->
-    <button class="w-100" style="background-color: #BAD8A8;">123456</button>
+    <a class="nav-link" [routerLink]="['/user/edit']">
+      <div class="w-100 p-1 mb-3"
+        style="border-radius:15px;border: solid 3px; border-color:#BAD8A8; background-color: #ffffff;">
 
-
-    <div class="row">
-      <!-- 主頁頭像與名字 -->
-      <!-- <div class="col-lg-3 col-md-4 col-sm-6 pb-2">
-        <div class="team-item bg-white mb-4">
-          <div class="team-img position-relative overflow-hidden">
-            <img class="img-fluid w-100" [src]="fUserImage" alt="">
+        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #BAD8A8;">
+          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-pen-to-square"></i></h4>
+          <div>
+            <h4 class="mb-0 text-white">我的票卷</h4>
           </div>
-          <div class="text-center py-4">
-            <h5 class="text-truncate">{{fUserName}}</h5>
-            <p class="m-0">{{fUserNickName}}</p>
-          </div>
+          <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
         </div>
-      </div> -->
-      <!-- 與其他頁面的連結 -->
+      </div>
+    </a>
 
+    <a class="nav-link" [routerLink]="['/user/edit']">
+      <div class="w-100 p-1 mb-3"
+        style="border-radius:15px;border: solid 3px; border-color:#BAD8A8; background-color: #ffffff;">
 
-    </div>
+        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #BAD8A8;">
+          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-pen-to-square"></i></h4>
+          <div>
+            <h4 class="mb-0 text-white">我的活動</h4>
+          </div>
+          <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
+        </div>
+      </div>
+    </a>
 
+    <a class="nav-link" [routerLink]="['/user/edit']">
+      <div class="w-100 p-1 mb-3"
+        style="border-radius:15px;border: solid 3px; border-color:#BAD8A8; background-color: #ffffff;">
 
+        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #BAD8A8;">
+          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-pen-to-square"></i></h4>
+          <div>
+            <h4 class="mb-0 text-white">我的文章</h4>
+          </div>
+          <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
+        </div>
+      </div>
+    </a>
 
+    <a class="nav-link" [routerLink]="['/user/edit']">
+      <div class="w-100 p-1 mb-3"
+        style="border-radius:15px;border: solid 3px; border-color:#BAD8A8; background-color: #ffffff;">
 
+        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #BAD8A8;">
+          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-pen-to-square"></i></h4>
+          <div>
+            <h4 class="mb-0 text-white">我的商品</h4>
+          </div>
+          <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
+        </div>
+      </div>
+    </a>
 
+    <a class="nav-link" [routerLink]="['/user/edit']">
+      <div class="w-100 p-1 mb-3"
+        style="border-radius:15px;border: solid 3px; border-color:#BAD8A8; background-color: #ffffff;">
 
+        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #BAD8A8;">
+          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-cart-shopping"></i></h4>
+          <div>
+            <h4 class="mb-0 text-white">我的購物車</h4>
+          </div>
+          <h4 class="mb-0 text-white"><i class=" fa fa-angle-double-right px-3  "></i></h4>
+        </div>
+      </div>
+    </a>
+    <a class="nav-link" [routerLink]="['/user/edit']">
+      <div class="w-100 p-1 mb-3"
+        style="border-radius:15px;border: solid 3px; border-color:#BAD8A8; background-color: #ffffff;">
 
+        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #BAD8A8;">
+          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-sack-dollar"></i></h4>
+          <div>
+            <h4 class="mb-0 text-white">我的點數</h4>
+          </div>
+          <h4 class="mb-0 text-white"><i class=" fa fa-angle-double-right px-3  "></i></h4>
+        </div>
+      </div>
+    </a>
 
+    <hr>
 
+    <a class="nav-link" [routerLink]="['/user/edit']">
+      <div class="w-100 p-1 mb-3"
+        style="border-radius:15px;border: solid 3px; border-color:#c5c5c5; background-color: #ffffff;">
+        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #c5c5c5;">
+          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-pen"></i></h4>
+          <div>
+            <h4 class="mb-0 text-white">修改資料</h4>
+          </div>
+          <h4 class="mb-0 text-white"><i class=" fa fa-angle-double-right px-3" style="color: #ebbaba;"></i></h4>
+        </div>
+      </div>
+    </a>
+
+    <a class="nav-link">
+      <div class="w-100 p-1 mb-3 nav-link"
+        style="border-radius:15px;border: solid 3px; border-color:#ebbaba; background-color: #ffffff;">
+        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #ebbaba;">
+          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-right-from-bracket"></i></h4>
+          <div>
+            <h4 class="mb-0 text-white">登出</h4>
+          </div>
+          <h4 class="mb-0 text-white"><i class=" fa fa-angle-double-right px-3" style="color: #ebbaba;"></i></h4>
+        </div>
+      </div>
+    </a>
   </div>
 </div>

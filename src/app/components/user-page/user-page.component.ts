@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { userMaterial } from './../../interfaces/user';
+import { Component, OnInit } from '@angular/core';
+import { data, error } from 'jquery';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -7,6 +9,10 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./user-page.component.css']
 })
 export class UserPageComponent {
+
+
+  user: userMaterial | null = null;  // 用來儲存用戶資料
+  userId: number | null = null;  // 儲存從本地存儲中取得的 userId
 
   constructor(private userService: UserService) { }
 
@@ -19,5 +25,24 @@ export class UserPageComponent {
   fUserComeDate = "2025-02-06";
 
 
+  ngOnInit(): void {
+    this.loadUser(2);
+  }
+
+  loadUser(userId: number) {
+    this.userService.getUser(userId).subscribe(
+      (data) => {
+        this.user = data;
+
+        console.log(data);
+        console.log(this.user);
+      }
+    )
+  }
+
 
 }
+
+
+
+

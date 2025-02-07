@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { userMaterial } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,8 @@ export class UserService {
   constructor(private userclient: HttpClient) { }
 
   // 取得資料
-  getUser(userid: any): Observable<any> {
-    return this.userclient.get(`${this.baseAddress}api/TUsers/${userid}`);
+  getUser(userId: number): Observable<userMaterial[]> {
+    return this.userclient.get<userMaterial[]>(`${this.baseAddress}api/TUsers/${userId}`, { withCredentials: true });
   }
 
   //修改資料
