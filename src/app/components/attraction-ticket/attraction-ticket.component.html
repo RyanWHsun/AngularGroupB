@@ -1,0 +1,224 @@
+<!-- ticket.component.html -->
+<div class="container mt-4">
+  <!-- Menu -->
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [ngClass]="{ 'active-tab': menuIsActive }"
+        (click)="toggleAll()"
+      >
+        全部票券
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [ngClass]="{ 'active-tab': !menuIsActive }"
+        (click)="togglePopular()"
+      >
+        熱賣票券
+      </button>
+    </li>
+  </ul>
+
+  <!-- View Mode Toggle -->
+  <div class="d-flex justify-content-end mt-3">
+    <button
+      class="btn btn-outline-primary"
+      [ngClass]="{ active: viewModeIsActive }"
+      (click)="setViewMode('grid')"
+    >
+      <img src="assets/images/menu.png" alt="格狀顯示" />
+    </button>
+    <button
+      class="btn btn-outline-primary ml-2"
+      [ngClass]="{ active: !viewModeIsActive }"
+      (click)="setViewMode('list')"
+    >
+      <img src="assets/images/list.png" alt="條列顯示" />
+    </button>
+  </div>
+
+  <!-- Ticket List -->
+  <div [ngSwitch]="viewMode">
+    <!-- Grid View -->
+    <div class="container mt-4">
+      <div class="row" *ngSwitchCase="'grid'">
+        <!-- Card -->
+        <!-- 使用 let i = index 獲取目前的索引。 -->
+        <div
+          class="col-md-4"
+          *ngFor="let ticket of partialAttractionTickets; let i = index"
+        >
+          <div class="card">
+            <div class="views"><i class="fas fa-eye"></i> {{ 99999 }}</div>
+            <img
+              [src]="ticket.fimageSrc || 'assets/images/noImage.jpg'"
+              class="card-img-top"
+              [alt]="ticket.fAttractionName"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{ ticket.fAttractionName }}</h5>
+              <div class="tags">{{ attractionDescription[i] }}</div>
+              <button
+                (click)="showTicketModal(ticket, attractionDescription[i])"
+                data-toggle="modal"
+                data-target="#exampleModalCenter"
+              >
+                <i class="fa-solid fa-cart-shopping"></i>
+                購買
+              </button>
+              <!-- <div class="tags ticketPrice">
+                {{ ticket.fPrice | currency : "TWD" : "symbol" : "1.0-0" }}
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- List View -->
+    <div class="container mt-4">
+      <div *ngSwitchCase="'list'">
+        <div class="list-container">
+          <div
+            class="list-item"
+            *ngFor="let ticket of partialAttractionTickets; let i = index"
+          >
+            <div class="image">
+              <img
+                [src]="ticket.fimageSrc || 'assets/images/noImage.jpg'"
+                [alt]="ticket.fAttractionName"
+              />
+            </div>
+            <div class="details">
+              <div class="views"><i class="fas fa-eye"></i> {{ 99999 }}</div>
+              <h3>{{ ticket.fAttractionName }}</h3>
+              <p>{{ attractionDescription[i] }}</p>
+              <!-- <p>
+                {{ ticket.fPrice | currency : "TWD" : "symbol" : "1.0-0" }}
+              </p> -->
+              <div class="button-container">
+                <button
+                  type="button"
+                  class="btn"
+                  (click)="showTicketModal(ticket, attractionDescription[i])"
+                  data-toggle="modal"
+                  data-target="#exampleModalCenter"
+                >
+                  購買
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="exampleModalCenter"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">
+            {{ buyTicketModal.attractionName }}
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <img
+            [src]="buyTicketModal.imageSrc || 'assets/images/noImage.jpg'"
+            class="modal-image"
+            [alt]="buyTicketModal.attractionName"
+          />
+          <div class="tags">{{ buyTicketModal.attractionDescription }}</div>
+          <!-- 票種下拉式選單 -->
+          <select #ticketTypeSelect (change)="setTicketPrice($event)">
+            <option value="">請選擇分類</option>
+            <option
+              *ngFor="let type of buyTicketModal.attractionTicketType"
+              [value]="type"
+            >
+              {{ type }}
+            </option>
+          </select>
+          <div class="tags">
+            {{ selectedPrice | currency : "TWD" : "symbol" : "1.0-0" }}
+          </div>
+          <button (click)="subTicketQuantity()">
+            <i class="fa-solid fa-minus"></i>
+          </button>
+          <input type="text" [(ngModel)]="buyTicketModal.attractionTicketQuantity" (change)="changeTicketQty()"/>
+          <button (click)="addTicketQuantity()">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+          <div>
+            {{
+              selectedPrice! * buyTicketModal.attractionTicketQuantity!
+                | currency : "TWD" : "symbol" : "1.0-0"
+            }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            取消
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-success"
+            (click)="addTicketToShoppingCart(buyTicketModal)"
+            [disabled]="isDisabled"
+          >
+            <i class="fa-solid fa-cart-shopping"></i>加入購物車
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <nav aria-label="..." class="d-flex justify-content-center">
+    <ul class="pagination">
+      <!-- 上一頁 -->
+      <li class="page-item" (click)="clickPreviousPage()">
+        <a class="page-link" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+      <!-- 頁碼 -->
+      <div *ngFor="let index of pages">
+        <li
+          class="page-item"
+          [ngClass]="{ active: selectedPageIndex === index }"
+          (click)="setSelectedPageIndex(index)"
+        >
+          <a class="page-link">{{ index + 1 }}</a>
+        </li>
+      </div>
+      <!-- 下一頁 -->
+      <li class="page-item" (click)="clickNextPage()">
+        <a class="page-link" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

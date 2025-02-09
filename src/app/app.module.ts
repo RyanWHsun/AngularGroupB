@@ -22,6 +22,7 @@ import { UserEditComponent } from './components/user-edit/user-edit.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { MyarticlesComponent } from './components/myarticles/myarticles.component';
 import { LayoutComponent } from './components/layout/layout.component';
+import { AttractionTicketComponent } from './components/attraction-ticket/attraction-ticket.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { LayoutComponent } from './components/layout/layout.component';
     UserPageComponent,
     MyarticlesComponent,
     LayoutComponent,
+    AttractionTicketComponent,
   ],
   imports: [
     BrowserModule,

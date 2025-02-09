@@ -109,7 +109,7 @@ export class AttractionComponent {
     private attractionService: AttractionService,
     private attractionCategoryService: AttractionCategoryService,
     private attractionImageService: AttractionImageService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     $('#btnSave').on('click', async (e) => {
@@ -119,7 +119,7 @@ export class AttractionComponent {
     });
 
     $('#FImages').on('change', (event) => {
-      alert('image change');
+      //alert('image change');
       this.selectedFiles = [];
       const inputElement = event.target as HTMLInputElement;
       if (inputElement.files && inputElement.files.length > 0) {
@@ -631,7 +631,7 @@ export class AttractionComponent {
       },
       error: (error) => {
         console.log(`刪除景點失敗 ${JSON.stringify(error)}`);
-      }
+      },
     });
   }
 
@@ -643,7 +643,7 @@ export class AttractionComponent {
       },
       error: (error) => {
         console.log(`刪除圖片失敗 ${JSON.stringify(error)}`);
-      }
-    })
+      },
+    });
   }
 }

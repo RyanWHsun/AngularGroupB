@@ -1,0 +1,216 @@
+.card {
+  margin-bottom: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card img {
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-body {
+  text-align: center;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.card-body button {
+  width: 100%; /* 讓按鈕填滿父容器 */
+  border-radius: 10px; /* 讓按鈕的圓角與卡片一致 */
+  padding: 10px; /* 增加按鈕的內邊距 */
+  background-color: white; /* 設定按鈕背景顏色，可依需求調整 */
+  color: #7ab730; /* 設定文字顏色 */
+  border-style: solid;
+  border-color: #7ab730;
+  font-size: 1rem; /* 設定字體大小 */
+  cursor: pointer; /* 鼠標變成手型 */
+}
+
+.card-body button:hover {
+  background-color: #7ab730; /* 設定按鈕背景顏色，可依需求調整 */
+  color: white; /* 設定文字顏色 */
+}
+
+.views {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+}
+
+.tags {
+  margin-top: 10px;
+}
+
+.tags span {
+  display: inline-block;
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  margin: 2px;
+}
+
+.modal-content {
+  border-radius: 20px;
+}
+
+.edit-button-container {
+  margin-top: 20px;
+}
+
+.carousel-inner {
+  border: solid 3px;
+  border-color: rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+}
+
+.btn-detail,
+.btn-delete {
+  margin: 10px 5px;
+}
+
+#FCategoryId,
+#FRegion,
+#FStatus {
+  width: 38%;
+  height: 40px;
+  border-radius: 10px;
+}
+
+/* ticket.component.css */
+.card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.card-title {
+  font-weight: bold;
+}
+.nav-tabs .nav-link {
+  cursor: pointer;
+  border-bottom: 1px solid #ddd; /* 預設底線灰色 */
+  outline: none; /* 移除按鈕的 focus 框線 */
+}
+
+.nav-tabs .nav-link:focus {
+  border-top: 2px solid #7ab730; /* 點擊時立即顯示綠色上邊框 */
+}
+
+.active-tab {
+  border-bottom: none !important; /* 移除下邊框 */
+  color: #7ab730; /* 文字顏色變成綠色 */
+}
+
+.pagination .page-link {
+  cursor: pointer;
+  color: #000; /* 預設按鈕文字顏色 */
+}
+
+.pagination {
+  margin-top: 20px; /* 調整與其他內容的垂直間距 */
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #7ab730; /* 當前頁面的背景色 */
+  border-color: #7ab730; /* 當前頁面的邊框色 */
+}
+
+.ticketPrice {
+  color: #ff8b00;
+}
+
+.list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 20px;
+}
+
+.list-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #f9f9f9;
+}
+
+/* 調整 .views 位置，讓它固定在右上角 */
+.details {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.views {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  width: 100px;
+}
+
+/* 讓按鈕固定在右下角 */
+.button-container {
+  margin-top: auto; /* 推動內容往上，讓按鈕靠底部 */
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.button-container button {
+  align-self: flex-end;
+  width: 100px;
+  border-radius: 30px;
+  border-style: solid;
+  border-color: #7ab730;
+  background-color: #ffffff;
+  color: #7ab730;
+}
+
+.button-container button:hover {
+  background-color: #7ab730;
+  color: #ffffff;
+}
+
+/* === */
+
+.image img {
+  width: 80%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 16px;
+}
+
+.details h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+}
+
+.details p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.modal-image {
+  width: 90%;
+  height: 200px;
+}
