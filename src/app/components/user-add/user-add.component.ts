@@ -15,6 +15,7 @@ export class UserAddComponent {
     fUserName: null,
     fUserNickName: null,
     fUserRankId: 1,
+    fUserSex: "不願透露",
     fUserEmail: null,
     fUserPassword: null,
   };

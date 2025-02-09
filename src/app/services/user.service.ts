@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { userMaterial } from '../interfaces/user';
+import { userEditMaterial, userMaterial } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +12,13 @@ export class UserService {
   constructor(private userclient: HttpClient) { }
 
   // 取得資料
-  getUser(userId: number): Observable<userMaterial[]> {
-    return this.userclient.get<userMaterial[]>(`${this.baseAddress}api/TUsers/${userId}`, { withCredentials: true });
+  getUser(userId: number): Observable<userMaterial> {
+    return this.userclient.get<userMaterial>(`${this.baseAddress}api/TUsers/${userId}`, { withCredentials: true });
   }
 
   //修改資料
-  putuser(userid: any): Observable<any> {
-    return this.userclient.put(`${this.baseAddress}api/TUsers/${userid}`, userid)
+  putuser(userid: any): Observable<userEditMaterial> {
+    return this.userclient.put<userEditMaterial>(`${this.baseAddress}api/TUsers/${userid}`, { withCredentials: true })
   }
 
   //新增資料

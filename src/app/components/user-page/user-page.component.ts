@@ -26,18 +26,29 @@ export class UserPageComponent {
 
 
   ngOnInit(): void {
-    this.loadUser(2);
+    this.loadUser(0);
   }
 
+  //找登入者的資料
   loadUser(userId: number) {
-    this.userService.getUser(userId).subscribe(
-      (data) => {
-        this.user = data;
-
+    this.userService.getUser(userId).subscribe({
+      next: (data) => {
         console.log(data);
-        console.log(this.user);
+
+        if (data) {  // 確保資料存在
+          this.user = data;  // 存入 user
+          this.fUserName = data.fUserName;
+          this.fUserNickName = data.fUserNickName;
+          this.fUserImage = data.fUserImage ? `data:image/png;base64,${data.fUserImage}` : "assets/images/noImage.jpg";
+          this.fUserSex = data.fUserSex;
+          this.fUserBirthday = data.fUserBirthday.split("T")[0];;
+          this.fUserComeDate = data.fUserComeDate.split("T")[0];;
+        }
+      },
+      error: (error) => {
+        console.log("找不到用戶", error);
       }
-    )
+    })
   }
 
 

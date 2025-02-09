@@ -31,7 +31,7 @@
         <div class="contact-form bg-white" style="padding: 30px;">
           <div id="success"></div>
 
-          <form name="sentMessage" id="contactForm" novalidate="novalidate">
+          <form name="sentMessage" id="contactForm" novalidate="novalidate" #f="ngForm">
 
 
 
@@ -41,17 +41,17 @@
               <div class="col-lg-4 col-md-6 mb-4">
                 <div class="destination-item position-relative overflow-hidden mb-2">
 
-                  <img class="img-fluid mb-5" [src]="img" alt="">
-                  <input type="file" (change)="changeImg($event)" id="userImage" accept="image/*" />
+                  <img class="img-fluid mb-5" [src]="user.fUserImage||'assets/images/noImage.jpg'" alt="">
+                  <input type="file" (change)="changeImg($event)" id="userImage" accept="image/*" name="fUserImage" />
                 </div>
               </div>
             </div>
 
             <!-- 用戶名稱輸入 -->
             <div class="control-group">
-              <h5 class="text-uppercase">用戶名稱</h5>
+              <h5 class="text-uppercase"> 用戶名稱</h5>
               <input type="text" class="form-control p-4" id="userName" placeholder="請輸入用戶名稱" required="required"
-                data-validation-required-message="請輸入用戶名稱" />
+                data-validation-required-message="請輸入用戶名稱" [(ngModel)]="user.fUserName" name="fUserName" />
               <p class="help-block text-danger"></p>
             </div>
 
@@ -59,7 +59,7 @@
             <div class="control-group">
               <h5 class="text-uppercase">暱稱</h5>
               <input type="text" class="form-control p-4" id="userName" placeholder="請輸入用戶暱稱" required="required"
-                data-validation-required-message="請輸入用戶名暱稱" />
+                data-validation-required-message="請輸入用戶名暱稱" [(ngModel)]="user.fUserNickName" name="fUserNickName" />
               <p class="help-block text-danger"></p>
             </div>
 
@@ -67,7 +67,7 @@
             <div class="control-group">
               <h5 class="text-uppercase">性別</h5>
               <select type="text" class="form-control" id="userSex" placeholder="請輸入用戶性別" required="required"
-                data-validation-required-message="請輸入用戶性別">
+                data-validation-required-message="請輸入用戶性別" [(ngModel)]="user.fUserSex" name="fUserSex">
                 <option value="不願透露">不願透露</option>
                 <option value="男">男</option>
                 <option value="女">女</option>
@@ -79,32 +79,36 @@
             <div class="control-group">
               <h5 class="text-uppercase">生日</h5>
               <input type="date" class="form-control p-4" id="userBirthday" placeholder="請輸入用戶生日" required="required"
-                value="1990-01-01" data-validation-required-message="請輸入用戶生日" />
+                value="1990-01-01" data-validation-required-message="請輸入用戶生日" [(ngModel)]="user.fUserBirthday"
+                name="fUserBirthday" />
               <p class="help-block text-danger"></p>
             </div>
 
             <!-- 電話輸入 -->
             <div class="control-group">
               <h5 class="text-uppercase">電話</h5>
-              <input type="text" class="form-control p-4" id="userPhone" placeholder="請輸入用戶電話" />
+              <input type="text" class="form-control p-4" id="userPhone" placeholder="請輸入用戶電話"
+                [(ngModel)]="user.fUserPhone" name="fUserPhone" />
               <p class="help-block text-danger"></p>
             </div>
 
             <!-- 地址輸入 -->
             <div class="control-group">
               <h5 class="text-uppercase">地址</h5>
-              <input type="text" class="form-control p-4" id="userName" placeholder="請輸入用戶地址" />
+              <input type="text" class="form-control p-4" id="userName" placeholder="請輸入用戶地址"
+                [(ngModel)]="user.fUserAddress" name="fUserAddress" />
               <p class="help-block text-danger"></p>
 
             </div>
-
-            <!-- 送出按鈕 -->
-            <div class="text-center">
-              <button class="btn btn-primary py-3 px-4" type="submit" id="sendMessageButton">確認修改
-              </button>
-            </div>
-
           </form>
+          <!-- 送出按鈕 -->
+          <div class="text-center">
+            <button class="btn btn-primary py-3 px-4" type="text" id="sendMessageButton"
+              (click)="submitUserEdit(f)">確認修改
+            </button>
+          </div>
+
+
 
         </div>
       </div>
