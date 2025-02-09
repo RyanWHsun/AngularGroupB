@@ -38,7 +38,7 @@ export class MyProductComponent {
         this.myProducts = data;
         this.updateProductCounts();
         this.filterProductsByStatus('all') //預設顯示全部商品
-        console.log(this.myProducts);
+        //console.log(this.myProducts);
       },
       error: (error) => {
         console.log('沒抓到商品哦', error);

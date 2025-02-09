@@ -24,6 +24,7 @@ import { MyarticlesComponent } from './components/myarticles/myarticles.componen
 import { LayoutComponent } from './components/layout/layout.component';
 import { CreateProductComponent } from './components/create-product/create-product.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CartComponent } from './components/cart/cart.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MyarticlesComponent,
     LayoutComponent,
     CreateProductComponent,
+    CartComponent,
   ],
   imports: [
     BrowserModule,

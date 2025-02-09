@@ -16,6 +16,7 @@ import { UserPageComponent } from './components/user-page/user-page.component';
 import { MyarticlesComponent } from './components/myarticles/myarticles.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { CreateProductComponent } from './components/create-product/create-product.component';
+import { CartComponent } from './components/cart/cart.component';
 
 const routes: Routes = [
   {
@@ -55,6 +56,9 @@ const routes: Routes = [
     }, {
       path: 'editProduct/:id',
       component: CreateProductComponent
+    }, {
+      path: 'cart',
+      component: CartComponent
     }]
   },
   {

@@ -1,0 +1,208 @@
+<!-- Header Start -->
+<div class="container-fluid page-header">
+  <div class="container">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+      <h3 class="display-4 text-white text-uppercase">購物車</h3>
+      <div class="d-inline-flex text-white">
+        <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase">購物車</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Header End -->
+
+<!-- start your coding here-->
+<div class="container  py-1 mt-2">
+
+
+  <!-- 景點 -->
+  <div class="container mt-3" *ngIf="tickets.length>0">
+    <div class="row" *ngFor="let ticket of tickets">
+      <div class="col-12">
+        <div class="card p-2 mb-2 shadow rounded">
+          <div class="row align-items-center ticketCart border-bottom p-2 mb-1">
+            <div class="col-1 text-center">
+              <input type="checkbox" [(ngModel)]="selectAllTickets" (change)="toggleAllTickets()" />
+            </div>
+            <div class="col-2 text-center">
+              <strong class="h6">票券</strong>
+            </div>
+            <div class="col-2 text-left">景點名稱</div>
+            <div class="col-2 text-center">票種</div>
+            <div class="col-1 text-center">單價</div>
+            <div class="col-2 text-center">數量</div>
+            <div class="col-1 text-center">小計</div>
+            <div class="col-1 text-center">操作</div>
+          </div>
+          <div class="row align-items-center p-2" *ngFor="let item of tickets">
+            <div class="col-1 text-center">
+              <input type="checkbox" [(ngModel)]="item.selected" (change)="calculateTotal()" />
+            </div>
+            <div class="col-2 text-center">
+              <img *ngIf="item.fSingleImage" [src]="'data:image/png;base64,' + item.fSingleImage"
+                class="img-fluid rounded" alt="商品圖片" />
+            </div>
+            <div class="col-2 text-left">
+              <p class="h6">{{ item.fItemName }}</p>
+            </div>
+            <div class="col-2 text-center">
+              <p class="h6">{{ item.fSpecification}}</p>
+            </div>
+            <div class="col-1 text-center">
+              <p class="text-danger h6">${{ item.fPrice }}</p>
+            </div>
+            <div class="col-2 text-center">
+              <div class="input-group input-group-sm justify-content-center">
+                <div class="input-group-prepend">
+                  <button class="btn btn-outline-primary" (click)="decreaseQuantity(item)">-</button>
+                </div>
+                <input type="text" class="form-control text-center bg-light" [value]="item.fQuantity" readonly
+                  style="max-width: 45px;" />
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" (click)="increaseQuantity(item)">+</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-1 text-center">
+              <p class="text-success font-weight-bold h6">${{ item.fPrice * item.fQuantity }}</p>
+            </div>
+            <div class="col-1 text-center">
+              <button class="btn btn-danger btn-sm" (click)="removeItem(ticket, item)">刪除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 活動報名費 -->
+  <div class="container" *ngIf="eventFee.length>0">
+    <div class="row">
+      <div class="col-12">
+        <div class="card p-2 mb-2 shadow rounded">
+          <div class=" row align-items-center eventCart border-bottom p-2 mb-1">
+            <div class="col-1 text-center">
+              <input type="checkbox" [(ngModel)]="selectAllEvents" (change)="toggleAllEvents()" />
+            </div>
+            <div class="col-2 text-center">
+              <strong class="h6">活動報名費</strong>
+            </div>
+            <div class="col-2 text-left">活動名稱</div>
+            <div class="col-2 text-center">活動日期</div>
+            <div class="col-1 text-center">單價</div>
+            <div class="col-2 text-center">數量</div>
+            <div class="col-1 text-center">小計</div>
+            <div class="col-1 text-center">操作</div>
+
+          </div>
+          <div class="row align-items-center p-2" *ngFor="let item of eventFee">
+            <div class="col-1 text-center">
+              <input type="checkbox" [(ngModel)]="item.selected" (change)="calculateTotal()" />
+            </div>
+            <div class="col-2 text-center">
+              <img *ngIf="item.fSingleImage" [src]="'data:image/png;base64,' + item.fSingleImage"
+                class="img-fluid rounded" alt="商品圖片" />
+            </div>
+            <div class="col-2  text-left">
+              <p class="h6">{{ item.fItemName }}</p>
+            </div>
+            <div class="col-2 text-center">
+              <p class="h6">{{ item.fSpecification}}</p>
+            </div>
+            <div class="col-1 text-center">
+              <p class="text-danger h6">${{ item.fPrice }}</p>
+            </div>
+            <div class="col-2 text-center">
+              <div class="input-group input-group-sm justify-content-center">
+                <div class="input-group-prepend">
+                  <button class="btn btn-outline-primary" (click)="decreaseQuantity(item)">-</button>
+                </div>
+                <input type="text" class="form-control text-center bg-light" [value]="item.fQuantity" readonly
+                  style="max-width: 45px;" />
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" (click)="increaseQuantity(item)">+</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-1 text-center">
+              <p class="text-success font-weight-bold h6">${{ item.fPrice * item.fQuantity }}</p>
+            </div>
+            <div class="col-1 text-center">
+              <button class="btn btn-danger btn-sm">刪除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 商品 -->
+  <div class="container">
+    <div class="row" *ngFor="let seller of sellers">
+      <div class="col-12">
+        <div class="card p-2 mb-2 shadow rounded">
+          <div class="row align-items-center productCart border-bottom p-2 mb-1">
+            <div class="col-1 text-center">
+              <input type="checkbox" [(ngModel)]="seller.selected" (change)="toggleSellerSelection(seller)" />
+            </div>
+            <div class="col-2 text-left">
+              <strong class="h6" style="color:white;">{{ seller.name }}</strong>
+            </div>
+            <div class="col-4 text-left">名稱</div>
+            <div class="col-1 text-center">單價</div>
+            <div class="col-2 text-center">數量</div>
+            <div class="col-1 text-center">小計</div>
+            <div class="col-1 text-center">操作</div>
+          </div>
+          <div class="row align-items-center p-2" *ngFor="let item of seller.products">
+            <div class="col-1 text-center">
+              <input type="checkbox" [(ngModel)]="item.selected" (change)="calculateTotal()" />
+            </div>
+            <div class="col-2 text-center">
+              <img *ngIf="item.fSingleImage" [src]="'data:image/png;base64,' + item.fSingleImage"
+                class="img-fluid rounded" alt="商品圖片" />
+            </div>
+            <div class="col-4 text-left">
+              <p class="h6">{{ item.fItemName }}</p>
+            </div>
+            <div class="col-1 text-center">
+              <p class="text-danger h6">${{ item.fPrice }}</p>
+            </div>
+            <div class="col-2 text-center">
+              <div class="input-group input-group-sm justify-content-center">
+                <div class="input-group-prepend">
+                  <button class="btn btn-outline-primary" (click)="decreaseQuantity(item)">-</button>
+                </div>
+                <input type="text" class="form-control text-center bg-light" [min]="1" [max]="item.fProductStock"
+                  [value]="item.fQuantity" readonly style="max-width: 45px;" />
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" (click)="increaseQuantity(item)">+</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-1 text-center">
+              <p class="text-success font-weight-bold ">${{ item.fPrice * item.fQuantity }}</p>
+            </div>
+            <div class="col-1 text-center">
+              <button class="btn btn-danger btn-sm">刪除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 固定在底部的結帳欄位 -->
+  <div class="fixed-bottom bg-white shadow-lg p-3 d-flex justify-content-between align-items-center">
+    <div class="form-inline">
+      <label class="mr-2 font-weight-bold">優惠券</label>
+      <input type="text" class="form-control" placeholder="輸入優惠代碼" />
+    </div>
+    <div>
+      <span class="font-weight-bold">總金額 ({{ selectedCount }} 個商品): </span>
+      <span class="text-danger font-weight-bold h5">${{ totalPrice }}</span>
+    </div>
+    <button class="btn btn-warning btn-lg">去買單</button>
+  </div>

@@ -1,4 +1,7 @@
+import { addProductToCart } from './../../interfaces/shoppingCart';
+import { CartService } from './../../services/cart.service';
 import { Component } from '@angular/core';
+import { error } from 'jquery';
 import { Products } from 'src/app/interfaces/products';
 import { ProductsService } from 'src/app/services/products.service';
 
@@ -21,9 +24,9 @@ export class ProductsComponent {
   selectedCategoryName: string = '全部商品'; // 默認顯示標題
   totalProductCount: number = 1;  //所有商品數量
   selectedProductId: number | null = null;  // 當前選中的商品
+  hotKeywords: string[] = ['行李箱', '紀念品', '露營', '登山鞋', '外套', '娃娃', '撲克牌', '帳篷', '出國', '登山', '卡牌', '包包', '旅行袋']
 
-
-  constructor(private productService: ProductsService) { }
+  constructor(private productService: ProductsService, private cartService: CartService) { }
 
   ngOnInit(): void {
     this.loadProducts(); // 初始化加載商品
@@ -56,6 +59,12 @@ export class ProductsComponent {
         }));
         this.hasMorePages = data.length === this.pageSize; // 如果返回的商品數量等於 pageSize，說明還有更多頁面
         //console.log(this.products);
+
+        if (this.keyword != '') {
+          this.selectedCategoryName = `${this.keyword}的搜尋結果`;
+        } else {
+          this.selectedCategoryName = '全部商品';
+        }
       },
       error: (error) => {
         console.error('沒抓到資料辣!', error);
@@ -120,6 +129,25 @@ export class ProductsComponent {
   closeProductDetail(): void {
     this.selectedProductId = null;
     console.log('click!');
+  }
+
+  addToCart(product: Products) {
+    const item: addProductToCart = {
+      fItemType: 'product',
+      fItemId: product.fProductId,
+      fQuantity: 1,
+      fPrice: product.fProductPrice
+    };
+    //console.log(item);
+    this.cartService.addProductToCart(item).subscribe({
+      next: (response) => {
+        //console.log(response);
+        alert(response.message);
+      }, error: (error) => {
+        console.log('加入購物車錯誤:', error);
+        alert(error.error.message);
+      }
+    })
   }
 }
 
