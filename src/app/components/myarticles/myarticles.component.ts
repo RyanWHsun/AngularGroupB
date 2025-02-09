@@ -5,7 +5,7 @@ import { loadCKEditorCloud, CKEditorModule, type CKEditorCloudResult, type CKEdi
 import type { ClassicEditor, EditorConfig } from 'https://cdn.ckeditor.com/typings/ckeditor5.d.ts';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 const LICENSE_KEY =
-  'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NzA0MjIzOTksImp0aSI6ImExZTliZjBiLWVjMGQtNDk2NC1hODViLTVjNmIyMmU4OGNhOCIsImxpY2Vuc2VkSG9zdHMiOlsiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJ1c2FnZUVuZHBvaW50IjoiaHR0cHM6Ly9wcm94eS1ldmVudC5ja2VkaXRvci5jb20iLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIl0sImxpY2Vuc2VUeXBlIjoiZGV2ZWxvcG1lbnQiLCJmZWF0dXJlcyI6WyJEUlVQIl0sInZjIjoiMGUxZDNiNzEifQ.4G8fSCo115sDjTwTgDE4jCCoH6KEZTd3nmdDQsh0KjNYEFUyc5eG-WJ430tGqEHkw3m9lIkwE_2pOfkeWetb8g';
+  'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NDAwOTU5OTksImp0aSI6IjAyNDhiMTFhLTU0ZDQtNDIzZi04NTFmLWEyYTA2ODIzY2FiZCIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImEwOWU3ZDIwIn0.vxr1VsfKg7W4Q58SL66gRKE3eqcERkRaMXA4AZyywVzwS9vx0O6WLlIkuNrWFTBn1Q34TeRofuRdm-Z1mDRlqw';
 const cloudConfig = {
   version: '44.1.0'
 } satisfies CKEditorCloudConfig;
@@ -23,16 +23,37 @@ export class MyarticlesComponent {
   datas = [];
   finalData: SafeHtml = '';
   imageData: { [key: number]: string[] } = {};
+  articleStatus: boolean = true;
+  lastPostId = -1;
+
+  statuses = [
+    { value: true, label: '公開' },
+    { value: false, label: '私人' }
+  ];
+  imagePreview: string | ArrayBuffer | null = null;
   constructor(private socialmediaService: SocialmediaService, private cdr: ChangeDetectorRef, private sanitizer: DomSanitizer) { };
   ngOnInit(): void {
     this.get();
     loadCKEditorCloud(cloudConfig).then(this._setupEditor.bind(this));
   }
   ngAfterViewInit() {
-    $('#modal').on('hide.bs.modal', () => {
-      this.editorData = '';
-      this.cdr.detectChanges();
-    });
+    setTimeout(() => {
+      // 找到 CKEditor 內部的顏色選擇器（或所有 .ck 類別）
+      const ckeditorElements = document.querySelectorAll('ckeditor');
+
+      ckeditorElements.forEach((el) => {
+        el.addEventListener(
+          'touchstart',
+          (event) => { },
+          { passive: true }
+        );
+      });
+    }, 1000); // 確保 CKEditor 已經載入
+  }
+  reset() {
+    this.articleTitle = '';
+    this.editorData = '';
+    this.articleStatus = true;
   }
 
   loadImages(postId: number) {
@@ -52,10 +73,24 @@ export class MyarticlesComponent {
   save() {
     this.finalData = this.sanitizer.bypassSecurityTrustHtml(this.editorData);
     this.socialmediaService.postArticle({
-      FContent: this.editorData
+      FTitle: this.articleTitle,
+      FContent: this.editorData,
+      FIsPublic: this.articleStatus
     }).subscribe(response => {
       console.log('文章發佈成功', response)
+      this.lastPostId = response['fPostId'];
     })
+
+  }
+  onFileSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
   }
   //
   private _setupEditor(cloud: CKEditorCloudResult<typeof cloudConfig>) {
@@ -86,9 +121,9 @@ export class MyarticlesComponent {
         items: [
           'heading',
           '|',
-          'fontSize',
           'fontColor',
           'fontBackgroundColor',
+          'fontSize',
           '|',
           'bold',
           'italic',

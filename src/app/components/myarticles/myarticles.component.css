@@ -1,5 +1,4 @@
-img {
-  width: 300px;
+#myArticle img {
   height: 300px;
   object-fit: cover;
 }
@@ -47,9 +46,12 @@ img {
   margin-right: 5px;
 }
 
-.editor-container {
-  max-height: 350px;
-  /* 固定最大高度 */
+.modal-custom {
+  max-width: 1000px;
+}
+
+::ng-deep .ck-editor__editable_inline {
+  min-height: 500px;
+  max-height: 500px;
   overflow-y: auto;
-  /* 啟用垂直滾動條 */
 }
