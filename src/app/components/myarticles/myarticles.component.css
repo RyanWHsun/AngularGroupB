@@ -55,3 +55,13 @@
   max-height: 500px;
   overflow-y: auto;
 }
+
+.search-bar-container {
+  position: sticky;
+  top: 0;
+}
+
+.form-select {
+  text-align: center;
+  letter-spacing: 5px;
+}

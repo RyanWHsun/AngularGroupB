@@ -4,6 +4,7 @@ import { loadCKEditorCloud, CKEditorModule, type CKEditorCloudResult, type CKEdi
 
 import type { ClassicEditor, EditorConfig } from 'https://cdn.ckeditor.com/typings/ckeditor5.d.ts';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { concatMap } from 'rxjs';
 const LICENSE_KEY =
   'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NDAwOTU5OTksImp0aSI6IjAyNDhiMTFhLTU0ZDQtNDIzZi04NTFmLWEyYTA2ODIzY2FiZCIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImEwOWU3ZDIwIn0.vxr1VsfKg7W4Q58SL66gRKE3eqcERkRaMXA4AZyywVzwS9vx0O6WLlIkuNrWFTBn1Q34TeRofuRdm-Z1mDRlqw';
 const cloudConfig = {
@@ -25,31 +26,20 @@ export class MyarticlesComponent {
   imageData: { [key: number]: string[] } = {};
   articleStatus: boolean = true;
   lastPostId = -1;
-
+  cloudConfig = {
+    version: '44.1.0'
+  } satisfies CKEditorCloudConfig;
   statuses = [
     { value: true, label: '公開' },
     { value: false, label: '私人' }
   ];
   imagePreview: string | ArrayBuffer | null = null;
-  constructor(private socialmediaService: SocialmediaService, private cdr: ChangeDetectorRef, private sanitizer: DomSanitizer) { };
+  constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer) { };
   ngOnInit(): void {
     this.get();
     loadCKEditorCloud(cloudConfig).then(this._setupEditor.bind(this));
   }
-  ngAfterViewInit() {
-    setTimeout(() => {
-      // 找到 CKEditor 內部的顏色選擇器（或所有 .ck 類別）
-      const ckeditorElements = document.querySelectorAll('ckeditor');
 
-      ckeditorElements.forEach((el) => {
-        el.addEventListener(
-          'touchstart',
-          (event) => { },
-          { passive: true }
-        );
-      });
-    }, 1000); // 確保 CKEditor 已經載入
-  }
   reset() {
     this.articleTitle = '';
     this.editorData = '';
@@ -63,7 +53,7 @@ export class MyarticlesComponent {
   }
   get() {
     this.socialmediaService.getMyArticles().subscribe(data => {
-      console.log('api', data);
+      // console.log('api', data);
       this.datas = data;
       this.datas.forEach(post => {
         this.loadImages(post['fPostId']);
@@ -76,11 +66,17 @@ export class MyarticlesComponent {
       FTitle: this.articleTitle,
       FContent: this.editorData,
       FIsPublic: this.articleStatus
-    }).subscribe(response => {
-      console.log('文章發佈成功', response)
-      this.lastPostId = response['fPostId'];
-    })
-
+    }).pipe(
+      concatMap(response => {
+        console.log('文章發佈成功', response);
+        return this.socialmediaService.postImages([{
+          FPostId: response['fPostId'],
+          FImage: this.imagePreview
+        }]);
+      })
+    ).subscribe(response => {
+      console.log('文章圖片發佈成功', response);
+    });
   }
   onFileSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -88,6 +84,7 @@ export class MyarticlesComponent {
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreview = reader.result;
+        console.log(this.imagePreview);
       };
       reader.readAsDataURL(file);
     }
