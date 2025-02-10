@@ -15,6 +15,7 @@ export class CartComponent {
   eventFee: ShoppingCartItem[] = []; //活動費用
   sellers: Seller[] = []; //賣家分組
 
+  selectedCartItemIds: number[] = []; //選取的項目id
   selectAllTickets = false;
   selectAllEvents = false;
   totalPrice = 0;
@@ -29,14 +30,15 @@ export class CartComponent {
   loadCart(): void {
     this.cartService.getCartItems().subscribe({
       next: (items) => {
-        //console.log(this.carItems);
         this.carItems = items;
+        //console.log(this.carItems);
         this.sortItems();
       }, error: (error) => {
         if (error.status === 404) {
           console.log(error);
           console.warn('購物車為空，顯示提示訊息');
           alert('購物車沒東西，快去加入吧!');
+          this.router.navigate(['#']);
         } else if (error.status === 401) {
           console.log(error);
           console.warn('沒登入，顯示提示訊息');
@@ -93,6 +95,7 @@ export class CartComponent {
     this.calculateTotal();
   }
 
+  //切換票券選取狀態
   toggleAllEvents() {
     this.selectAllEvents = !this.selectAllEvents;
     this.eventFee.forEach(fee => {
@@ -101,37 +104,49 @@ export class CartComponent {
     this.calculateTotal();
   }
 
-  // 計算總金額與已選商品數量
-  calculateTotal() {
+  //處理選取的項目
+  processCartItems() {
+    this.selectedCartItemIds = [];
     this.totalPrice = 0;
     this.selectedCount = 0;
-    this.sellers.forEach((seller) => {
-      seller.selected = seller.products.every((product) => product.selected);
-      seller.products.forEach((product) => {
+
+    // 迭代所有類型的購物車項目
+    this.sellers.forEach(seller => {
+      seller.selected = seller.products.every(product => product.selected);
+      seller.products.forEach(product => {
         if (product.selected) {
           this.totalPrice += product.fPrice * product.fQuantity;
           this.selectedCount++;
+          this.selectedCartItemIds.push(product.fCartItemId);
         }
       });
     });
 
-    this.tickets.forEach((ticket) => {
+    this.tickets.forEach(ticket => {
       if (ticket.selected) {
         this.totalPrice += ticket.fPrice * ticket.fQuantity;
         this.selectedCount++;
+        this.selectedCartItemIds.push(ticket.fCartItemId)
       }
     });
 
-    this.eventFee.forEach((event) => {
+    this.eventFee.forEach(event => {
       if (event.selected) {
         this.totalPrice += event.fPrice * event.fQuantity;
         this.selectedCount++;
+        this.selectedCartItemIds.push(event.fCartItemId);
       }
     });
-
     // 更新全選 checkbox 狀態
     this.selectAllTickets = this.tickets.every(ticket => ticket.selected);
     this.selectAllEvents = this.eventFee.every(event => event.selected);
+
+    console.log(this.selectedCartItemIds);
+    return this.selectedCartItemIds;
+  }
+  // 計算總金額與已選商品數量
+  calculateTotal() {
+    this.processCartItems()
   }
 
   increaseQuantity(item: any) {
@@ -155,14 +170,36 @@ export class CartComponent {
     }
   }
 
-  removeItem(category: any, item: any) {
-    // if (category.products) {
-    //   category.products = category.products.filter(p => p.id !== item.id);
-    // } else if (category.items) {
-    //   category.items = category.items.filter(i => i.id !== item.id);
-    // } else if (category.fees) {
-    //   category.fees = category.fees.filter(f => f.id !== item.id);
-    // }
-    this.calculateTotal();
+  removeItem(fCartItemId: number) {
+    this.cartService.removeCartItem(fCartItemId).subscribe({
+      next: (response) => {
+        //console.log(response);
+        this.cartService.loadCartCount();
+        this.loadCart();
+      },
+      error: (error) => {
+        alert(error.message)
+        console.log(error);
+      }
+    });
+  }
+
+  removeSelectedItems() {
+    const removeItemsIds = this.processCartItems();
+    if (this.selectedCartItemIds.length === 0) {
+      alert("請先選擇要刪除的項目!")
+      return;
+    }
+    this.cartService.removeCartItems(removeItemsIds).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.cartService.loadCartCount();
+        this.loadCart();
+      }, error: (error) => {
+        alert(error.message)
+        console.log(error);
+      }
+    })
+    this.totalPrice = 0;
   }
 }

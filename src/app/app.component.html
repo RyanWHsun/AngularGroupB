@@ -105,9 +105,17 @@
           <!-- 帳戶end -->
 
           <!-- 購物車 -->
-          <div class="nav-item ">
-            <a routerLink="products/cart" routerLinkActive="active" class="nav-link"><i class="fa-solid fa-cart-shopping"></i></a>
+          <div class="nav-item position-relative">
+            <a routerLink="products/cart" routerLinkActive="active" class="nav-link position-relative">
+              <i class="fa-solid fa-cart-shopping fa-lg"></i>
+              <span *ngIf="cartItemCount > 0"
+                class="badge badge-primary position-absolute translate-middle rounded-pill"
+                style="top: 20px; right: 0px; font-size: 12px; min-width: 18px;">
+                {{ cartItemCount }}
+              </span>
+            </a>
           </div>
+
 
           <!-- 參考start -->
           <div class="nav-item dropdown">

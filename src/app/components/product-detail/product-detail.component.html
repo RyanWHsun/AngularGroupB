@@ -55,13 +55,16 @@
         <i class="fa fa-minus" style="color: white;"></i>
       </button>
     </div>
-    <input type="text" class="form-control form-control-sm text-center border-0 mx-2" [value]="quantity" readonly>
+    <input type="text" class="form-control form-control-sm text-center bg-light border-0 mx-2" [value]="quantity"
+      readonly>
     <div class="input-group-btn">
       <button class="btn btn-sm rounded-circle bg-primary border" (click)="increaseQty()">
         <i class="fa fa-plus" style="color: white;"></i>
       </button>
     </div>
   </div>
-  <button class="btn btn-primary mx-3 fw-bold" (click)="addToCart()"><i class="fa-solid fa-cart-arrow-down"></i>&nbsp;&nbsp;加入購物車</button>
-  <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="resetQuantity()">關閉</button>
+  <button class="btn btn-primary mx-3 fw-bold " (click)="addToCart()"><i
+      class="fa-solid fa-cart-arrow-down"></i>&nbsp;&nbsp;加入購物車</button>
+  <button type="button" class="btn btn-secondary" data-dismiss="modal"
+    (click)="resetQuantity()">關閉</button>
 </div>

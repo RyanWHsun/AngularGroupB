@@ -56,7 +56,9 @@ export class ProductsComponent {
           ...product,
           fUserImage: product.fUserImage || null, // 保留 Base64 值，若為 null 則不處理
           fImage: product.fImage || null,
-        }));
+        }))
+          .sort((a, b) => b.fProductId - a.fProductId);
+
         this.hasMorePages = data.length === this.pageSize; // 如果返回的商品數量等於 pageSize，說明還有更多頁面
         //console.log(this.products);
 
@@ -143,6 +145,7 @@ export class ProductsComponent {
       next: (response) => {
         //console.log(response);
         alert(response.message);
+        this.cartService.loadCartCount();
       }, error: (error) => {
         console.log('加入購物車錯誤:', error);
         alert(error.error.message);

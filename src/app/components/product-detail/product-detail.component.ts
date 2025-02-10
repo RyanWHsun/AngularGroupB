@@ -76,6 +76,7 @@ export class ProductDetailComponent {
       next: (response) => {
         //console.log(response);
         alert(response.message);
+        this.cartService.loadCartCount();
       }, error: (error) => {
         console.log('加入購物車錯誤:', error);
         alert(error.error.message);

@@ -76,12 +76,13 @@ export class CreateProductComponent implements OnInit {
         //圖片
         if (product.fImage && product.fImage.length > 0) {
           this.imagePreviews = product.fImage.map(img => `data:image/png;base64,${img}`);
+          console.log(this.imagePreviews);
         }
 
       },
       error: (error) => {
         alert(error.error)
-        //console.error('獲取商品失敗', error);
+        console.error('獲取商品失敗', error);
       }
     })
   }
@@ -129,7 +130,7 @@ export class CreateProductComponent implements OnInit {
         const reader = new FileReader();
         reader.onload = () => {
           this.imagePreviews.push(reader.result as string);
-          //console.log("目前預覽圖片:", this.imagePreviews);
+          console.log("目前預覽圖片:", this.imagePreviews);
         };
         reader.readAsDataURL(file);
       }
@@ -149,8 +150,15 @@ export class CreateProductComponent implements OnInit {
       alert('請填寫完整的商品資訊');
       return;
     }
-    const base64Images = await this.convertImagesToBase64();
-    //console.log("轉換完成的 Base64 圖片:", base64Images);
+    // 轉換圖片為 Base64
+    let base64Images = await this.convertImagesToBase64();
+
+    // 確保不會產生重複圖片
+    const existingImages = this.imagePreviews
+      .filter(img => !this.selectedImages.some(file => img.includes(file.name)))
+      .map(img => img.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''));
+
+    base64Images = [...new Set([...existingImages, ...base64Images])]; // 確保不重複
     if (base64Images.length === 0 && this.imagePreviews.length === 0) {
       alert('請至少上傳一張圖片');
       return;
@@ -161,7 +169,7 @@ export class CreateProductComponent implements OnInit {
 
     // 發送 API
     const productData: createProduct = this.productForm.value as createProduct;
-    //console.log("即將發送的商品資料:", productData);
+    console.log("即將發送的商品資料:", productData);
 
     if (this.isEditMode) {
       productData.fProductId = this.productId;
@@ -190,10 +198,9 @@ export class CreateProductComponent implements OnInit {
 
   private async convertImagesToBase64(): Promise<string[]> {
     if (this.selectedImages.length === 0) {
-      console.warn("沒有圖片可轉換");
+      console.warn("沒有新圖片可轉換，將使用現有圖片");
       return [];
     }
-    console.log("開始轉換 Base64，圖片數量:", this.selectedImages.length);
     return Promise.all(
       this.selectedImages.map(file => {
         return new Promise<string>((resolve, reject) => {
@@ -203,7 +210,7 @@ export class CreateProductComponent implements OnInit {
             resolve((reader.result as string).split(',')[1]); // 只取 Base64
           };
           reader.onerror = () => {
-            //console.error("讀取圖片失敗:", file.name);
+            console.error("讀取圖片失敗:", file.name);
             reject("讀取失敗");
           };
           reader.readAsDataURL(file);
