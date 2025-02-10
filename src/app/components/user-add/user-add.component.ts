@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { UserService } from './../../services/user.service';
 import { Component, OnInit } from '@angular/core';
@@ -21,9 +22,10 @@ export class UserAddComponent {
   };
 
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
+    window.scrollTo(0, 0);
   }
 
   // 送出表單資料
@@ -31,6 +33,9 @@ export class UserAddComponent {
     if (form.invalid) {  // 檢查表單是否有效
       console.log('表單驗證不通過');
       alert('請確保所有欄位都正確填寫！');
+      Object.values(form.controls).forEach(control => {
+        control.markAsTouched(); // ✅ 標記所有欄位為 `touched`
+      });
       return;  // 如果表單無效，阻止提交
     }
     console.log('送出的資料:', this.user);
@@ -38,6 +43,8 @@ export class UserAddComponent {
       next: (response) => {
         console.log('成功:', response);
         alert('帳號創建成功！');
+        this.router.navigate(['/user/user']);
+        window.scrollTo(0, 0);
       },
       error: (error) => {
         console.log('錯誤:', error);

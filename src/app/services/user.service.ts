@@ -17,8 +17,8 @@ export class UserService {
   }
 
   //修改資料
-  putuser(userid: any): Observable<userEditMaterial> {
-    return this.userclient.put<userEditMaterial>(`${this.baseAddress}api/TUsers/${userid}`, { withCredentials: true })
+  putuser(userId: number, user: userEditMaterial): Observable<userEditMaterial> {
+    return this.userclient.put<userEditMaterial>(`${this.baseAddress}api/TUsers/${userId}`, user, { withCredentials: true })
   }
 
   //新增資料

@@ -47,7 +47,7 @@ import { LayoutComponent } from './components/layout/layout.component';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    AgGridModule
+    AgGridModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

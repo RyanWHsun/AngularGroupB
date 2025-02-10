@@ -1,6 +1,7 @@
 import { UserService } from './../../services/user.service';
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { userEditMaterial } from 'src/app/interfaces/user';
 
 @Component({
@@ -24,7 +25,7 @@ export class UserEditComponent {
 
   img = "assets/images/noImage.jpg"
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadUser(0);
@@ -59,10 +60,9 @@ export class UserEditComponent {
 
         if (data) {  // 確保資料存在
           this.user = data;  // 存入 user
-          this.user.fUserImage = data.fUserImage ? `data:image/png;base64,${data.fUserImage}` : "assets/images/noImage.jpg";
-          if (data.fUserBirthday != null) {
-            this.user.fUserBirthday = data.fUserBirthday.split("T")[0];
-          }
+          this.user.fUserImage = data.fUserImage ? `data:image/png;base64,${data.fUserImage}` : "";
+          this.user.fUserBirthday = data.fUserBirthday ? data.fUserBirthday.split("T")[0] : "2000-01-01";
+
         }
       },
       error: (error) => {
@@ -74,23 +74,41 @@ export class UserEditComponent {
 
 
   //修改開始
-  submitUserEdit(form: NgForm) {
-    if (form.invalid) {  // 檢查表單是否有效
-      console.log('表單驗證不通過');
-      alert('請確保所有欄位都正確填寫！');
-      return;  // 如果表單無效，阻止提交
+  updateUser(userId: number) {
+
+    if (this.user.fUserImage != null) {
+      this.user.fUserImage = this.user.fUserImage.replace("data:image/png;base64,", "");
+      this.user.fUserImage = this.user.fUserImage.replace("data:image/jpeg;base64,", "");
+      console.log(this.user.fUserImage);
     }
-    console.log('送出的資料:', this.user);
-    this.userService.putuser(this.user).subscribe({
+
+    this.userService.putuser(userId, this.user).subscribe({
       next: (response) => {
         console.log('成功:', response);
         alert('帳號修改成功！');
+        this.router.navigate(['/user/page']);
+        window.scrollTo(0, 0);
       },
       error: (error) => {
         console.log('錯誤:', error);
         alert('帳號修改失敗，請稍後再試！');
       }
     })
+  }
+
+
+
+
+
+  submitUserEdit(form: NgForm) {
+    if (form.invalid) {  // 檢查表單是否有效
+      console.log('表單驗證不通過');
+      alert('請確保所有欄位都正確填寫！');
+      Object.values(form.control).forEach(p => { p.markAsTouched(); });
+      return;  // 如果表單無效，阻止提交
+    }
+    console.log('送出的資料:', this.user);
+    this.updateUser(this.userId!);
   }
 
 
