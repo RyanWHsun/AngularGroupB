@@ -23,7 +23,7 @@ export class UserService {
 
   //新增資料
   adduser(editData: any): Observable<any> {
-    return this.userclient.post(`${this.baseAddress}api/TUsers`, editData)
+    return this.userclient.post(`${this.baseAddress}api/TUsers`, editData, { headers: { 'Content-Type': 'application/json' } });
   }
 
 }

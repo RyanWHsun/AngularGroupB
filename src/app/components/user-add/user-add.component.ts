@@ -1,3 +1,4 @@
+import { error } from 'jquery';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { UserService } from './../../services/user.service';
@@ -10,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserAddComponent {
 
-
+  emailHelpText = "請輸入電子郵件";
   // 存放輸入的表單資料
   user = {
     fUserName: null,
@@ -48,6 +49,7 @@ export class UserAddComponent {
       },
       error: (error) => {
         console.log('錯誤:', error);
+        alert(error.error.message);
         alert('帳號創建失敗，請稍後再試！');
       }
     })
