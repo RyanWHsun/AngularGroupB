@@ -10,6 +10,7 @@ import { SocialmediaService } from 'src/app/services/socialmedia.service';
 export class SocialmediaComponent {
   datas = [];
   imageData: { [key: number]: string[] } = {};
+  activePostIds: number[] = [];
   constructor(private socialmediaService: SocialmediaService) { };
   ngOnInit(): void {
     this.get();
@@ -27,5 +28,8 @@ export class SocialmediaComponent {
         this.loadImages(post['fPostId']);
       });
     })
+  }
+  openComments(postId: number) {
+    this.activePostIds.push(postId);
   }
 }
