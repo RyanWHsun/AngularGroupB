@@ -79,7 +79,7 @@
 
 
     <!-- 嘗試增加 -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm rounded mb-3">
+    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm rounded mb-3">
       <ul class="nav nav-tabs border-0">
         <li class="nav-item">
           <a class="nav-link">我的商品</a>
@@ -89,6 +89,7 @@
         </li>
       </ul>
     </nav>
+ -->
 
 
 
@@ -101,92 +102,98 @@
 
 
     <!-- 按鈕們 -->
-    <a class="nav-link" [routerLink]="['']">
-      <div class="w-100 p-1 mb-3"
-        style="border-radius:15px;border: solid 3px; border-color:#8cae78;; background-color: #ffffff;">
+    <div class="row">
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['']">
+        <div class="w-100 p-1 mb-3"
+          style="border-radius:15px;border: solid 3px; border-color:#8cae78;; background-color: #ffffff;">
 
-        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
-          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-ticket"></i></h4>
-          <div>
-            <h4 class="mb-0 text-white">我的票卷</h4>
+          <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
+            <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-ticket"></i></h4>
+            <div>
+              <h4 class="mb-0 text-white">我的票卷</h4>
+            </div>
+            <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
           </div>
-          <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
         </div>
-      </div>
-    </a>
+      </a>
 
-    <a class="nav-link" [routerLink]="['']">
-      <div class="w-100 p-1 mb-3"
-        style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['']">
+        <div class="w-100 p-1 mb-3"
+          style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
 
-        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
-          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-calendar-days"></i></h4>
-          <div>
-            <h4 class="mb-0 text-white">我的活動</h4>
+          <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
+            <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-calendar-days"></i></h4>
+            <div>
+              <h4 class="mb-0 text-white">我的活動</h4>
+            </div>
+            <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
           </div>
-          <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
         </div>
-      </div>
-    </a>
+      </a>
 
-    <a class="nav-link" [routerLink]="['/socialmedia']">
-      <div class="w-100 p-1 mb-3"
-        style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['/socialmedia']">
+        <div class="w-100 p-1 mb-3"
+          style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
 
-        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
-          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-feather"></i></h4>
-          <div>
-            <h4 class="mb-0 text-white">我的文章</h4>
+          <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
+            <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-feather"></i></h4>
+            <div>
+              <h4 class="mb-0 text-white">我的文章</h4>
+            </div>
+            <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
           </div>
-          <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
         </div>
-      </div>
-    </a>
+      </a>
 
-    <a class="nav-link" [routerLink]="['/products/myProduct']">
-      <div class="w-100 p-1 mb-3"
-        style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['/products/myProduct']">
+        <div class="w-100 p-1 mb-3"
+          style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
 
-        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
-          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-store"></i></h4>
-          <div>
-            <h4 class="mb-0 text-white">我的商品</h4>
+          <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
+            <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-store"></i></h4>
+            <div>
+              <h4 class="mb-0 text-white">我的商品</h4>
+            </div>
+            <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
           </div>
-          <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
         </div>
-      </div>
-    </a>
+      </a>
 
-    <a class="nav-link" [routerLink]="['']">
-      <div class="w-100 p-1 mb-3"
-        style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['']">
+        <div class="w-100 p-1 mb-3"
+          style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
 
-        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
-          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-cart-shopping"></i></h4>
-          <div>
-            <h4 class="mb-0 text-white">我的購物車</h4>
+          <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
+            <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-cart-shopping"></i></h4>
+            <div>
+              <h4 class="mb-0 text-white">我的購物車</h4>
+            </div>
+            <h4 class="mb-0 text-white"><i class=" fa fa-angle-double-right px-3  "></i></h4>
           </div>
-          <h4 class="mb-0 text-white"><i class=" fa fa-angle-double-right px-3  "></i></h4>
         </div>
-      </div>
-    </a>
-    <a class="nav-link" [routerLink]="['']">
-      <div class="w-100 p-1 mb-3"
-        style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
+      </a>
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['']">
+        <div class="w-100 p-1 mb-3"
+          style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
 
-        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
-          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-sack-dollar"></i></h4>
-          <div>
-            <h4 class="mb-0 text-white">我的點數</h4>
+          <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
+            <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-sack-dollar"></i></h4>
+            <div>
+              <h4 class="mb-0 text-white">我的點數</h4>
+            </div>
+            <h4 class="mb-0 text-white"><i class=" fa fa-angle-double-right px-3  "></i></h4>
           </div>
-          <h4 class="mb-0 text-white"><i class=" fa fa-angle-double-right px-3  "></i></h4>
         </div>
-      </div>
-    </a>
+      </a>
+    </div>
+
+
+
+
 
     <hr>
-
-    <a class="nav-link" [routerLink]="['']" *ngIf="user?.fUserRankId==99">
+    <div class="w-100"></div>
+    <a [routerLink]="['']" *ngIf="user?.fUserRankId==99">
       <div class="w-100 p-1 mb-3"
         style="border-radius:15px;border: solid 3px; border-color:#b0b0b0; background-color: #ffffff;">
         <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #b0b0b0;">
@@ -199,7 +206,7 @@
       </div>
     </a>
 
-    <a class="nav-link" [routerLink]="['/user/edit']">
+    <a [routerLink]="['/user/edit']">
       <div class="w-100 p-1 mb-3"
         style="border-radius:15px;border: solid 3px; border-color:#b0b0b0; background-color: #ffffff;">
         <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #b0b0b0;">
@@ -212,7 +219,7 @@
       </div>
     </a>
 
-    <a class="nav-link">
+    <a>
       <div class="w-100 p-1 mb-3"
         style="border-radius:15px;border: solid 3px; border-color:#b0b0b0; background-color: #ffffff;">
         <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #b0b0b0;">
@@ -226,7 +233,7 @@
       </div>
     </a>
     <!-- 登出 -->
-    <a class="nav-link" (click)="logOut()">
+    <a (click)="logOut()">
       <div class="w-100 p-1 mb-3 nav-link"
         style="border-radius:15px;border: solid 3px; border-color:#ebbaba; background-color: #ffffff;">
         <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #ebbaba;">

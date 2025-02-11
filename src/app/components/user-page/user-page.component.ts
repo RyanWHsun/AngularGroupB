@@ -72,8 +72,19 @@ export class UserPageComponent {
 
   logOut() {
     if (confirm('確定要登出嗎？')) {
-      this.authService.logout();
-      this.router.navigate(['/user/login']);
+      this.authService.logout().subscribe({
+        next: (a) => {
+          //清除本地儲存的 Token
+          localStorage.removeItem('jwt_token');
+          sessionStorage.removeItem('jwt_token');
+          alert("Token 已刪除，開始登出");
+          this.router.navigate(['/user/login']);
+        },
+        error: (error) => {
+          console.error("登出 API 失敗:", error);
+          alert("登出失敗，請稍後再試！");
+        }
+      });
     };
   }
 
