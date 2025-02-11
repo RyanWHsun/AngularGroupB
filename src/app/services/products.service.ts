@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { myProductList, ProductDetail, Products, createProduct } from '../interfaces/products';
+import { myProductList, ProductDetail, Products, createProduct, latestProducts } from '../interfaces/products';
 
 @Injectable({
   providedIn: 'root'
@@ -69,5 +69,10 @@ export class ProductsService {
   batchUpdateStatus(productIds: number[]): Observable<any> {
     const url = `${this.baseAddress}api/TProducts/batchUpdateStatus`;
     return this.http.put(url, productIds, { withCredentials: true });
+  }
+
+  getLatestProducts(): Observable<latestProducts[]> {
+    const url = `${this.baseAddress}api/TProducts/latest`
+    return this.http.get<latestProducts[]>(url);
   }
 }

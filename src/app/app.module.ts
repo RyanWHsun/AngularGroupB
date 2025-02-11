@@ -26,6 +26,7 @@ import { CreateProductComponent } from './components/create-product/create-produ
 import { ReactiveFormsModule } from '@angular/forms';
 import { CartComponent } from './components/cart/cart.component';
 import { PaymentComponent } from './components/payment/payment.component';
+import { ProductPipe } from './pipes/product.pipe';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { PaymentComponent } from './components/payment/payment.component';
     CreateProductComponent,
     CartComponent,
     PaymentComponent,
+    ProductPipe,
   ],
   imports: [
     BrowserModule,

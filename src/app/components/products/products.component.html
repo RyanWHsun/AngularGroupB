@@ -40,7 +40,7 @@
 <!-- Title -->
 <div class="text-center mb-1 pb-1">
   <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Products</h6>
-  <h1>{{ selectedCategoryName }}</h1>
+  <h1>{{selectedCategoryName}}</h1>
 </div>
 
 <!-- Content -->
@@ -48,23 +48,8 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-3 mt-5 mt-lg-0">
-        <!-- Search Form -->
-        <div class="mb-4">
-          <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">關鍵字搜尋</h4>
-          <div class="bg-light shadow" style="padding: 15px;">
-            <div class="input-group">
-              <input type="text" [(ngModel)]="keyword" class="form-control p-4" placeholder="Keyword">
-              <div class="input-group-append">
-                <span class="input-group-text btn btn-primary bg-primary" style="cursor: pointer;"
-                  (click)="searchProducts()"><i class="fa fa-search"></i></span>
-                <span class="input-group-text btn btn-primary bg-primary" style="cursor: pointer;"
-                  (click)="resetFilters()"><i class="fa-solid fa-rotate-right"></i></span>
-              </div>
-            </div>
-          </div>
-        </div>
         <!-- Category List -->
-        <div class=" mb-5">
+        <div class="mb-4">
           <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">商品類別</h4>
           <div class="bg-light shadow" style="padding: 30px;">
             <ul class="list-inline m-0">
@@ -84,6 +69,37 @@
             </ul>
           </div>
         </div>
+        <!-- Recent Post -->
+        <div class="mb-5">
+          <h4 class="text-uppercase mb-3" style="letter-spacing: 5px;">最新商品</h4>
+          <a *ngFor="let product of latestProducts" class="d-flex align-items-center text-decoration-none bg-white mb-3"
+            href="javascript:void(0)" data-toggle="modal" data-target="#productDetailModal"
+            (click)="openProductDetail(product.fProductId)">
+            <img class="img-fluid"
+              [src]="product.fSingleImage ? 'data:image/png;base64,' + product.fSingleImage : '../../../assets/images/noImage.jpg'"
+              alt="{{ product.fProductName }}">
+            <div class="pl-3">
+              <h6 class="m-1">{{ product.fProductName }}</h6>
+              <small>{{ product.fProductDateAdd | timeAgo }}</small>
+            </div>
+          </a>
+        </div>
+
+        <!-- Search Form -->
+        <!-- <div class="mb-4">
+          <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">關鍵字搜尋</h4>
+          <div class="bg-light shadow" style="padding: 15px;">
+            <div class="input-group">
+              <input type="text" [(ngModel)]="keyword" class="form-control p-4" placeholder="Keyword">
+              <div class="input-group-append">
+                <span class="input-group-text btn btn-primary bg-primary" style="cursor: pointer;"
+                  (click)="searchProducts()"><i class="fa fa-search"></i></span>
+                <span class="input-group-text btn btn-primary bg-primary" style="cursor: pointer;"
+                  (click)="resetFilters()"><i class="fa-solid fa-rotate-right"></i></span>
+              </div>
+            </div>
+          </div>
+        </div> -->
       </div>
 
       <!-- productList -->
@@ -127,7 +143,8 @@
               <div class="border-top px-4 py-2">
                 <div class="d-flex justify-content-between">
                   <div></div>
-                  <button class="btn btn-primary me-2 fw-bold" (click)="addToCart(product)"><i class="fa-solid fa-cart-arrow-down"></i>&nbsp;&nbsp;加入購物車</button>
+                  <button class="btn btn-primary me-2 fw-bold" (click)="addToCart(product)"><i
+                      class="fa-solid fa-cart-arrow-down"></i>&nbsp;&nbsp;加入購物車</button>
                 </div>
               </div>
             </div>

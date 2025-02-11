@@ -47,3 +47,10 @@ export interface createProduct {
   fStock: number;
   fImage: string[]; // Base64 圖片陣列
 }
+
+export interface latestProducts {
+  fProductId: number;
+  fProductName: string;
+  fProductDateAdd: string;
+  fSingleImage: string | null; // Base64 字串
+}

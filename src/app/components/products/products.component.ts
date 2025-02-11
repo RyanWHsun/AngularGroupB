@@ -2,7 +2,7 @@ import { addProductToCart } from './../../interfaces/shoppingCart';
 import { CartService } from './../../services/cart.service';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Products } from 'src/app/interfaces/products';
+import { latestProducts, Products } from 'src/app/interfaces/products';
 import { ProductsService } from 'src/app/services/products.service';
 
 
@@ -24,13 +24,15 @@ export class ProductsComponent {
   selectedCategoryName: string = '全部商品'; // 默認顯示標題
   totalProductCount: number = 1;  //所有商品數量
   selectedProductId: number | null = null;  // 當前選中的商品
-  hotKeywords: string[] = ['行李箱', '紀念品', '露營', '登山鞋', '外套', '娃娃', '撲克牌', '帳篷', '出國', '登山', '卡牌', '包包', '旅行袋']
+  hotKeywords: string[] = ['行李箱', 'RIWAWA', '露營', '爆爆瑪特', '外套', '娃娃', 'Golumbia', '帳篷', '日本', '登山', '公仔', '台灣', '手錶', '麻將', 'Germès']
+  latestProducts: latestProducts[] = []; //最新商品
 
   constructor(private productService: ProductsService, private cartService: CartService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadProducts(); // 初始化加載商品
     this.loadCategories(); // 加載分類數據
+    this.loadLatestProducts();//加載最新商品
   }
 
   // 加載分類
@@ -60,6 +62,7 @@ export class ProductsComponent {
 
         this.hasMorePages = data.length === this.pageSize; // 如果返回的商品數量等於 pageSize，說明還有更多頁面
         //console.log(this.products);
+        this.showTheTitle();
       },
       error: (error) => {
         console.error('沒抓到資料辣!', error);
@@ -95,16 +98,22 @@ export class ProductsComponent {
   filterByCategory(categoryId: number | null): void {
     this.selectedCategoryId = categoryId; // 設置當前選擇的類別
     this.currentPage = 1; // 重置到第一頁
-
-    // 根據選中的分類 ID 設置標題
-    if (categoryId === null) {
-      this.selectedCategoryName = '全部商品';
-    } else {
-      const category = this.categories.find(c => c.fProductCategoryId === categoryId);
-      this.selectedCategoryName = category ? category.fCategoryName : '未知分類';
-    }
-
+    this.showTheTitle();
+    this.keyword = '';
     this.loadProducts(); // 載入篩選後的商品列表
+  }
+
+  showTheTitle() {
+    // 更新標題顯示邏輯
+    if (this.keyword && this.keyword.trim() !== '') {
+      this.selectedCategoryName = `"${this.keyword}" 的搜尋結果`;
+    } else if (this.selectedCategoryId) {
+      this.selectedCategoryName = this.categories.find(c => c.fProductCategoryId === this.selectedCategoryId)?.fCategoryName || '全部商品';
+      this.keyword = '';
+    } else {
+      this.selectedCategoryName = '全部商品';
+      this.keyword = '';
+    }
   }
 
   resetFilters(): void {
@@ -149,6 +158,18 @@ export class ProductsComponent {
           console.log('加入購物車錯誤:', error);
           alert(error.error.message);
         }
+      }
+    })
+  }
+
+  loadLatestProducts(): void {
+    this.productService.getLatestProducts().subscribe({
+      next: (data) => {
+        this.latestProducts = data;
+        console.log(this.latestProducts);
+      },
+      error: (error) => {
+        console.error('最新商品載入錯誤:', error)
       }
     })
   }
