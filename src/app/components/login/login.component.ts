@@ -8,9 +8,13 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+
+
   account = '';
   password = '';
+
   constructor(private authService: AuthService) { };
+
   submit() {
     this.authService.login(this.account, this.password)
       .pipe(
@@ -26,5 +30,7 @@ export class LoginComponent {
           console.log('登入成功：', data);
         }
       });
+
+
   }
 }

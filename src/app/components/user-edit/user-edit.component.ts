@@ -12,12 +12,13 @@ import { userEditMaterial } from 'src/app/interfaces/user';
 export class UserEditComponent {
 
   user: userEditMaterial = {
+    fUserRankId: 0,
     fUserName: "",
     fUserImage: "",//照片
     fUserNickName: "",
     fUserSex: "",
     fUserPhone: "",
-    fUserBirthday: "1999-01-01",
+    fUserBirthday: "2000-01-01",
     fUserAddress: ""
   };
   userId: number | null = null;  // 儲存從本地存儲中取得的 userId
@@ -29,6 +30,7 @@ export class UserEditComponent {
 
   ngOnInit(): void {
     this.loadUser(0);
+    window.scrollTo(0, 0);
   }
 
 

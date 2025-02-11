@@ -9,8 +9,6 @@ export class UserComponent {
 
 
 
-
-
   userLogin() {
     alert("hellow");
   }

@@ -1,5 +1,7 @@
+import { AuthService } from './../../services/auth.service';
 import { Router } from '@angular/router';
 import { Component } from '@angular/core';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-user-login',
@@ -8,11 +10,36 @@ import { Component } from '@angular/core';
 })
 export class UserLoginComponent {
 
+  fUserEmail = "";
+  fUserPassword = "";
 
-  constructor(private router: Router) { }
 
+  constructor(private router: Router, private authService: AuthService) { }
 
-  submit(){
+  ngOnInit(): void {
+    window.scrollTo(0, 0);
+  }
+
+  submit(form: NgForm) {
+    if (form.invalid) {
+      Object.values(form.controls).forEach(a => {
+        a.markAllAsTouched();
+      });
+      alert("請輸入帳號密碼");
+      return;
+    }
+    this.authService.login(this.fUserEmail, this.fUserPassword).subscribe({
+      next: (response) => {
+        console.log("成功", response);
+        alert("登入成功!");
+        this.router.navigate(['/user/page']);
+      },
+      error: (error) => {
+        console.log(error);
+        alert(error.error.message);
+      }
+
+    })
 
 
   }

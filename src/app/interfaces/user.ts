@@ -1,5 +1,6 @@
 // 顯示
 export interface userMaterial {
+  fUserRankId: number;
   fUserName: string;
   fUserImage?: string | null;//照片
   fUserNickName: string;
@@ -13,6 +14,7 @@ export interface userMaterial {
 
 //修改
 export interface userEditMaterial {
+  fUserRankId: number;
   fUserName: string;
   fUserImage?: string | null;//照片
   fUserNickName: string;

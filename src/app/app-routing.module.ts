@@ -84,6 +84,10 @@ const routes: Routes = [
     {
       path: 'page',
       component: UserPageComponent
+    },
+    {
+      path: 'editPassword',
+      component: UserComponent
     }]
   },
   {

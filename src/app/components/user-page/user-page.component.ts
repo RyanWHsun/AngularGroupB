@@ -1,3 +1,5 @@
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 import { userMaterial } from './../../interfaces/user';
 import { Component, OnInit } from '@angular/core';
 import { data, error } from 'jquery';
@@ -14,7 +16,7 @@ export class UserPageComponent {
   user: userMaterial | null = null;  // 用來儲存用戶資料
   userId: number | null = null;  // 儲存從本地存儲中取得的 userId
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private router: Router, private authService: AuthService) { }
 
 
   fUserName = "你的名字";
@@ -22,11 +24,12 @@ export class UserPageComponent {
   fUserImage = "assets/images/noImage.jpg"
   fUserSex = "女";
   fUserBirthday = "2000-01-01";
-  fUserComeDate = "2025-02-06";
+  fUserComeDate = "";
 
 
   ngOnInit(): void {
     this.loadUser(0);
+    window.scrollTo(0, 0);
   }
 
   //找登入者的資料
@@ -41,7 +44,9 @@ export class UserPageComponent {
           this.fUserNickName = data.fUserNickName;
           this.fUserImage = data.fUserImage ? `data:image/png;base64,${data.fUserImage}` : "assets/images/noImage.jpg";
           this.fUserSex = data.fUserSex;
-          this.fUserBirthday = data.fUserBirthday.split("T")[0];;
+          if (data.fUserBirthday != null) {
+            this.fUserBirthday = data.fUserBirthday.split("T")[0];
+          };
           this.fUserComeDate = data.fUserComeDate.split("T")[0];;
         }
       },
@@ -51,6 +56,26 @@ export class UserPageComponent {
     })
   }
 
+
+
+  //前往購物車
+  goToShoppingCart() {
+    this.router.navigate(['']);
+  }
+  //前往修改資料
+  goToUserEdit() {
+    this.router.navigate(['/user/edit']);
+  }
+
+
+
+
+  logOut() {
+    if (confirm('確定要登出嗎？')) {
+      this.authService.logout();
+      this.router.navigate(['/user/login']);
+    };
+  }
 
 }
 
