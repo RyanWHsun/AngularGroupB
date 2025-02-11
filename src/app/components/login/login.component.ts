@@ -25,13 +25,6 @@ export class LoginComponent {
       .subscribe((data) => {
         if (data) {
           console.log('登入成功：', data);
-
-          // Writer: Li-Chun Chen
-          this.authService.getUserInfo().subscribe((user) => {
-            console.log(`User ID: ${user.userId}`);
-            console.log(`User Name: ${user.userName}`);
-          });
-          // Writer: Li-Chun Chen
         }
       });
   }

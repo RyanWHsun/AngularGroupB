@@ -1,7 +1,7 @@
 export interface IAttractionTicketShoppingCart{
-  fCartId?:number|null,
-  fCartItemId?:number|null,
-  fUserId?:number|null,
+  fCartId?:number|null;
+  fCartItemId?:number|null;
+  fUserId?:number|null;
   fTicketId?: number | null;
   fAttractionId?: number | null;
   fAttractionName?: string | null;

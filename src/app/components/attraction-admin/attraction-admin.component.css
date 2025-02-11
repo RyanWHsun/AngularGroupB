@@ -1,41 +1,23 @@
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-alpine.css';
+
 .card {
   margin-bottom: 20px;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
 .card img {
   height: 200px;
   object-fit: cover;
 }
-
 .card-body {
   text-align: center;
 }
-
 .card-title {
   font-size: 1.2rem;
   font-weight: bold;
 }
-
-.card-body button {
-  width: 100%; /* 讓按鈕填滿父容器 */
-  border-radius: 10px; /* 讓按鈕的圓角與卡片一致 */
-  padding: 10px; /* 增加按鈕的內邊距 */
-  background-color: white; /* 設定按鈕背景顏色，可依需求調整 */
-  color: #7ab730; /* 設定文字顏色 */
-  border-style: solid;
-  border-color: #7ab730;
-  font-size: 1rem; /* 設定字體大小 */
-  cursor: pointer; /* 鼠標變成手型 */
-}
-
-.card-body button:hover {
-  background-color: #7ab730; /* 設定按鈕背景顏色，可依需求調整 */
-  color: white; /* 設定文字顏色 */
-}
-
 .views {
   position: absolute;
   top: 10px;
@@ -46,11 +28,9 @@
   border-radius: 15px;
   font-size: 0.9rem;
 }
-
 .tags {
   margin-top: 10px;
 }
-
 .tags span {
   display: inline-block;
   background: #f8f9fa;
@@ -82,18 +62,4 @@
   width: 38%;
   height: 40px;
   border-radius: 10px;
-}
-
-.pagination .page-link {
-  cursor: pointer;
-  color: #000; /* 預設按鈕文字顏色 */
-}
-
-.pagination {
-  margin-top: 20px; /* 調整與其他內容的垂直間距 */
-}
-
-.pagination .page-item.active .page-link {
-  background-color: #7ab730; /* 當前頁面的背景色 */
-  border-color: #7ab730; /* 當前頁面的邊框色 */
 }

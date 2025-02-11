@@ -14,10 +14,4 @@ export class AuthService {
   login(email: string, password: string): Observable<any> {
     return this.httpClient.post(`${this.apiUrl}/login`, { email, password }, { withCredentials: true });
   }
-
-  // Writer: Li-Chun Chen
-  getUserInfo(){
-    return this.httpClient.get<IUser>(`${this.apiUrl}/userInfo`, {withCredentials:true});
-  }
-  // Writer: Li-Chun Chen
 }

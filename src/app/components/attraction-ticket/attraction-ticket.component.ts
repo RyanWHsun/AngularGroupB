@@ -5,7 +5,7 @@ import { AttractionService } from 'src/app/services/attraction.service';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { IAttractionTicket } from 'src/app/interfaces/IAttractionTicket';
 import { AttractionTicketService } from 'src/app/services/attraction-ticket.service';
-import { catchError, forkJoin, map, Observable, of } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, take } from 'rxjs';
 import { tick } from '@angular/core/testing';
 import { IBuyTicketModal } from 'src/app/interfaces/IBuyTicketModal';
 import { IAttractionTicketShoppingCart } from 'src/app/interfaces/IAttractionTicketShoppingCart';
@@ -37,7 +37,7 @@ export class AttractionTicketComponent {
     attractionTicketType: [],
     attractionTicketPrice: [],
     attractionTicketQuantity: 0,
-    imageSrc:''
+    imageSrc: '',
   };
 
   selectedType: string = ''; // 被選中的票種
@@ -230,7 +230,7 @@ export class AttractionTicketComponent {
 
   showAllTickets() {
     this.attractionTicketService.getAllAttractionTickets().subscribe((data) => {
-      this.setPages(Math.ceil(data.length / 9));
+      //this.setPages(Math.ceil(data.length / 9));
     });
   }
 
@@ -243,26 +243,13 @@ export class AttractionTicketComponent {
         map((data) => {
           this.partialAttractionTickets = data;
           this.setImage(data);
-          this.setPages(Math.ceil(data.length / 9));
           return data; // 回傳票券資料
         })
       );
   }
 
-  toggleAll() {
-    this.menuIsActive = true;
-    this.showPartialAttractionTickets(0);
-    console.log('all');
-  }
-
-  togglePopular() {
-    this.menuIsActive = false;
-  }
-
-  setViewMode(mode: 'grid' | 'list') {
-    this.viewMode = mode;
-    this.viewModeIsActive = !this.viewModeIsActive;
-    console.log(this.viewMode);
+  getTicketQuantities(): Observable<number> {
+    return this.attractionTicketService.getTicketQuantities();
   }
 
   setPages(pageLength: number) {
@@ -276,6 +263,26 @@ export class AttractionTicketComponent {
     // 這個函式的作用是針對每個元素返回其索引值 i。
     // _ 表示忽略元素的值（因為不需要），只使用索引值。
     this.pages = Array.from({ length: pageLength }, (_, i) => i); // 生成 0~9 的陣列
+  }
+
+  toggleAll() {
+    this.menuIsActive = true;
+    this.getTicketQuantities()
+      .pipe(take(1))
+      .subscribe((qty) => {
+        this.setPages(Math.ceil(qty / 9));
+        this.showPartialAttractionTickets(0);
+      });
+  }
+
+  togglePopular() {
+    this.menuIsActive = false;
+  }
+
+  setViewMode(mode: 'grid' | 'list') {
+    this.viewMode = mode;
+    this.viewModeIsActive = !this.viewModeIsActive;
+    console.log(this.viewMode);
   }
 
   // 點選頁碼，設定 selectedPageIndex
@@ -350,7 +357,6 @@ export class AttractionTicketComponent {
       // descriptions 是一個陣列，包含每個請求的最終值。
       forkJoin(request).subscribe((descriptions) => {
         this.attractionDescription = descriptions;
-        console.log('des:', this.attractionDescription);
       });
     });
   }

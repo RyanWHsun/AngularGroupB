@@ -30,4 +30,8 @@ export class AttractionTicketService {
   getAttractionTicketTypes(attractionId: number) {
     return this.client.get<string[]>(`${this.baseUrl}/${attractionId}/types`);
   }
+
+  getTicketQuantities(){
+    return this.client.get<number>(`${this.baseUrl}/Count`);
+  }
 }

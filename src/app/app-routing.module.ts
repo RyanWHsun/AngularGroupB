@@ -16,91 +16,107 @@ import { UserPageComponent } from './components/user-page/user-page.component';
 import { MyarticlesComponent } from './components/myarticles/myarticles.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { AttractionTicketComponent } from './components/attraction-ticket/attraction-ticket.component';
+import { AttractionAdminComponent } from './components/attraction-admin/attraction-admin.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
   },
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
   },
   {
     path: 'attraction',
     component: LayoutComponent,
-    children: [{
-      path:'',
-      component: AttractionComponent
-    },{
-      path:'tickets',
-      component:AttractionTicketComponent
-    }]
+    children: [
+      {
+        path: '',
+        component: AttractionComponent,
+      },
+      {
+        path:'admin',
+        component:AttractionAdminComponent,
+      },
+      {
+        path: 'tickets',
+        component: AttractionTicketComponent,
+      },
+    ],
   },
   {
     path: 'event',
     component: LayoutComponent,
-    children: [{
-      path: '',
-      component: EventComponent
-    }]
+    children: [
+      {
+        path: '',
+        component: EventComponent,
+      },
+    ],
   },
   {
     path: 'products',
     component: LayoutComponent,
-    children: [{
-      path: '',
-      component: ProductsComponent
-    },
-    {
-      path: 'myProduct',
-      component: MyProductComponent
-    }]
+    children: [
+      {
+        path: '',
+        component: ProductsComponent,
+      },
+      {
+        path: 'myProduct',
+        component: MyProductComponent,
+      },
+    ],
   },
   {
     path: 'socialmedia',
     component: LayoutComponent,
-    children: [{
-      path: '',
-      component: SocialmediaComponent
-    },
-    {
-      path: 'articles',
-      component: MyarticlesComponent
-    }]
+    children: [
+      {
+        path: '',
+        component: SocialmediaComponent,
+      },
+      {
+        path: 'articles',
+        component: MyarticlesComponent,
+      },
+    ],
   },
   {
     path: 'user',
     component: LayoutComponent,
-    children: [{
-      path: '',
-      component: UserLoginComponent
-    },
-    {
-      path: 'add',
-      component: UserAddComponent
-    },
-    {
-      path: 'edit',
-      component: UserEditComponent
-    },
-    {
-      path: 'login',
-      component: UserLoginComponent
-    },
-    {
-      path: 'page',
-      component: UserPageComponent
-    }]
+    children: [
+      {
+        path: '',
+        component: UserLoginComponent,
+      },
+      {
+        path: 'add',
+        component: UserAddComponent,
+      },
+      {
+        path: 'edit',
+        component: UserEditComponent,
+      },
+      {
+        path: 'login',
+        component: UserLoginComponent,
+      },
+      {
+        path: 'page',
+        component: UserPageComponent,
+      },
+    ],
   },
   {
     path: '**',
-    component: HomeComponent
+    component: HomeComponent,
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
