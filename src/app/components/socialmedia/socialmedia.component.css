@@ -28,7 +28,7 @@ strong {
 
 .fixed-sidebar {
   position: sticky;
-  top: 200px
+  top: 200px;
 }
 
 .form-select {

@@ -74,11 +74,11 @@
 
           <!-- Image -->
           <div *ngIf="imageData[data['fPostId']] && imageData[data['fPostId']].length > 0" class="mb-2">
-            <img [src]="imageData[data['fPostId']][0]" class="w-100" style='height: auto;object-fit: cover' />
+            <img [src]="imageData[data['fPostId']][0]" class="w-100" style='height: 444.75px;object-fit: cover' />
           </div>
 
           <div *ngIf="!imageData[data['fPostId']] || imageData[data['fPostId']].length == 0" class="mb-2">
-            <img src="/assets/images/noImage.jpg" class="w-100" style='height: auto;object-fit: cover' />
+            <img src="/assets/images/noImage.jpg" class="w-100" style='height: 444.75px;object-fit: cover' />
           </div>
 
           <!-- Actions -->
@@ -115,6 +115,26 @@
     <div class="col-2">
       <div class="contacts-list fixed-sidebar">
         <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">聯絡人</h4>
+        <div class="contact-card">
+          <img src="/assets/images/noImage.jpg" class="avatar">
+          <span class="name">asdasdasd</span>
+        </div>
+        <div class="contact-card">
+          <img src="/assets/images/noImage.jpg" class="avatar">
+          <span class="name">asdasdasd</span>
+        </div>
+        <div class="contact-card">
+          <img src="/assets/images/noImage.jpg" class="avatar">
+          <span class="name">asdasdasd</span>
+        </div>
+        <div class="contact-card">
+          <img src="/assets/images/noImage.jpg" class="avatar">
+          <span class="name">asdasdasd</span>
+        </div>
+        <div class="contact-card">
+          <img src="/assets/images/noImage.jpg" class="avatar">
+          <span class="name">asdasdasd</span>
+        </div>
         <div class="contact-card">
           <img src="/assets/images/noImage.jpg" class="avatar">
           <span class="name">asdasdasd</span>

@@ -46,9 +46,9 @@
 <div>{{editorData}}</div>
 <div [innerHTML]="finalData">123</div>
 
-<div id="myArticle" class="container" style="width: 60%;">
+<div id="myArticle" class="container">
   <div class="row">
-    <div *ngFor="let data of datas" class="col-4 px-1">
+    <div *ngFor="let data of datas" class="col-4">
       <div *ngIf="imageData[data['fPostId']] && imageData[data['fPostId']].length > 0" class="image-container">
         <img [src]="imageData[data['fPostId']][0]" class="w-100" />
         <div class="overlay">

@@ -1,5 +1,5 @@
 #myArticle img {
-  height: 300px;
+  height: 262.5px;
   object-fit: cover;
 }
 
@@ -64,4 +64,14 @@
 .form-select {
   text-align: center;
   letter-spacing: 5px;
+}
+
+.col-4 {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.row {
+  padding-left: 10px;
+  padding-right: 10px;
 }
