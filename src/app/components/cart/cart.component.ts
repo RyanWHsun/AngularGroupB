@@ -202,4 +202,8 @@ export class CartComponent {
     })
     this.totalPrice = 0;
   }
+
+  checkOut() {
+    this.router.navigate(['products/payment']);
+  }
 }

@@ -28,7 +28,7 @@
     <span class="text-primary">NT</span><i class="text-primary fa-solid fa-dollar-sign"></i>&ensp;{{
     productDetail.fProductPrice | number:'1.0-0' }}
   </h4>
-  <div class=" border-top mt-3 pt-3 mx-3">
+  <div class="product-description border-top mt-3 pt-3 mx-3">
     <h5><strong><i class="text-primary fa-solid fa-circle-info"></i>&ensp;商品描述</strong></h5>
     <p>{{productDetail.fProductDescription}}</p>
     <div class="row mt-2">
@@ -65,6 +65,5 @@
   </div>
   <button class="btn btn-primary mx-3 fw-bold " (click)="addToCart()"><i
       class="fa-solid fa-cart-arrow-down"></i>&nbsp;&nbsp;加入購物車</button>
-  <button type="button" class="btn btn-secondary" data-dismiss="modal"
-    (click)="resetQuantity()">關閉</button>
+  <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="resetQuantity()">關閉</button>
 </div>

@@ -1,7 +1,7 @@
 import { addProductToCart } from './../../interfaces/shoppingCart';
 import { CartService } from './../../services/cart.service';
 import { Component } from '@angular/core';
-import { error } from 'jquery';
+import { Router } from '@angular/router';
 import { Products } from 'src/app/interfaces/products';
 import { ProductsService } from 'src/app/services/products.service';
 
@@ -26,7 +26,7 @@ export class ProductsComponent {
   selectedProductId: number | null = null;  // 當前選中的商品
   hotKeywords: string[] = ['行李箱', '紀念品', '露營', '登山鞋', '外套', '娃娃', '撲克牌', '帳篷', '出國', '登山', '卡牌', '包包', '旅行袋']
 
-  constructor(private productService: ProductsService, private cartService: CartService) { }
+  constructor(private productService: ProductsService, private cartService: CartService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadProducts(); // 初始化加載商品
@@ -57,16 +57,9 @@ export class ProductsComponent {
           fUserImage: product.fUserImage || null, // 保留 Base64 值，若為 null 則不處理
           fImage: product.fImage || null,
         }))
-          .sort((a, b) => b.fProductId - a.fProductId);
 
         this.hasMorePages = data.length === this.pageSize; // 如果返回的商品數量等於 pageSize，說明還有更多頁面
         //console.log(this.products);
-
-        if (this.keyword != '') {
-          this.selectedCategoryName = `${this.keyword}的搜尋結果`;
-        } else {
-          this.selectedCategoryName = '全部商品';
-        }
       },
       error: (error) => {
         console.error('沒抓到資料辣!', error);
@@ -147,8 +140,15 @@ export class ProductsComponent {
         alert(response.message);
         this.cartService.loadCartCount();
       }, error: (error) => {
-        console.log('加入購物車錯誤:', error);
-        alert(error.error.message);
+        if (error.status === 401) {
+          console.log(error);
+          console.warn('沒登入，顯示提示訊息');
+          alert('請先登入哦!');
+          this.router.navigate(['user/login']);
+        } else {
+          console.log('加入購物車錯誤:', error);
+          alert(error.error.message);
+        }
       }
     })
   }

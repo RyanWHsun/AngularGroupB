@@ -17,6 +17,7 @@ import { MyarticlesComponent } from './components/myarticles/myarticles.componen
 import { LayoutComponent } from './components/layout/layout.component';
 import { CreateProductComponent } from './components/create-product/create-product.component';
 import { CartComponent } from './components/cart/cart.component';
+import { PaymentComponent } from './components/payment/payment.component';
 
 const routes: Routes = [
   {
@@ -59,6 +60,9 @@ const routes: Routes = [
     }, {
       path: 'cart',
       component: CartComponent
+    }, {
+      path: 'payment',
+      component: PaymentComponent
     }]
   },
   {

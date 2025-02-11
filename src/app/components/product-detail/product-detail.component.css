@@ -8,6 +8,11 @@ h5 {
   font-weight: bold;
 }
 
+.product-description {
+  /* 讓 \n 換行生效 */
+  white-space: pre-line;
+}
+
 .modal-footer {
   background-color: rgb(243, 243, 243);
   border-top: 1px solid #dee2e6;
