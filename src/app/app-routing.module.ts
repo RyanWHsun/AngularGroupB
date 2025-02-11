@@ -4,6 +4,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { AttractionComponent } from './components/attraction/attraction.component';
 import { EventComponent } from './components/event/event.component';
+import { EventDetailComponent } from './components/event-detail/event-detail.component'; // ✅ 修正為頁面
 import { ProductsComponent } from './components/products/products.component';
 import { SocialmediaComponent } from './components/socialmedia/socialmedia.component';
 import { UserComponent } from './components/user/user.component';
@@ -36,6 +37,9 @@ const routes: Routes = [
     children: [{
       path: '',
       component: EventComponent
+    },
+    { path: 'detail/:id',
+      component: EventDetailComponent
     }]
   },
   {

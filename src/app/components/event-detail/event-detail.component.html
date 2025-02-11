@@ -1,0 +1,9 @@
+<div class="container mt-5">
+  <h2>{{ event?.fEventName }}</h2>
+  <img [src]="event?.fEventImageUrl || 'assets/images/noImage.jpg'" alt="活動圖片" class="img-fluid" />
+  <p><strong>活動地點:</strong> {{ event?.fLocation || '未提供' }}</p>
+  <p><strong>開始時間:</strong> {{ event?.fEventStartDate | date:'yyyy-MM-dd' }}</p>
+  <p><strong>結束時間:</strong> {{ event?.fEventEndDate | date:'yyyy-MM-dd' }}</p>
+  <p><strong>報名人數:</strong> {{ event?.fParticipant }} 人</p>
+  <p><strong>活動描述:</strong> {{ event?.fEventDescription }}</p>
+</div>

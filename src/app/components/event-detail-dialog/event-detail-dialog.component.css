@@ -1,0 +1,109 @@
+/* ✅ 讓對話框內容置中，並適應不同裝置 */
+.event-detail-modal {
+  text-align: center;
+  padding: 25px;
+  max-width: 750px; /* ✅ 再稍微放大，讓內容更清楚 */
+  width: 80vw;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* ✅ 讓圖片填滿對話框 */
+.event-image img {
+  width: 100%;
+  max-height: 350px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+/* ✅ 美化關閉按鈕 */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  background: transparent;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+}
+
+.close-btn:hover {
+  color: #000;
+}
+
+/* ✅ 美化報名按鈕 */
+.btn-primary {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-top: 15px;
+  transition: background 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+  background: #218838;
+}
+
+.btn-primary:disabled {
+  background: gray;
+  cursor: not-allowed;
+}
+
+/* ✅ 讓 MatDialog 固定置中 */
+.event-dialog .mat-dialog-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 750px; /* ✅ 讓對話框大一點 */
+  width: 80vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* ✅ 背景模糊效果 */
+.mat-dialog-backdrop {
+  background: rgba(0, 0, 0, 0.6) !important;
+  position: fixed !important;
+}
+
+/* ✅ 添加彈出動畫 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -55%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* ✅ 確保小螢幕適應 */
+@media (max-width: 768px) {
+  .event-dialog .mat-dialog-container {
+    width: 90vw;
+    max-width: 90vw;
+    padding: 20px;
+  }
+}
