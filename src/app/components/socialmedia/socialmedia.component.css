@@ -6,3 +6,32 @@ button:hover i {
 strong {
   color: black;
 }
+
+.search-bar-container {
+  position: sticky;
+  top: 0;
+}
+
+
+.contact-card {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  gap: 10px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.fixed-sidebar {
+  position: sticky;
+  top: 200px
+}
+
+.form-select {
+  text-align: center;
+  letter-spacing: 5px;
+}
