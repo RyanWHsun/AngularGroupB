@@ -31,40 +31,49 @@
         <div class="contact-form bg-white" style="padding: 30px;">
           <div id="success"></div>
 
-          <form name="sentMessage" id="contactForm" novalidate="novalidate">
+          <form name="sentMessage" id="contactForm" #f="ngForm" novalidate="novalidate">
 
-            <div class="control-group">
-              <!-- 用戶名稱輸入 -->
+            <!-- 用戶名稱輸入 -->
+            <div class="control-group mb-2">
               <h5 class="text-uppercase">用戶名稱</h5>
-              <input type="text" class="form-control p-4" id="userName" placeholder="用戶名稱並不是你的帳戶" required="required"
-                data-validation-required-message="請輸入用戶名稱" />
-              <p class="help-block text-danger"></p>
+              <input type="text" class="form-control p-4" id="userName" placeholder="用戶名稱最多20字" required="required"
+                maxlength="20" [(ngModel)]="user.fUserName" name="fUserName" #name="ngModel" />
+              <p class="help-block text-danger" *ngIf="name.invalid && name.touched">請輸入用戶名稱</p>
+            </div>
+
+            <!-- 暱稱輸入 -->
+            <div class="control-group mb-2">
+              <h5 class="text-uppercase">暱稱</h5>
+              <input type="text" class="form-control p-4" id="userNickName" placeholder="暱稱最多20字" required="required"
+                maxlength="20" [(ngModel)]="user.fUserNickName" name="fUserNickName" #nickName="ngModel" />
+              <p class="help-block text-danger" *ngIf="nickName.invalid && nickName.touched">請輸入暱稱</p>
+            </div>
 
 
-              <!-- 帳號(email)輸入 -->
+            <!-- 帳號(email)輸入 -->
+            <div class="control-group mb-2">
               <h5 class="text-uppercase">帳號</h5>
               <input type="email" class="form-control p-4" id="userEmail" placeholder="請輸入電子郵件" required="required"
-                data-validation-required-message="請輸入電子郵件" />
-              <p class="help-block text-danger"></p>
+                [(ngModel)]="user.fUserEmail" name="fUserEmail" #userEmail="ngModel" />
+              <p class="help-block text-danger" *ngIf="userEmail.invalid && userEmail.touched">請輸入電子郵件</p>
+            </div>
 
-              <!-- 密碼輸入 -->
+
+            <!-- 密碼輸入 -->
+            <div class="control-group mb-2">
               <h5 class="text-uppercase">密碼</h5>
               <input type="password" class="form-control p-4" id="userPassword" placeholder="請輸入密碼" required="required"
-                data-validation-required-message="Please enter a password" />
-              <p class="help-block text-danger"></p>
-
-              <!-- 創建日期 -->
-              <h5 class="text-uppercase">創建日期</h5>
-              <input type="text" class="form-control p-4" id="userComeDate" placeholder="創建日期" required="required" />
-              <p class="help-block text-danger"></p>
+                [(ngModel)]="user.fUserPassword" name="fUserPassword" #userPassword="ngModel" />
+              <p class="help-block text-danger" *ngIf="userPassword.invalid && userPassword.touched">請輸入密碼</p>
             </div>
-
-            <!-- 送出按鈕 -->
-            <div class="text-center">
-              <button class="btn btn-primary py-3 px-4" type="submit" id="sendMessageButton">創建帳號</button>
-            </div>
-
           </form>
+
+          <!-- 送出按鈕 -->
+          <div class="text-center">
+            <button class="btn btn-primary py-3 px-4" type="text" (click)="submit(f)"
+              id="sendMessageButton">創建帳號</button>
+          </div>
+
 
         </div>
       </div>

@@ -1,1 +1,255 @@
-<p>user-page works!</p>
+<!-- Header Start -->
+<div class="container-fluid page-header">
+  <div class="container">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+      <h3 class="display-4 text-white text-uppercase">帳戶</h3>
+      <div class="d-inline-flex text-white">
+        <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase">帳戶</p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase">帳戶主頁</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Header End -->
+
+<!-- Booking Start -->
+<!-- Booking End -->
+
+<!-- start your coding here-->
+<div class="container-fluid booking mt-5 pb-5">
+  <div class="container pt-5 pb-3">
+    <!-- <div class="text-center mb-3 pb-3">
+      <h1>會員中心</h1>
+    </div> -->
+
+
+    <!-- 頭像 -->
+    <div class="container-fluid booking mb-3">
+      <div class="container col-lg-3 col-md-3 col-sm-6 w-75 mb-3">
+        <img class="img-fluid w-100" style="border-radius: 15px;" [src]="fUserImage" alt="">
+      </div>
+    </div>
+
+    <!-- 姓名 -->
+    <div class="container-fluid mb-3">
+      <div class="d-flex align-items-start flex-column h-100">
+        <div class="container">
+          <h4 class="text-truncate text-center">{{fUserNickName}}</h4>
+          <h5 class="text-primary  text-center">{{fUserName}}</h5>
+          <hr>
+
+          <div class="w-100 d-flex justify-content-evenly row">
+            <h5 class="text-primary  text-center mx-auto">性別：{{fUserSex}}</h5>
+            <h5 class="text-primary  text-center mx-auto">生日：{{fUserBirthday}}</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 三常用 -->
+    <!-- <div class=" container-fluid mb-3"> -->
+    <div class="container d-flex justify-content-evenly w-100">
+      <button type="button" class="mx-auto btn btn-outline-secondary" (click)="goToShoppingCart()">
+        <div class="bg-white p-3" style="border-radius: 15px; border:solid 3px; border-color: #BAD8A8;">
+          <i class="fa-solid fa-cart-shopping" style="color: #56bda9;font-size:35px"></i>
+        </div>
+        <p class="mb-0">購物車</p>
+
+      </button>
+
+      <button type="button" class="mx-auto btn btn-outline-secondary">
+        <div class="bg-white p-3" style="border-radius: 15px; border:solid 3px; border-color: #BAD8A8;">
+          <i class="fa-solid fa-sack-dollar" style="color: #56bda9;font-size:35px"></i>
+        </div>
+        <p class="mb-0">點數</p>
+      </button>
+
+      <button type="button" class="mx-auto btn btn-outline-secondary" (click)="goToUserEdit()">
+        <div class="bg-white p-3" style="border-radius: 15px; border:solid 3px; border-color: #BAD8A8;">
+          <i class="fa-solid fa-pen-to-square" style="color: #56bda9;font-size:35px"></i>
+        </div>
+        <p class="mb-0">修改資料</p>
+      </button>
+
+    </div>
+    <!-- </div> -->
+
+
+    <!-- 嘗試增加 -->
+    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm rounded mb-3">
+      <ul class="nav nav-tabs border-0">
+        <li class="nav-item">
+          <a class="nav-link">我的商品</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link">我的文章</a>
+        </li>
+      </ul>
+    </nav>
+ -->
+
+
+
+
+
+
+
+
+
+
+
+    <!-- 按鈕們 -->
+    <div class="row">
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['']">
+        <div class="w-100 p-1 mb-3"
+          style="border-radius:15px;border: solid 3px; border-color:#8cae78;; background-color: #ffffff;">
+
+          <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
+            <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-ticket"></i></h4>
+            <div>
+              <h4 class="mb-0 text-white">我的票卷</h4>
+            </div>
+            <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
+          </div>
+        </div>
+      </a>
+
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['']">
+        <div class="w-100 p-1 mb-3"
+          style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
+
+          <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
+            <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-calendar-days"></i></h4>
+            <div>
+              <h4 class="mb-0 text-white">我的活動</h4>
+            </div>
+            <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
+          </div>
+        </div>
+      </a>
+
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['/socialmedia']">
+        <div class="w-100 p-1 mb-3"
+          style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
+
+          <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
+            <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-feather"></i></h4>
+            <div>
+              <h4 class="mb-0 text-white">我的文章</h4>
+            </div>
+            <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
+          </div>
+        </div>
+      </a>
+
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['/products/myProduct']">
+        <div class="w-100 p-1 mb-3"
+          style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
+
+          <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
+            <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-store"></i></h4>
+            <div>
+              <h4 class="mb-0 text-white">我的商品</h4>
+            </div>
+            <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
+          </div>
+        </div>
+      </a>
+
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['']">
+        <div class="w-100 p-1 mb-3"
+          style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
+
+          <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
+            <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-cart-shopping"></i></h4>
+            <div>
+              <h4 class="mb-0 text-white">我的購物車</h4>
+            </div>
+            <h4 class="mb-0 text-white"><i class=" fa fa-angle-double-right px-3  "></i></h4>
+          </div>
+        </div>
+      </a>
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['']">
+        <div class="w-100 p-1 mb-3"
+          style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
+
+          <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
+            <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-sack-dollar"></i></h4>
+            <div>
+              <h4 class="mb-0 text-white">我的點數</h4>
+            </div>
+            <h4 class="mb-0 text-white"><i class=" fa fa-angle-double-right px-3  "></i></h4>
+          </div>
+        </div>
+      </a>
+    </div>
+
+
+
+
+
+    <hr>
+    <div class="w-100"></div>
+    <a [routerLink]="['']" *ngIf="user?.fUserRankId==99">
+      <div class="w-100 p-1 mb-3"
+        style="border-radius:15px;border: solid 3px; border-color:#b0b0b0; background-color: #ffffff;">
+        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #b0b0b0;">
+          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-pen-to-square"></i></h4>
+          <div>
+            <h4 class="mb-0 text-white">管理所有用戶</h4>
+          </div>
+          <h4 class="mb-0 text-white"><i class=" fa fa-angle-double-right px-3" style="color: #b0b0b0;"></i></h4>
+        </div>
+      </div>
+    </a>
+
+    <a [routerLink]="['/user/edit']">
+      <div class="w-100 p-1 mb-3"
+        style="border-radius:15px;border: solid 3px; border-color:#b0b0b0; background-color: #ffffff;">
+        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #b0b0b0;">
+          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-pen-to-square"></i></h4>
+          <div>
+            <h4 class="mb-0 text-white">修改資料</h4>
+          </div>
+          <h4 class="mb-0 text-white"><i class=" fa fa-angle-double-right px-3" style="color: #b0b0b0;"></i></h4>
+        </div>
+      </div>
+    </a>
+
+    <a>
+      <div class="w-100 p-1 mb-3"
+        style="border-radius:15px;border: solid 3px; border-color:#b0b0b0; background-color: #ffffff;">
+        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #b0b0b0;">
+          <h4 class="mb-0 text-white px-3"><i class="fa-regular fa-circle-xmark"></i></h4>
+          <div>
+
+            <h4 class="mb-0 text-white">註銷帳號</h4>
+          </div>
+          <h4 class="mb-0 text-white"><i class=" fa fa-angle-double-right px-3" style="color: #b0b0b0;"></i></h4>
+        </div>
+      </div>
+    </a>
+    <!-- 登出 -->
+    <a (click)="logOut()">
+      <div class="w-100 p-1 mb-3 nav-link"
+        style="border-radius:15px;border: solid 3px; border-color:#ebbaba; background-color: #ffffff;">
+        <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #ebbaba;">
+          <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-right-from-bracket"></i></h4>
+          <div>
+            <h4 class="mb-0 text-white">登出</h4>
+          </div>
+          <h4 class="mb-0 text-white"><i class=" fa fa-angle-double-right px-3" style="color: #ebbaba;"></i></h4>
+        </div>
+      </div>
+    </a>
+
+
+
+
+
+
+  </div>
+</div>
