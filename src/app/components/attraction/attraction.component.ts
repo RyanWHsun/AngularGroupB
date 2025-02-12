@@ -1,6 +1,6 @@
 import { AttractionCommentService } from './../../services/attraction-comment.service';
 import { AttractionImageService } from './../../services/attraction-image.service';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { IAttraction } from 'src/app/interfaces/IAttraction';
 import { AttractionService } from 'src/app/services/attraction.service';
 import * as $ from 'jquery';
@@ -20,13 +20,16 @@ import {
   tap,
 } from 'rxjs';
 import { IAttractionComment } from 'src/app/interfaces/IAttractionComment';
+import { GoogleMapAPIService } from 'src/app/services/google-map-api.service';
+
+declare var google: any;
 
 @Component({
   selector: 'app-attraction',
   templateUrl: './attraction.component.html',
   styleUrls: ['./attraction.component.css'],
 })
-export class AttractionComponent {
+export class AttractionComponent implements AfterViewInit {
   attraction: IAttraction = {};
   partialAttractions: IAttraction[] = [];
   attractionCategories: IAttractionCategory[] = [];
@@ -40,6 +43,53 @@ export class AttractionComponent {
     selectedPageIndex: 0,
     pages: [] as number[],
   };
+
+  googleMapsApiKey: string = '';
+  address: string = '台北101';
+  geocodeResult: any;
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      if (typeof google !== 'undefined' && google.maps) {
+        this.loadMap();
+      } else {
+        console.error('Google Maps API 未載入');
+      }
+    }, 5000);
+  }
+
+  loadMap() {
+    const map = new google.maps.Map(
+      document.getElementById('map') as HTMLElement,
+      {
+        center: { lat: 25.033964, lng: 121.564468 }, // 台北101
+        zoom: 15,
+      }
+    );
+
+    new google.maps.Marker({
+      position: { lat: 25.033964, lng: 121.564468 },
+      map: map,
+      title: '這是標記',
+    });
+  }
+
+  constructor(
+    private attractionService: AttractionService,
+    private attractionCategoryService: AttractionCategoryService,
+    private attractionImageService: AttractionImageService,
+    private attractionCommentService: AttractionCommentService,
+    private googleMapsService: GoogleMapAPIService
+  ) {}
+
+  searchAddress() {
+    this.googleMapsService
+      .getGeocodeAddress(this.address)
+      .subscribe((result) => {
+        this.geocodeResult = result;
+        console.log(result);
+      });
+  }
 
   // showImagesByAttractionId$():Observable<void> {}
 
@@ -68,6 +118,13 @@ export class AttractionComponent {
     this.showAttractionById$(id)
       .pipe(switchMap(() => this.showCommentsByAttractionId$(id)))
       .subscribe();
+    setTimeout(() => {
+      if (typeof google !== 'undefined' && google.maps) {
+        this.loadMap();
+      } else {
+        console.error('Google Maps API 未載入');
+      }
+    }, 5000);
   }
 
   // 按上一頁，顯示上一頁的景點
@@ -120,13 +177,6 @@ export class AttractionComponent {
     // behavior: 'smooth' 則會讓滾動行為更加平滑。
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
-  constructor(
-    private attractionService: AttractionService,
-    private attractionCategoryService: AttractionCategoryService,
-    private attractionImageService: AttractionImageService,
-    private attractionCommentService: AttractionCommentService
-  ) {}
 
   // 顯示本頁面 9 個景點各 1 張圖片
   showPartialImages$(): Observable<void> {
@@ -213,5 +263,10 @@ export class AttractionComponent {
         switchMap(() => this.showPartialImages$()) // 等待 initPage 完成後再執行 showPartialImages
       )
       .subscribe();
+    // this.googleMapsService.getApiKey().subscribe((response) => {
+    //   this.googleMapsApiKey = response.apiKey;
+    //   console.log(this.googleMapsApiKey);
+    // });
+    //this.searchAddress();
   }
 }
