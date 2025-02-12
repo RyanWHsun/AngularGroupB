@@ -4,12 +4,12 @@
     <span style="size:50px">&times;</span>
   </button>
 </div>
-<div class="modal-body" *ngIf=" productDetail">
+<div class="modal-body" *ngIf="productDetail">
   <!-- carousel -->
   <div id="productCarousel" class="carousel slide" data-ride="carousel">
     <div class="carousel-inner">
       <div *ngFor="let image of productDetail.fImage; let i = index" class="carousel-item" [class.active]="i === 0">
-        <img [src]="'data:image/png;base64,' + image" class="d-block w-100 carousel-img" alt="商品圖片 {{ i + 1 }}">
+        <img [src]="'data:image/png;base64,' + image" class="d-block w-100 carousel-img rounded" alt="商品圖片 {{ i + 1 }}">
       </div>
     </div>
     <button class="carousel-control-prev" type="button" data-target="#productCarousel" data-slide="prev">

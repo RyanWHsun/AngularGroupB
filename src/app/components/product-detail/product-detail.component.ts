@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { ProductDetail } from 'src/app/interfaces/products';
 import { ProductsService } from 'src/app/services/products.service';
-import * as $ from 'jquery';
 import { addProductToCart } from 'src/app/interfaces/shoppingCart';
 import { CartService } from 'src/app/services/cart.service';
+declare var $: any;  // 確保 jQuery 可用
 
 @Component({
   selector: 'app-product-detail',
@@ -42,6 +42,14 @@ export class ProductDetailComponent {
         this.productDetail = data;
         this.isLoading = false;
         //console.log(data);
+        // 等待 DOM 渲染完成後初始化 carousel
+        setTimeout(() => {
+          ($('#productCarousel') as any).carousel({
+            interval: 2000,
+            ride: 'carousel', // 啟動自動輪播
+            pause: "hover"   // 滑鼠停留時暫停
+          });
+        }, 500); // 延遲確保 HTML 渲染完成
       },
       error: (err) => {
         this.errorMessage = '無法載入商品詳情，請稍後再試';
@@ -88,10 +96,4 @@ export class ProductDetailComponent {
   resetQuantity() {
     this.quantity = 1; // 重設數量為 1
   }
-
-  closeModal(): void {
-    this.close.emit(); // 發出關閉事件，通知父元件
-    ($('#productDetailModal') as any).modal('hide'); // 使用 Bootstrap 4 的方式隱藏模態框
-  }
-
 }

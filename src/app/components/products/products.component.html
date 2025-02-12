@@ -50,7 +50,7 @@
       <div class="col-lg-3 mt-5 mt-lg-0">
         <!-- Category List -->
         <div class="mb-4">
-          <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">商品類別</h4>
+          <h4 class="text-uppercase mb-3" style="letter-spacing: 5px;">商品類別</h4>
           <div class="bg-light shadow" style="padding: 30px;">
             <ul class="list-inline m-0">
               <li class="mb-3 d-flex justify-content-between align-items-center">
@@ -71,11 +71,12 @@
         </div>
         <!-- Recent Post -->
         <div class="mb-5">
-          <h4 class="text-uppercase mb-3" style="letter-spacing: 5px;">最新商品</h4>
-          <a *ngFor="let product of latestProducts" class="d-flex align-items-center text-decoration-none bg-white mb-3"
+          <h4 class="text-uppercase mb-2" style="letter-spacing: 5px;">最新商品</h4>
+          <a *ngFor="let product of latestProducts"
+            class="d-flex align-items-center text-decoration-none bg-white mb-3 rounded shadow"
             href="javascript:void(0)" data-toggle="modal" data-target="#productDetailModal"
             (click)="openProductDetail(product.fProductId)">
-            <img class="img-fluid"
+            <img class="img-fluid rounded"
               [src]="product.fSingleImage ? 'data:image/png;base64,' + product.fSingleImage : '../../../assets/images/noImage.jpg'"
               alt="{{ product.fProductName }}">
             <div class="pl-3">
