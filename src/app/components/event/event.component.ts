@@ -74,8 +74,7 @@ export class EventComponent implements OnInit {
       (!this.filters.location || e.fLocation.toLowerCase().includes(this.filters.location.toLowerCase())) &&
       (!this.filters.departDate || new Date(e.fEventStartDate) >= new Date(this.filters.departDate)) &&
       (!this.filters.returnDate || new Date(e.fEventEndDate) <= new Date(this.filters.returnDate)) &&
-      (!this.filters.days || e.fDuration == +this.filters.days) &&
-      (e.fPrice >= this.filters.minPrice && e.fPrice <= this.filters.maxPrice) // ✅ 價格篩選
+      (!this.filters.days || e.fDuration == +this.filters.days) // ✅ 確保天數篩選沒問題
     );
 
     this.currentIndex = 0;
@@ -85,7 +84,21 @@ export class EventComponent implements OnInit {
   /** 📌 更新顯示的活動 (處理分頁) */
   updateDisplayedEvents() {
     this.displayedEvents = this.filteredEvents.slice(this.currentIndex, this.currentIndex + this.eventsPerPage);
+
+    console.log("📌 總活動數量:", this.events.length);
+    console.log("📌 篩選後的活動數量:", this.filteredEvents.length);
+    console.log("📌 當前顯示的活動數量:", this.displayedEvents.length);
+
+    // 🔍 檢查 eventsPerPage 是否正確
+    console.log("📌 每頁應顯示:", this.eventsPerPage);
+
+    // 🛠️ 如果只有 1 個活動，強制修正
+    if (this.displayedEvents.length < this.eventsPerPage && this.filteredEvents.length >= this.eventsPerPage) {
+      console.warn("🚨 顯示的活動數量異常，自動修正");
+      this.displayedEvents = this.filteredEvents.slice(0, this.eventsPerPage);
+    }
   }
+
 
   /** ◀️ 上一頁 */
   prevEvent() {
