@@ -20,15 +20,17 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { CreateProductComponent } from './components/create-product/create-product.component';
 import { CartComponent } from './components/cart/cart.component';
 import { PaymentComponent } from './components/payment/payment.component';
+import { AttractionTicketComponent } from './components/attraction-ticket/attraction-ticket.component';
+import { AttractionAdminComponent } from './components/attraction-admin/attraction-admin.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
   },
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
   },
   {
     path: 'attraction',
@@ -78,14 +80,16 @@ const routes: Routes = [
   {
     path: 'socialmedia',
     component: LayoutComponent,
-    children: [{
-      path: '',
-      component: SocialmediaComponent
-    },
-    {
-      path: 'articles',
-      component: MyarticlesComponent
-    }]
+    children: [
+      {
+        path: '',
+        component: SocialmediaComponent,
+      },
+      {
+        path: 'articles',
+        component: MyarticlesComponent,
+      },
+    ],
   },
   {
     path: 'user',
@@ -117,12 +121,12 @@ const routes: Routes = [
   },
   {
     path: '**',
-    component: HomeComponent
+    component: HomeComponent,
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule { }

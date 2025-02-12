@@ -3,17 +3,27 @@ import { Injectable } from '@angular/core';
 import { IAttractionImage } from '../interfaces/IAttractionImage';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AttractionImageService {
-  constructor(private client:HttpClient) { }
+  constructor(private client: HttpClient) {}
 
-  getAttractionImages(){
-    return this.client.get<IAttractionImage[]>("https://localhost:7112/api/TAttractionImages");
+  getAttractionImages() {
+    return this.client.get<IAttractionImage[]>(
+      'https://localhost:7112/api/TAttractionImages'
+    );
   }
 
-  getAttractionImageById(id:number){
-    return this.client.get<IAttractionImage[]>(`https://localhost:7112/api/TAttractionImages/${id}`);
+  getAttractionImageById(id: number) {
+    return this.client.get<IAttractionImage[]>(
+      `https://localhost:7112/api/TAttractionImages/${id}`
+    );
+  }
+
+  getOneAttractionImageById(id: number) {
+    return this.client.get<IAttractionImage>(
+      `https://localhost:7112/api/TAttractionImages/Search?id=${id}&amount=1`
+    );
   }
 
   postAttractionImages(fAttractionId: number, files: File[]) {
@@ -24,11 +34,16 @@ export class AttractionImageService {
       formData.append('fImages', file); // 多個圖片用 'FImages'
     }
 
-    return this.client.post("https://localhost:7112/api/TAttractionImages", formData);
+    return this.client.post(
+      'https://localhost:7112/api/TAttractionImages',
+      formData
+    );
   }
 
   // id is attraction id
-  deleteAttractionImagesById(id:number){
-    return this.client.delete<void>(`https://localhost:7112/api/TAttractionImages/${id}`);
+  deleteAttractionImagesById(id: number) {
+    return this.client.delete<void>(
+      `https://localhost:7112/api/TAttractionImages/${id}`
+    );
   }
 }

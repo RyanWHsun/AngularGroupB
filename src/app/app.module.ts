@@ -34,6 +34,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CartComponent } from './components/cart/cart.component';
 import { PaymentComponent } from './components/payment/payment.component';
 import { ProductPipe } from './pipes/product.pipe';
+import { AttractionTicketComponent } from './components/attraction-ticket/attraction-ticket.component';
+import { AttractionAdminComponent } from './components/attraction-admin/attraction-admin.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +61,8 @@ import { ProductPipe } from './pipes/product.pipe';
     CartComponent,
     PaymentComponent,
     ProductPipe,
+    AttractionTicketComponent,
+    AttractionAdminComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,649 +1,272 @@
+import { AttractionCommentService } from './../../services/attraction-comment.service';
 import { AttractionImageService } from './../../services/attraction-image.service';
-//import { ColDef } from './../../../../node_modules/ag-grid-community/dist/types/core/entities/colDef.d';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { IAttraction } from 'src/app/interfaces/IAttraction';
 import { AttractionService } from 'src/app/services/attraction.service';
 import * as $ from 'jquery';
-// import 'bootstrap';
 import { IAttractionCategory } from 'src/app/interfaces/IAttractionCategory';
 import { AttractionCategoryService } from 'src/app/services/attraction-category.service';
 import { IAttractionImage } from 'src/app/interfaces/IAttractionImage';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
+import {
+  catchError,
+  forkJoin,
+  map,
+  Observable,
+  of,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
+import { IAttractionComment } from 'src/app/interfaces/IAttractionComment';
+import { GoogleMapAPIService } from 'src/app/services/google-map-api.service';
+
+declare var google: any;
 
 @Component({
   selector: 'app-attraction',
   templateUrl: './attraction.component.html',
   styleUrls: ['./attraction.component.css'],
 })
-export class AttractionComponent {
+export class AttractionComponent implements AfterViewInit {
+  attraction: IAttraction = {};
+  partialAttractions: IAttraction[] = [];
   attractionCategories: IAttractionCategory[] = [];
+  partialImages: IAttractionImage[] = [];
+  imageSrc: string[] = [];
+  attractionComment: IAttractionComment[] = [];
 
-  @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
-  gridApi!: GridApi;
-
-  columnDefs: ColDef[] = [
-    {
-      headerName: '操作',
-      field: 'actions',
-      cellRenderer: this.actionCellRenderer.bind(this), // 呼叫自訂函式
-      cellStyle: { textAlign: 'center' }, // 讓按鈕置中
-      minWidth: 150, // 設定欄位寬度
-    },
-    { headerName: '景點ID', field: 'fAttractionId' },
-    { headerName: '景點名稱', field: 'fAttractionName', filter: true },
-    { headerName: '分類ID', field: 'fCategoryId' },
-    { headerName: '分類名稱', field: 'fCategoryName', filter: true },
-    { headerName: '描述', field: 'fDescription', filter: true },
-    { headerName: '地區', field: 'fRegion', filter: true },
-    { headerName: '地址', field: 'fAddress', filter: true },
-    { headerName: '狀態', field: 'fStatus', filter: true },
-    { headerName: '開放時間', field: 'fOpeningTime' },
-    { headerName: '關閉時間', field: 'fClosingTime' },
-    { headerName: '電話', field: 'fPhoneNumber' },
-    { headerName: '網址', field: 'fWebsiteUrl' },
-    { headerName: '建立日期', field: 'fCreatedDate' },
-    { headerName: '更新日期', field: 'fUpdatedDate' },
-    { headerName: '交通資訊', field: 'fTrafficInformation' },
-    { headerName: '經度', field: 'fLongitude' },
-    { headerName: '緯度', field: 'fLatitude' },
-  ];
-
-  rowData: IAttraction[] = [];
-  pagination = true;
-  paginationPageSize = 10;
-  paginationPageSizeSelector = [10, 30, 50];
-
-  onGridReady(params: GridReadyEvent) {
-    this.gridApi = params.api;
-  }
-
-  // 這段程式碼不需要手動呼叫，而是由 AG Grid 自動在內部調用的
-  // 當你在 ag-grid-angular 元件上設置 [getRowId] 屬性時，Grid 會在以下情況下自動調用 getRowId：
-
-  // 初始化 Grid 時：當 rowData 第一次被載入時。
-  // 更新資料時：當你使用方法如 applyTransaction 或 setRowData 時，Grid 會自動根據 getRowId 返回的值，來判斷需要更新哪一行。
-  getRowId = (params: any): string => {
-    return params.data.fAttractionId; // 使用 fAttractionId 作為唯一鍵
+  Page = {
+    size: 0,
+    index: 0,
+    selectedPageIndex: 0,
+    pages: [] as number[],
   };
 
-  selectedFiles: File[] = [];
+  googleMapsApiKey: string = '';
+  address: string = '台北101';
+  geocodeResult: any;
 
-  // **自訂按鈕的 CellRenderer**
-  actionCellRenderer(params: any) {
-    const div = document.createElement('div');
-
-    // 建立編輯按鈕
-    const editButton = document.createElement('button');
-    editButton.innerText = '編輯';
-    editButton.classList.add('btn', 'btn-outline-info', 'btn-sm');
-    editButton.setAttribute('data-toggle', 'modal');
-    editButton.setAttribute('data-target', '#mixModal');
-    editButton.style.marginRight = '3px';
-    editButton.addEventListener('click', () => {
-      const id = params.data.fAttractionId; // 假設 params.data.fAttractionId 是景點的 ID
-      this.showDetails(id); // 呼叫 `showDetails` 函式
-      this.setCarouselImages(id);
-      this.setDefaultPreviewImage();
-    });
-
-    // 建立刪除按鈕
-    const deleteButton = document.createElement('button');
-    deleteButton.innerText = '刪除';
-    deleteButton.classList.add('btn', 'btn-outline-danger', 'btn-sm', 'ms-2');
-    deleteButton.addEventListener('click', () => {
-      // 使用箭頭函式，確保 this 指向 Angular 組件上下文
-      // 改成用 function，this 會指向 deleteButton
-      console.log(`Data:${JSON.stringify(params.data)}`);
-      console.log(`ID:${JSON.stringify(params.data.fAttractionId)}`);
-      this.deleteAttraction(params.data.fAttractionId);
-      this.deleteImages(params.data.fAttractionId);
-    });
-
-    // 將按鈕加入 div
-    div.appendChild(editButton);
-    div.appendChild(deleteButton);
-    return div;
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      if (typeof google !== 'undefined' && google.maps) {
+        this.loadMap();
+      } else {
+        console.error('Google Maps API 未載入');
+      }
+    }, 5000);
   }
+
+  loadMap() {
+    const map = new google.maps.Map(
+      document.getElementById('map') as HTMLElement,
+      {
+        center: { lat: 25.033964, lng: 121.564468 }, // 台北101
+        zoom: 15,
+      }
+    );
+
+    new google.maps.Marker({
+      position: { lat: 25.033964, lng: 121.564468 },
+      map: map,
+      title: '這是標記',
+    });
+  }
+
   constructor(
     private attractionService: AttractionService,
     private attractionCategoryService: AttractionCategoryService,
-    private attractionImageService: AttractionImageService
-  ) { }
+    private attractionImageService: AttractionImageService,
+    private attractionCommentService: AttractionCommentService,
+    private googleMapsService: GoogleMapAPIService
+  ) {}
+
+  searchAddress() {
+    this.googleMapsService
+      .getGeocodeAddress(this.address)
+      .subscribe((result) => {
+        this.geocodeResult = result;
+        console.log(result);
+      });
+  }
+
+  // showImagesByAttractionId$():Observable<void> {}
+
+  // 根據 attractionId 顯示評論
+  showCommentsByAttractionId$(id: number): Observable<void> {
+    return this.attractionCommentService.getAttractionCommentById(id).pipe(
+      tap((data) => {
+        this.attractionComment = Array.isArray(data) ? data : [data];
+      }),
+      map(() => void 0)
+    );
+  }
+
+  // 根據 attractionId 顯示景點資料
+  showAttractionById$(id: number): Observable<void> {
+    return this.attractionService.getAttractionById(id).pipe(
+      tap((data) => {
+        this.attraction = data;
+      }),
+      map(() => void 0)
+    );
+  }
+
+  // 點擊"詳細資訊"按鈕時，要顯示某個景點的詳細資訊
+  clickShowDetail(id: number) {
+    this.showAttractionById$(id)
+      .pipe(switchMap(() => this.showCommentsByAttractionId$(id)))
+      .subscribe();
+    setTimeout(() => {
+      if (typeof google !== 'undefined' && google.maps) {
+        this.loadMap();
+      } else {
+        console.error('Google Maps API 未載入');
+      }
+    }, 5000);
+  }
+
+  // 按上一頁，顯示上一頁的景點
+  clickPreviousPage() {
+    if (this.Page.selectedPageIndex <= 0) return;
+    this.Page.selectedPageIndex--;
+    this.showPartialAttractions$(this.Page.selectedPageIndex)
+      .pipe(switchMap(() => this.showPartialImages$()))
+      .subscribe();
+    this.scrollToTop();
+  }
+
+  // 按下一頁，顯示下一頁的景點
+  clickNextPage() {
+    if (this.Page.selectedPageIndex >= this.Page.pages.length - 1) return;
+    this.Page.selectedPageIndex++;
+    this.showPartialAttractions$(this.Page.selectedPageIndex)
+      .pipe(switchMap(() => this.showPartialImages$()))
+      .subscribe();
+    this.scrollToTop();
+  }
+
+  // 點選頁碼，設定 selectedPageIndex
+  setSelectedPageIndex(index: number) {
+    this.Page.selectedPageIndex = index;
+    this.showPartialAttractions$(this.Page.selectedPageIndex)
+      .pipe(switchMap(() => this.showPartialImages$()))
+      .subscribe();
+    this.scrollToTop();
+  }
+
+  // 設定要給 HTML 做迴圈的陣列
+  setPages(pageLength: number) {
+    // length: 10：建立一個長度為 10 的陣列。
+    // (_, i) => i：使用索引值生成 0 到 9 的數字。
+    //
+    // _：這是第一個參數，代表當前元素的值。由於在這裡我們不需要使用元素值，所以用 _ 作為佔位符（只是習慣用法，可以改成任何名稱）。
+    // i：這是第二個參數，代表當前元素的索引值。
+    //
+    // (_, i) => i：
+    // 這個函式的作用是針對每個元素返回其索引值 i。
+    // _ 表示忽略元素的值（因為不需要），只使用索引值。
+    this.Page.pages = Array.from({ length: pageLength }, (_, i) => i); // 生成 0~9 的陣列
+  }
+
+  // 在每次換頁事件中調用 scrollToTop()，確保在頁碼切換後自動滾動到頁面頂端。
+  scrollToTop() {
+    // window.scrollTo 方法：
+    // top: 0 表示滾動到頁面的頂端。
+    // behavior: 'smooth' 則會讓滾動行為更加平滑。
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // 顯示本頁面 9 個景點各 1 張圖片
+  showPartialImages$(): Observable<void> {
+    this.imageSrc = [];
+    // this.partialAttractions.map(...) 會產生一個 Observable<IAttractionImage>[] 陣列，每個元素都是一個 HTTP 請求，請求對應景點的圖片。
+    const imageRequests = this.partialAttractions.map((attraction) =>
+      this.attractionImageService
+        .getOneAttractionImageById(attraction.fAttractionId!)
+        .pipe(
+          map((data) =>
+            data === null ? '' : `data:image/jpeg;base64,${data.fImage}`
+          ),
+          catchError(() => of('')) // 若請求失敗，預設回傳空字串，避免 forkJoin 崩潰
+        )
+    );
+
+    // forkJoin() 的特性
+    // forkJoin() 會並行執行所有請求，並等待所有請求都成功後，才會發出最終的結果。
+    // 回傳一個包含所有請求結果的陣列（Observable<IAttractionImage[]>）。
+    // 如果有一個請求失敗，整個 forkJoin() 會發出錯誤（需要特別處理錯誤時，可使用 catchError()）。
+    return forkJoin(imageRequests).pipe(
+      tap((images) => {
+        images.forEach((imageSrc, index) => {
+          this.imageSrc[index] = imageSrc;
+        });
+      }),
+      map(() => void 0) // 確保回傳 Observable<void>
+    );
+  }
+
+  // 在 RxJS 和 Angular 的開發中，通常我們會在回傳 Observable 的方法名稱後加上 $，是一種約定俗成的做法。
+  // 這樣可以讓開發者一眼就知道這個方法回傳的是 Observable，而不是一般的同步函式。
+  showPartialAttractions$(index: number): Observable<void> {
+    return this.attractionService.getPartialAttractions('', 9, index).pipe(
+      // tap 是一種副作用（side effect），不會改變 Observable 的內容，它只是讓我們在 Observable 流程中執行額外的動作。
+      // 這裡的 tap() 主要作用是：當 HTTP 請求回傳資料時，將資料存入 this.partialAttractions，以便前端顯示。
+      tap((data) => {
+        this.partialAttractions = data;
+      }),
+      // 將 Observable<IAttraction[]> 轉換為 Observable<void>。
+      // 因為 getPartialAttractions() 回傳的是 Observable<IAttraction[]>，但我們不需要這個值，我們只在乎請求是否完成，所以用 map() 把它轉換成 void，讓它適合 switchMap() 使用。
+      // void 0 是 undefined 的別名，因此 map(() => void 0) 其實就是：map(() => undefined)
+      map(() => void 0)
+    );
+  }
+
+  getAttractionQuantities(): Observable<number> {
+    return this.attractionService.getAttractionQuantities();
+  }
+
+  // take(1) 會確保 subscribe() 只會執行一次，避免記憶體洩漏。
+  initPage$(): Observable<void> {
+    return this.getAttractionQuantities().pipe(
+      take(1),
+      tap((qty) => {
+        this.setPages(Math.ceil(qty / 9));
+      }),
+      map(() => void 0)
+    );
+  }
 
   ngOnInit(): void {
-    $('#btnSave').on('click', async (e) => {
-      e.preventDefault(); // 防止表單預設提交行為
-      await this.editItem();
-      ($('#mixModal') as any).modal('hide'); // 關閉 modal
-    });
-
-    $('#FImages').on('change', (event) => {
-      alert('image change');
-      this.selectedFiles = [];
-      const inputElement = event.target as HTMLInputElement;
-      if (inputElement.files && inputElement.files.length > 0) {
-        this.selectedFiles = Array.from(inputElement.files); // 轉成陣列
-      }
-      this.previewImage(event.target);
-    });
-
-    this.attractionCategoryService
-      .getAttractionCategories()
-      .subscribe((data) => {
-        // console.log(data);
-        // console.log(`${JSON.stringify(data)}`);
-        this.attractionCategories = data;
-        //console.log(this.attractionCategories);
-      });
-
-    const modalElement = document.getElementById('exampleModalCenter');
-
-    if (modalElement) {
-      $('#exampleModalCenter').on('hide.bs.modal', () => {
-        //alert('Modal has been closed!');
-      });
-    }
-    // this.attractionService.getAttractions() 回傳 1 個 Observable 的物件，要 subscribe() 後才可以使用
-    this.attractionService.getAttractions().subscribe((data) => {
-      //console.log(data);
-      this.rowData = data;
-    });
-
-    document.getElementById('btnEdit')?.addEventListener('click', () => {
-      const fieldIds = [
-        'FCategoryId',
-        'FDescription',
-        'FRegion',
-        'FAddress',
-        'FStatus',
-        'FOpeningTime',
-        'FClosingTime',
-        'FPhoneNumber',
-        'FWebsiteUrl',
-        'FTrafficInformation',
-        'FImages',
-      ];
-
-      // 解除禁用的欄位
-      fieldIds.forEach((id) => {
-        const field = document.getElementById(id) as
-          | HTMLInputElement
-          | HTMLSelectElement
-          | HTMLTextAreaElement;
-        if (field) {
-          field.disabled = false; // 設置為可用
-        }
-      });
-
-      // 顯示按鈕
-      const buttonIds = ['btnCancel', 'btnSave'];
-      buttonIds.forEach((id) => {
-        const button = document.getElementById(id);
-        if (button) {
-          button.style.display = 'block'; // 顯示按鈕
-        }
-      });
-    });
-
-    // 動態綁定點擊事件
-    document.addEventListener('click', (event: Event) => {
-      const target = event.target as HTMLElement;
-      if (target && target.id === 'FAttractionName') {
-        this.editH5Text(event);
-      }
-    });
-
-    // 關閉 Modal 時觸發
-    $('#mixModal').on('hide.bs.modal', () => {
-      const fieldsToDisable = [
-        'FCategoryId',
-        'FDescription',
-        'FRegion',
-        'FAddress',
-        'FStatus',
-        'FOpeningTime',
-        'FClosingTime',
-        'FPhoneNumber',
-        'FWebsiteUrl',
-        'FTrafficInformation',
-        'FImages',
-      ];
-
-      fieldsToDisable.forEach((fieldId) => {
-        const field = document.getElementById(fieldId) as
-          | HTMLInputElement
-          | HTMLSelectElement
-          | HTMLTextAreaElement;
-        if (field) {
-          field.disabled = true;
-        }
-      });
-      //
-
-      // 隱藏按鈕
-      const buttonsToHide = ['btnCancel', 'btnSave'];
-      buttonsToHide.forEach((buttonId) => {
-        const button = document.getElementById(buttonId) as HTMLElement;
-        if (button) {
-          button.style.display = 'none';
-        }
-      });
-
-      // 清空容器和圖片輸入欄位
-      const imageNameContainer = document.getElementById(
-        'imageNameContainer'
-      ) as HTMLElement;
-      const imagesField = document.getElementById(
-        'FImages'
-      ) as HTMLInputElement;
-
-      if (imageNameContainer) {
-        imageNameContainer.innerHTML = ''; // 清空容器
-      }
-
-      if (imagesField) {
-        imagesField.value = ''; // 清空圖片輸入欄位
-      }
-
-      // 清空和重設圖片預覽容器內容
-      const previewImageContainer = $('#previewImageContainer');
-      const $previewCarouselItem = $(
-        `<div class="carousel-item active" data-bs-interval="2000"><img src="assets/images/noImage.jpg" class="d-block w-100" alt="景點圖片" style="height: 300px"></div>`
-      );
-      if (previewImageContainer) {
-        previewImageContainer.empty(); // 清空預覽圖片容器
-        //this.previewImageContainer.innerHTML = ''; // 清空預覽圖片容器
-        if ($previewCarouselItem) {
-          previewImageContainer.append($previewCarouselItem);
-          //this.previewImageContainer.appendChild(this.$previewCarouselItem); // 重設為 noImage.jpeg 預設內容
-        }
-      }
-
-      // 手動移除 backdrop
-      $('.modal-backdrop').remove();
-      $('body').removeClass('modal-open'); // 移除 Bootstrap 加上的 class
-    });
-  }
-
-  editH5Text(event: Event): void {
-    // 獲取當前文字內容
-    const target = event.target as HTMLElement;
-
-    const currentText = target.innerText;
-
-    // 建立 <input> 元素
-    const inputField = document.createElement('input');
-    inputField.type = 'text';
-    inputField.id = 'FAttractionNameInput';
-    inputField.className = 'form-control w-100';
-    inputField.value = currentText;
-
-    // 替換 <h5> 為 <input>
-    target.replaceWith(inputField);
-
-    // 當失去焦點時恢復為 <h5>
-    inputField.addEventListener('blur', () => {
-      const newText =
-        inputField.value.trim() === '' ? currentText : inputField.value;
-
-      // 建立新的 <h5> 元素
-      const h5Element = document.createElement('h5');
-      h5Element.className = 'modal-title w-100';
-      h5Element.id = 'FAttractionName';
-      h5Element.innerText = newText;
-
-      // 替換回 <h5>，並重新綁定點擊事件
-      inputField.replaceWith(h5Element);
-
-      // 更新隱藏欄位的值
-      const hiddenInput = document.getElementById(
-        'hiddenFAttractionName'
-      ) as HTMLInputElement;
-      if (hiddenInput) {
-        hiddenInput.value = newText;
-      }
-
-      // 重新綁定點擊事件
-      h5Element.addEventListener('click', (e) => this.editH5Text(e));
-    });
-
-    // 自動聚焦輸入框
-    inputField.focus();
-  }
-
-  // 取得某個 atraction 的詳細資料
-  showDetails(id: number) {
-    this.attractionService.getAttractionById(id).subscribe((data) => {
-      //console.log(data);
-      $('#hiddenFAttractionId').val(
-        data.fAttractionId ? data.fAttractionId : ''
-      );
-      $('#FAttractionName').text(
-        data.fAttractionName ? data.fAttractionName : ''
-      );
-      let attractionName = $('#FAttractionName').text();
-      $('#hiddenFAttractionName').val(attractionName);
-      $('#FCategoryId').val(data.fCategoryId ? data.fCategoryId : '');
-      $('#FDescription').val(data.fDescription ? data.fDescription : '');
-      $('#FRegion').val(data.fRegion ? data.fRegion : '');
-      $('#FAddress').val(data.fAddress ? data.fAddress : '');
-      $('#FStatus').val(data.fStatus ? data.fStatus : '');
-      $('#FOpeningTime').val(data.fOpeningTime ? data.fOpeningTime : '');
-      $('#FClosingTime').val(data.fClosingTime ? data.fClosingTime : '');
-      $('#FPhoneNumber').val(data.fPhoneNumber ? data.fPhoneNumber : '');
-      $('#FWebsiteUrl').val(data.fWebsiteUrl ? data.fWebsiteUrl : '');
-      $('#FTrafficInformation').val(
-        data.fTrafficInformation ? data.fTrafficInformation : ''
-      );
-      $('#FCreatedDate').val(data.fCreatedDate ? data.fCreatedDate : '');
-      $('#FUpdatedDate').val(data.fUpdatedDate ? data.fUpdatedDate : '');
-    });
-  }
-
-  // carousel
-  setCarouselImages(attractionId: number) {
-    //清空原有的 carousel-inner 內容
-    const $carouselInner = $('#displayImageContainer');
-    $carouselInner.empty();
-
-    this.attractionImageService
-      .getAttractionImageById(attractionId)
-      .subscribe((images) => {
-        //console.log(images);
-        // no image
-        if (images.length === 0) {
-          // 建立 carousel-item 元素
-          const $carouselItem = $(
-            `<div class="carousel-item active" data-bs-interval="2000"><img src="assets/images/noImage.jpg" class="d-block w-100" alt="景點圖片" style="height: 300px"></div>`
-          );
-          // 加入到 carousel-inner
-          $carouselInner.append($carouselItem);
-          return;
-        } else {
-          // 遍歷圖片陣列並生成 carousel-item
-          // $.each 是 jQuery 提供的迴圈方法，用來遍歷 images 陣列。
-          // images 是一個陣列，其中每個元素 image 可能包含圖片的 URL。
-          // index 是陣列中當前元素的索引。
-          // image 是陣列中當前的圖片物件。
-          $.each(images, (index, image) => {
-            const isActive = index === 0 ? 'active' : ''; // 第一張圖片設為 active
-            // 如果 fImage 是 Base64 格式的圖片資料，應確保它有正確的 MIME 類型前綴
-            // <img src="data:image/jpeg;base64,{Base64 字串}">
-            let imageSrc = `data:image/jpeg;base64,${image.fImage}`;
-            // 建立 carousel-item 元素
-            const $carouselItem = $(
-              `<div class="carousel-item ${isActive}" data-bs-interval="2000"><img src="${imageSrc}" class="d-block w-100" alt="景點圖片" style="height: 300px"></div>`
-            );
-
-            // 加入到 carousel-inner
-            $carouselInner.append($carouselItem);
-          });
-        }
-      });
-  }
-
-  setDefaultPreviewImage() {
-    const previewImageContainer = $('#previewImageContainer');
-    const $previewCarouselItem = $(
-      `<div class="carousel-item active" data-bs-interval="2000"><img src="assets/images/noImage.jpg" class="d-block w-100" alt="景點圖片" style="height: 300px"></div>`
-    );
-    if (previewImageContainer.length === 0) {
-      console.error('previewImageContainer not found!');
-    } else {
-      previewImageContainer.append($previewCarouselItem);
-    }
-  }
-
-  previewImage(inputFile: any) {
-    // 清空 imageNameContainer 的內容
-    $('#imageNameContainer').find('div').remove();
-    // 清空預覽圖片欄位的內容
-    const previewImageContainer = $('#previewImageContainer');
-    const $previewCarouselItem = $(
-      `<div class="carousel-item active" data-bs-interval="2000"><img src="assets/images/noImage.jpg" class="d-block w-100" alt="景點圖片" style="height: 300px"></div>`
-    );
-    previewImageContainer.empty();
-
-    if (!inputFile.files || inputFile.files.length == 0) {
-      alert('no image');
-      return;
-    }
-
-    let allowType = 'image.*';
-    let fileList = inputFile.files;
-    console.log(inputFile.files);
-    // 遍歷圖片陣列並生成 carousel-item
-    // $.each 是 jQuery 提供的迴圈方法，用來遍歷 images 陣列。
-    // images 是一個陣列，其中每個元素 image 可能包含圖片的 URL。
-    // index 是陣列中當前元素的索引。
-    // image 是陣列中當前的圖片物件。
-    $.each(fileList, (index, file) => {
-      if (file.type.match(allowType)) {
-        let reader = new FileReader();
-
-        // 註冊一個回呼函式(不會立即執行!)，當reader讀取完成後會觸發該函式。
-        // 使用箭頭函式確保 `this` 指向正確
-        reader.onload = (e) => {
-          // 第一張圖片設為 active
-          const isActive = index === 0 ? 'active' : '';
-          const mimeType = file.type; // 例如 "image/png"
-
-          // 確保 e.target?.result 是 string
-          if (typeof e.target?.result === 'string') {
-            const base64Data = e.target.result.split(',')[1]; // 去掉 data:image/png;base64, 前綴
-            //console.log(base64Data);
-            const fullBase64 = `data:${mimeType};base64,${base64Data}`;
-            // 建立 carousel-item 元素，並設置圖片 src 為讀取的結果
-            const $previewCarouselItem2 = $(
-              `<div class="carousel-item ${isActive}" data-bs-interval="2000"><img src="${fullBase64}" class="d-block w-100" alt="${file.name}" style="height: 300px"></div>`
-            );
-            // 加入到 carousel-inner
-            previewImageContainer.append($previewCarouselItem2);
-          }
-
-          // 顯示剛剛添加的圖片檔名
-          let div = $('<div>').text(file.name);
-          $('#imageNameContainer').append(div);
-        };
-
-        // 使用 readAsDataURL 讀取檔案內容
-        reader.readAsDataURL(file);
-      } else {
-        // Swal.fire({
-        //     icon: "error",
-        //     title: "錯誤",
-        //     text: `不支援上傳的檔案格式：${file.name}`,
-        // });
-        alert('不支援上傳的檔案格式');
-        $('#FImages').val('');
-        $('#imageNameContainer').find('div').remove();
-
-        // 加入到 carousel-inner
-        previewImageContainer.append($previewCarouselItem);
-      }
-    });
-  }
-
-  async editItem() {
-    // 建立一個 FormData 物件來處理表單資料和圖片上傳
-    const formData = new FormData();
-
-    // 將表單欄位值加入 formData
-    let hiddenFAttractionId = $('#hiddenFAttractionId').val();
-    let hiddenFAttractionName = $('#hiddenFAttractionName').val();
-    let FCategoryId = $('#FCategoryId').val();
-    let FCategoryName = $('#FCategoryId option:selected').text();
-    let FDescription = $('#FDescription').val();
-    let FRegion = $('#FRegion').val();
-    let FAddress = $('#FAddress').val();
-    let FStatus = $('#FStatus').val();
-    let FOpeningTime = $('#FOpeningTime').val();
-    let FClosingTime = $('#FClosingTime').val();
-    let FPhoneNumber = $('#FPhoneNumber').val();
-    let FWebsiteUrl = $('#FWebsiteUrl').val();
-    let FCreatedDate = $('#FCreatedDate').val();
-    let FUpdatedDate = new Date().toISOString();
-    let FTrafficInformation = $('#FTrafficInformation').val();
-
-    formData.append(
-      'fAttractionId',
-      hiddenFAttractionId ? hiddenFAttractionId.toString() : ''
-    );
-    formData.append(
-      'fAttractionName',
-      hiddenFAttractionName ? hiddenFAttractionName.toString() : ''
-    );
-    formData.append('fCategoryId', FCategoryId ? FCategoryId.toString() : '');
-    formData.append(
-      'fCategoryName',
-      FCategoryName ? FCategoryName.toString() : ''
-    );
-    // formData.append(
-    //   'fCategoryName',
-    //   $('#FCategoryId option:selected').text() || ''
-    // );
-    formData.append(
-      'fDescription',
-      FDescription ? FDescription.toString() : ''
-    );
-    formData.append('fRegion', FRegion ? FRegion.toString() : '');
-    formData.append('fAddress', FAddress ? FAddress.toString() : '');
-    formData.append('fStatus', FStatus ? FStatus.toString() : '');
-    formData.append(
-      'fOpeningTime',
-      FOpeningTime ? FOpeningTime.toString() : ''
-    );
-    formData.append(
-      'fClosingTime',
-      FClosingTime ? FClosingTime.toString() : ''
-    );
-    formData.append(
-      'fPhoneNumber',
-      FPhoneNumber ? FPhoneNumber.toString() : ''
-    );
-    formData.append('fWebsiteUrl', FWebsiteUrl ? FWebsiteUrl.toString() : '');
-    formData.append(
-      'fCreatedDate',
-      FCreatedDate ? FCreatedDate.toString() : ''
-    );
-    formData.append('fUpdatedDate', FUpdatedDate ? FUpdatedDate : '');
-    formData.append(
-      'fTrafficInformation',
-      FTrafficInformation ? FTrafficInformation.toString() : ''
-    );
-
-    // 處理圖片上傳
-    let inputElement = $('#FImages')[0] as HTMLInputElement;
-    let files = inputElement.files;
-    if (files) {
-      for (let i = 0; i < files.length; i++) {
-        formData.append('fImages', files[i]);
-      }
-    }
-
-    formData.forEach((value, key) => {
-      // 通過檢查 value instanceof File，可以確定 value 是否是 File 類型。
-      if (value instanceof File) {
-        console.log(
-          `${key}: File Name - ${value.name}, File Size - ${value.size} bytes, File Type - ${value.type}`
-        );
-      } else {
-        console.log(`${key}: ${value}`);
-      }
-    });
-
-    // FOpeningTime 和 FClosingTime 的值為 HH:mm ， 後端 attractionDTO 只能接收 HH:mm:ss 這種格式的字串，所以要加 ':00'
-    let editedAttraction: IAttraction = {
-      fAttractionId: hiddenFAttractionId ? Number(hiddenFAttractionId) : null,
-      fAttractionName: hiddenFAttractionName as string | null,
-      fCategoryId: FCategoryId ? Number(FCategoryId) : null,
-      fCategoryName: FCategoryName as string | null,
-      fDescription: FDescription as string | null,
-      fRegion: FRegion as string | null,
-      fAddress: FAddress as string | null,
-      fStatus: FStatus as string | null,
-      fOpeningTime: FOpeningTime as string | null,
-      fClosingTime: FClosingTime as string | null,
-      fPhoneNumber: FPhoneNumber as string | null,
-      fWebsiteUrl: FWebsiteUrl as string | null,
-      fCreatedDate: FCreatedDate as string | null,
-      fUpdatedDate: FUpdatedDate,
-      fTrafficInformation: FTrafficInformation as string | null,
-      fLongitude: null,
-      fLatitude: null,
-    };
-
-    console.log(editedAttraction);
-    // Non-Null Assertion Operator: ! 是 TypeScript 提供的一個語法，用來告訴編譯器某個值一定不為 null 或 undefined，即便 TypeScript 推斷它可能是 null 或 undefined。
-    this.attractionService
-      .putAttractionById(editedAttraction.fAttractionId!, editedAttraction)
-      .subscribe({
-        next: () => {
-          console.log('update success');
-        },
-        error: () => {
-          console.log('update error');
-        },
-      });
-
-    if (this.selectedFiles.length > 0) {
-      this.attractionImageService
-        .postAttractionImages(
-          editedAttraction.fAttractionId!,
-          this.selectedFiles
-        )
-        .subscribe({
-          next: () => {
-            console.log('圖片上傳成功');
-          },
-          error: () => {
-            console.log('圖片上傳失敗');
-          },
-        });
-    }
-    this.updateGrid(editedAttraction);
-  }
-
-  updateGrid(editedAttraction: IAttraction) {
-    if (!this.gridApi) {
-      console.error('Grid API 未初始化，無法更新資料');
-      return;
-    }
-    const existingItem = this.rowData.find(
-      (item) => item.fAttractionId === editedAttraction.fAttractionId
-    );
-
-    if (existingItem) {
-      // 更新 Grid 內的資料
-      this.gridApi.applyTransaction({ update: [editedAttraction] });
-    } else {
-      // 新增新資料
-      this.gridApi.applyTransaction({ add: [editedAttraction] });
-    }
-  }
-
-  deleteAttraction(id: number) {
-    // id is attraciton id
-    this.attractionService.deleteAttractionById(id).subscribe({
-      next: () => {
-        console.log(`刪除景點成功`);
-      },
-      error: (error) => {
-        console.log(`刪除景點失敗 ${JSON.stringify(error)}`);
-      }
-    });
-  }
-
-  deleteImages(id: number) {
-    // id is attraciton id
-    this.attractionImageService.deleteAttractionImagesById(id).subscribe({
-      next: () => {
-        console.log(`刪除圖片成功`);
-      },
-      error: (error) => {
-        console.log(`刪除圖片失敗 ${JSON.stringify(error)}`);
-      }
-    })
+    // 確保三個非同步函式依序執行，而不會因為 HTTP 請求的非同步特性導致順序錯亂。
+    // 這段程式碼的執行順序
+    // 1. initPartialAttractions$()
+    // 透過 attractionService.getPartialAttractions() 取得部分景點資訊，並存入 this.partialAttractions。
+    // 執行完成後，switchMap() 會繼續執行 initPage$()。
+    //
+    // 2. initPage$()
+    // 透過 getAttractionQuantities() 取得景點總數，計算總頁數，並呼叫 setPages()。
+    // 執行完成後，switchMap() 會繼續執行 showPartialImages$()。
+    //
+    // 3. showPartialImages$()
+    // 迴圈 this.partialAttractions，並為每個景點請求一張圖片。
+    // 確保所有圖片請求完成後，才會進入 subscribe()。
+    this.showPartialAttractions$(0)
+      // 在 RxJS 中，pipe() 用來組合不同的 RxJS operators，這裡我們使用 switchMap() 來鏈接非同步操作，確保它們按順序執行。
+      .pipe(
+        // switchMap() 會：
+        // 等待前一個 Observable 完成，然後再執行新的 Observable。
+        // 如果前一個 Observable 尚未完成，則取消它，改執行新的 Observable（但這裡不會有這種情況，因為我們的流程是線性的）。
+        // 返回新的 Observable，讓它接著執行。
+        switchMap(() => this.initPage$()), // 等待 initPartialAttractions 完成後再執行 initPage
+        switchMap(() => this.showPartialImages$()) // 等待 initPage 完成後再執行 showPartialImages
+      )
+      .subscribe();
+    // this.googleMapsService.getApiKey().subscribe((response) => {
+    //   this.googleMapsApiKey = response.apiKey;
+    //   console.log(this.googleMapsApiKey);
+    // });
+    //this.searchAddress();
   }
 }
