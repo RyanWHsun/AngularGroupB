@@ -166,7 +166,7 @@ export class ProductsComponent {
     this.productService.getLatestProducts().subscribe({
       next: (data) => {
         this.latestProducts = data;
-        console.log(this.latestProducts);
+        //console.log(this.latestProducts);
       },
       error: (error) => {
         console.error('最新商品載入錯誤:', error)

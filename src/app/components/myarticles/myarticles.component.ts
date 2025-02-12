@@ -68,14 +68,14 @@ export class MyarticlesComponent {
       FIsPublic: this.articleStatus
     }).pipe(
       concatMap(response => {
-        console.log('文章發佈成功', response);
+        // console.log('文章發佈成功', response);
         return this.socialmediaService.postImages([{
           FPostId: response['fPostId'],
           FImage: this.imagePreview
         }]);
       })
     ).subscribe(response => {
-      console.log('文章圖片發佈成功', response);
+      // console.log('文章圖片發佈成功', response);
     });
   }
   onFileSelected(event: Event): void {
@@ -84,7 +84,7 @@ export class MyarticlesComponent {
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreview = reader.result;
-        console.log(this.imagePreview);
+        // console.log(this.imagePreview);
       };
       reader.readAsDataURL(file);
     }
