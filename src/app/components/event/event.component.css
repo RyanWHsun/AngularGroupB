@@ -1,3 +1,30 @@
+/* 設定活動卡片固定高度 */
+.package-item {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 確保圖片固定大小 */
+.package-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover; /* 讓圖片完整填滿，防止變形 */
+}
+
+/* 讓卡片內容自動填充剩餘空間 */
+.package-item .p-4 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* 確保底部按鈕對齊 */
+.package-item .border-top {
+  margin-top: auto;
+}
+
 /* 讓輪播按鈕固定在兩側 */
 .carousel-container {
   position: relative;
@@ -6,12 +33,11 @@
   justify-content: center;
 }
 
-/* 共用按鈕樣式 */
 .carousel-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5); /* 透明黑色背景 */
+  background-color: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
   font-size: 24px;
@@ -25,18 +51,16 @@
   transition: background 0.3s ease;
 }
 
-/* 左箭頭 (靠左) */
 .carousel-btn.left {
-  left: -60px; /* 調整讓箭頭往左一點 */
+  left: -60px;
 }
 
-/* 右箭頭 (靠右) */
 .carousel-btn.right {
-  right: -60px; /* 調整讓箭頭往右一點 */
+  right: -60px;
 }
 
-/* 滑鼠懸停時變暗 */
 .carousel-btn:hover {
   background-color: rgba(0, 0, 0, 0.8);
 }
+
 

@@ -13,17 +13,19 @@ export class EventComponent implements OnInit {
   displayedEvents: any[] = [];
   savedEvents: any[] = [];
   uniqueLocations: string[] = [];
-  uniqueDurations: number[] = [1, 2, 3, 5, 7]; // ✅ 預設一些行程天數
+  uniqueDurations: number[] = [1, 2, 3, 5, 7]; // ✅ 預設行程天數
   currentIndex = 0;
   eventsPerPage = 3;
-  apiUrl = 'https://localhost:7112/api';
+  apiUrl = 'https://localhost:7112/api/Event';
   isLoading = false;
 
   filters = {
     location: '',
     departDate: '',
     returnDate: '',
-    days: '' // ✅ 新增天數篩選
+    days: '',
+    minPrice: 0, // ✅ 最低價格篩選
+    maxPrice: 999999 // ✅ 最高價格篩選
   };
 
   constructor(private http: HttpClient, private router: Router, private cdRef: ChangeDetectorRef) {}
@@ -36,14 +38,17 @@ export class EventComponent implements OnInit {
   /** 🚀 從 API 載入活動 */
   loadEvents() {
     this.isLoading = true;
-    this.http.get<any>(`${this.apiUrl}/Event`).subscribe(
+    this.http.get<any>(this.apiUrl).subscribe(
       (data) => {
+        console.log("📌 API 回傳資料:", data);
         this.events = Array.isArray(data) ? data : data?.$values || [];
 
         this.events.forEach(event => {
           event.fLocation = event.location ?? '未知地點';
-          event.fParticipant = event.participantCount ?? 0;
-          event.fEventImageUrl = event.imageUrl ?? 'assets/images/noImage.jpg'; // 預設圖片
+          event.fParticipant = event.fParticipants ?? 0; // ✅ 設定參加人數
+          event.fDuration = event.fDuration ?? 1; // ✅ 設定行程天數
+          event.fPrice = event.registrationFee ?? 0; // ✅ 設定報名費
+          event.fEventImageUrl = event.imageBase64 ?? 'assets/images/noImage.jpg'; // ✅ 設定圖片
         });
 
         this.extractUniqueFilters();
@@ -69,7 +74,8 @@ export class EventComponent implements OnInit {
       (!this.filters.location || e.fLocation.toLowerCase().includes(this.filters.location.toLowerCase())) &&
       (!this.filters.departDate || new Date(e.fEventStartDate) >= new Date(this.filters.departDate)) &&
       (!this.filters.returnDate || new Date(e.fEventEndDate) <= new Date(this.filters.returnDate)) &&
-      (!this.filters.days || e.fDuration == +this.filters.days)
+      (!this.filters.days || e.fDuration == +this.filters.days) &&
+      (e.fPrice >= this.filters.minPrice && e.fPrice <= this.filters.maxPrice) // ✅ 價格篩選
     );
 
     this.currentIndex = 0;
@@ -125,5 +131,6 @@ export class EventComponent implements OnInit {
     this.router.navigate(['/']);
   }
 }
+
 
 

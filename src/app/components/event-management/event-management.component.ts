@@ -1,79 +1,111 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-interface Event {
-  id: number;
-  name: string;
-  location: string;
-  startDate: string;
-  endDate: string;
-  description: string;
-}
-
 @Component({
   selector: 'app-event-management',
   templateUrl: './event-management.component.html',
   styleUrls: ['./event-management.component.css']
 })
 export class EventManagementComponent implements OnInit {
-  apiUrl = 'https://localhost:7112/api/Event';
-  events: Event[] = [];
-  newEvent: Event = { id: 0, name: '', location: '', startDate: '', endDate: '', description: '' };
-  editingEvent: Event | null = null;
+  events: any[] = []; // 活動列表
+  displayedEvents: any[] = []; // 顯示的活動
+  newEvent: any = { name: '', location: '', startDate: '', endDate: '', description: '', imageBase64: '' };
+  apiUrl = 'http://localhost:7112/api/Event'; // API 位址
+  selectedImage: File | null = null;
+  isLoading = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
     this.loadEvents();
   }
 
+  /** 🚀 從 API 取得活動 */
   loadEvents() {
-    this.http.get<Event[]>(this.apiUrl).subscribe(
-      data => this.events = data,
-      error => console.error('🚨 無法獲取活動列表:', error)
-    );
-  }
+    this.isLoading = true;
+    this.http.get<any>(this.apiUrl).subscribe(
+      (data) => {
+        console.log("📌 API 回傳的原始資料:", data);
+        if (!Array.isArray(data)) {
+          console.error("🚨 API 回傳格式錯誤！", data);
+          return;
+        }
 
-  addEvent() {
-    this.http.post<Event>(this.apiUrl, this.newEvent).subscribe(
-      data => {
-        this.events.push(data);
-        this.newEvent = { id: 0, name: '', location: '', startDate: '', endDate: '', description: '' };
+        this.events = [...data];
+
+        this.events.forEach(event => {
+          event.fEventImageUrl = event.imageBase64 ?? 'assets/images/noImage.jpg';
+          event.fLocation = event.location ?? '未知地點';
+          event.fDuration = event.duration ?? 1;
+          event.fParticipant = event.participant ?? 0;
+          event.fPrice = event.registrationFee ?? 0;
+        });
+
+        this.displayedEvents = [...this.events];
+        console.log("✅ 更新後的 displayedEvents:", this.displayedEvents);
+        this.isLoading = false;
       },
-      error => console.error('🚨 新增活動失敗:', error)
+      (error) => {
+        console.error("🚨 無法獲取活動:", error);
+        this.isLoading = false;
+      }
     );
   }
 
-  editEvent(event: Event) {
-    this.editingEvent = { ...event };
-  }
-
-  updateEvent() {
-    if (this.editingEvent && this.editingEvent.id !== undefined) {
-      this.http.put(`${this.apiUrl}/${this.editingEvent.id}`, this.editingEvent).subscribe(
-        () => {
-          const index = this.events.findIndex(e => e.id !== undefined && e.id === this.editingEvent!.id);
-          if (index !== -1) {
-            this.events[index] = {
-              id: this.editingEvent?.id!,
-              name: this.editingEvent?.name || '',
-              location: this.editingEvent?.location || '',
-              startDate: this.editingEvent?.startDate || '',
-              endDate: this.editingEvent?.endDate || '',
-              description: this.editingEvent?.description || ''
-            };
-          }
-          this.editingEvent = null;
-        },
-        error => console.error('🚨 更新活動失敗:', error)
-      );
+  /** 📸 當使用者選擇圖片時觸發 */
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedImage = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.newEvent.imageBase64 = reader.result as string;
+      };
+      reader.readAsDataURL(file);
     }
   }
 
+  /** ➕ 新增活動 */
+  addEvent() {
+    if (!this.newEvent.name || !this.newEvent.startDate || !this.newEvent.endDate) {
+      alert("請填寫完整的活動資訊！");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("name", this.newEvent.name);
+    formData.append("location", this.newEvent.location);
+    formData.append("startDate", this.newEvent.startDate);
+    formData.append("endDate", this.newEvent.endDate);
+    formData.append("description", this.newEvent.description);
+    if (this.selectedImage) {
+      formData.append("image", this.selectedImage);
+    }
+
+    this.http.post(this.apiUrl, formData).subscribe(() => {
+      this.loadEvents();
+      this.newEvent = { name: '', location: '', startDate: '', endDate: '', description: '', imageBase64: '' };
+      this.selectedImage = null;
+    }, error => {
+      console.error("🚨 無法新增活動:", error);
+    });
+  }
+
+  /** ✏️ 編輯活動 */
+  editEvent(event: any) {
+    this.newEvent = { ...event };
+  }
+
+  /** ❌ 刪除活動 */
   deleteEvent(eventId: number) {
-    this.http.delete(`${this.apiUrl}/${eventId}`).subscribe(
-      () => this.events = this.events.filter(e => e.id !== eventId),
-      error => console.error('🚨 刪除活動失敗:', error)
-    );
+    this.http.delete(`${this.apiUrl}/${eventId}`).subscribe(() => {
+      this.loadEvents();
+    });
   }
 }
+
+
+
+
+
+
