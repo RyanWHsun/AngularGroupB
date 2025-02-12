@@ -53,8 +53,7 @@ import { ProductPipe } from './pipes/product.pipe';
     MyarticlesComponent,
     LayoutComponent,
     EventDetailComponent,
-    EventManagementComponent
-
+    EventManagementComponent,
     CreateProductComponent,
     CartComponent,
     PaymentComponent,
@@ -66,7 +65,7 @@ import { ProductPipe } from './pipes/product.pipe';
     HttpClientModule,
     FormsModule,
     AgGridModule,
-    MatDialogModule
+    MatDialogModule,
     AgGridModule,
     ReactiveFormsModule
   ],
