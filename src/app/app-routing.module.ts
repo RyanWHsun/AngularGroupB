@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -34,8 +34,18 @@ const routes: Routes = [
   },
   {
     path: 'attraction',
-    component: AttractionComponent,
-    children: []
+    component: LayoutComponent,
+    children: [
+      {
+        path: '',
+        component: AttractionComponent,
+      }, {
+        path: 'admin',
+        component: AttractionAdminComponent,
+      }, {
+        path: 'tickets',
+        component: AttractionTicketComponent,
+      }]
   },
   {
     path: 'events',
