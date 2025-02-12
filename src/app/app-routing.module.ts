@@ -5,6 +5,7 @@ import { HomeComponent } from './components/home/home.component';
 import { AttractionComponent } from './components/attraction/attraction.component';
 import { EventComponent } from './components/event/event.component';
 import { EventDetailComponent } from './components/event-detail/event-detail.component'; // ✅ 修正為頁面
+import { EventManagementComponent } from './components/event-management/event-management.component';
 import { ProductsComponent } from './components/products/products.component';
 import { SocialmediaComponent } from './components/socialmedia/socialmedia.component';
 import { UserComponent } from './components/user/user.component';
@@ -32,13 +33,18 @@ const routes: Routes = [
     children: []
   },
   {
+    path: 'events',
+    component: EventManagementComponent
+  }, // ✅ 讓 /events 直接對應到管理頁面
+  {
     path: 'event',
     component: LayoutComponent,
     children: [{
       path: '',
       component: EventComponent
     },
-    { path: 'detail/:id',
+    {
+      path: 'detail/:id',
       component: EventDetailComponent
     }]
   },

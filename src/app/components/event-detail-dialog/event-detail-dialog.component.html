@@ -1,16 +1,24 @@
-<div class="event-detail-modal">
+<div class="event-detail-modal" *ngIf="event">
   <div class="container mt-5">
     <div class="card">
-      <img class="card-img-top" [src]="event?.fEventImageUrl || 'assets/images/noImage.jpg'" alt="活動圖片">
+      <img class="card-img-top"
+        [src]="event.fEventImageUrl && event.fEventImageUrl.trim() !== '' ? event.fEventImageUrl : 'assets/images/noImage.jpg'"
+        alt="活動圖片">
       <div class="card-body">
-        <h3 class="card-title">{{ event?.fEventName }}</h3>
-        <p class="card-text">{{ event?.fEventDescription }}</p>
-        <p><strong>活動地點:</strong> {{ event?.fLocation || '未提供' }}</p>
-        <p><strong>開始時間:</strong> {{ event?.fEventStartDate | date:'yyyy-MM-dd' }}</p>
-        <p><strong>結束時間:</strong> {{ event?.fEventEndDate | date:'yyyy-MM-dd' }}</p>
-        <p><strong>報名人數:</strong> {{ event?.fParticipant }} 人</p>
+        <h3 class="card-title">{{ event.fEventName }}</h3>
+        <p class="card-text">{{ event.fEventDescription || '無活動描述' }}</p>
+        <p><strong>活動地點:</strong> {{ event.fLocation && event.fLocation.trim() !== '' ? event.fLocation : '未提供' }}</p>
+        <p><strong>開始時間:</strong> {{ getFormattedDate(event?.fEventStartDate) }}</p>
+        <p><strong>結束時間:</strong> {{ getFormattedDate(event?.fEventEndDate) }}</p>
+        <p><strong>報名人數:</strong> {{ event.fParticipant || 0 }} 人</p>
 
         <button class="btn btn-success" (click)="registerEvent()">我要報名</button>
       </div>
     </div>
   </div>
+</div>
+
+<!-- 如果 event 為 null，顯示 loading -->
+<div *ngIf="!event" class="text-center mt-5">
+  <p>載入活動資訊中...</p>
+</div>

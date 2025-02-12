@@ -25,6 +25,8 @@ import { UserPageComponent } from './components/user-page/user-page.component';
 import { MyarticlesComponent } from './components/myarticles/myarticles.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { EventDetailComponent } from './components/event-detail/event-detail.component';
+import { EventManagementComponent } from './components/event-management/event-management.component';
+
 
 
 @NgModule({
@@ -45,7 +47,8 @@ import { EventDetailComponent } from './components/event-detail/event-detail.com
     UserPageComponent,
     MyarticlesComponent,
     LayoutComponent,
-    EventDetailComponent
+    EventDetailComponent,
+    EventManagementComponent
 
   ],
   imports: [
