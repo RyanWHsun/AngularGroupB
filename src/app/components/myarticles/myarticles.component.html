@@ -19,22 +19,25 @@
     <div class="bg-light shadow" style="padding: 30px;">
       <div class="row align-items-center" style="min-height: 60px;">
         <div class="col-md-3">
-          <button class="btn btn-primary btn-block" style="height: 47px;" data-toggle="modal" data-target="#modal"
-            (click)="reset()"><i class="fa-solid fa-pencil"></i> 寫文章</button>
+          <button class="custom-btn w-100" data-toggle="modal" data-target="#modal" (click)="reset()">
+            <div class="custom-btn-inner">
+              <i class="fa-solid fa-pencil"></i>
+              <span>寫文章</span>
+            </div>
+          </button>
         </div>
         <div class="col-md-3">
-          <select class="form-select w-100" style="height: 47px;">
+          <select class="custom-select w-100">
             <option value="">類別</option>
             <option value="tech">健行</option>
             <option value="lifestyle">美食</option>
           </select>
         </div>
-        <div class="col-md-3 input-group" style="height: 47px;">
-          <input type="date" class="form-control" style="height: 47px;">
-          <button class="btn btn-primary ml-1"><i class="fa fa-search"></i></button>
+        <div class="col-md-3 w-100" style="height: 47px;">
+          <input type="date" class="custom-date w-100">
         </div>
         <div class="col-md-3" style="height: 47px;">
-          <input type="text" class="form-control" style="height: 47px;" placeholder="關鍵字搜尋">
+          <input type="text" class="custom-input w-100" placeholder="關鍵字搜尋">
         </div>
       </div>
     </div>
