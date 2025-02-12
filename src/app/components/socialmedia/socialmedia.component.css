@@ -24,6 +24,7 @@ strong {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .fixed-sidebar {
@@ -31,7 +32,55 @@ strong {
   top: 200px;
 }
 
-.form-select {
+.custom-btn {
+  border-radius: 15px;
+  border: 3px solid #8cae78;
+  background-color: #ffffff;
+  padding: 4px;
+  display: inline-block;
+  color: white;
+  outline: none;
+  box-shadow: none;
+}
+
+.custom-btn-inner {
+  border-radius: 15px;
+  background-color: #8cae78;
+  padding: 10px;
+}
+
+.custom-btn:hover .custom-btn-inner i {
+  color: white !important;
+}
+
+.custom-btn:hover .custom-btn-inner {
+  background-color: #8cae78cb;
+}
+
+.custom-btn:active {
+  border-color: #8cae78cb;
+}
+
+.custom-select {
+  border: 3px solid #8cae78;
+  border-radius: 15px;
+  height: 47px;
   text-align: center;
   letter-spacing: 5px;
+  color: #8cae78;
+}
+
+
+.custom-input {
+  border: 3px solid #8cae78;
+  border-radius: 15px;
+  height: 47px;
+  padding-left: 20px
+}
+
+.custom-input:focus,
+.custom-select:focus {
+  border-color: #8cae78cb;
+  outline: none;
+  box-shadow: none;
 }
