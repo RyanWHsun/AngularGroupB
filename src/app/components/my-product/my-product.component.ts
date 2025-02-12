@@ -47,7 +47,7 @@ export class MyProductComponent {
       }
     })
     setTimeout(() => {
-      const scrollY = window.innerHeight * 0.6; //視窗高度百分比
+      const scrollY = window.innerHeight * 0.5; //視窗高度百分比
       window.scrollTo({ top: scrollY, behavior: 'smooth' });
     }, 200);
   }
