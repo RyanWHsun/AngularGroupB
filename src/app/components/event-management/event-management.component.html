@@ -1,0 +1,53 @@
+<div class="container mt-5">
+  <h2>活動管理</h2>
+
+  <!-- 新增活動 -->
+  <div class="card p-3 mb-4">
+    <h4>新增活動</h4>
+    <input type="text" class="form-control mb-2" placeholder="活動名稱" [(ngModel)]="newEvent.name">
+    <input type="text" class="form-control mb-2" placeholder="活動地點" [(ngModel)]="newEvent.location">
+    <input type="date" class="form-control mb-2" [(ngModel)]="newEvent.startDate">
+    <input type="date" class="form-control mb-2" [(ngModel)]="newEvent.endDate">
+    <textarea class="form-control mb-2" placeholder="活動描述" [(ngModel)]="newEvent.description"></textarea>
+    <button class="btn btn-primary" (click)="addEvent()">新增</button>
+  </div>
+
+  <!-- 活動列表 -->
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>名稱</th>
+        <th>地點</th>
+        <th>開始時間</th>
+        <th>結束時間</th>
+        <th>描述</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let event of events">
+        <td>{{ event.name }}</td>
+        <td>{{ event.location }}</td>
+        <td>{{ event.startDate }}</td>
+        <td>{{ event.endDate }}</td>
+        <td>{{ event.description }}</td>
+        <td>
+          <button class="btn btn-warning btn-sm" (click)="editEvent(event)">編輯</button>
+          <button class="btn btn-danger btn-sm" (click)="deleteEvent(event.id)">刪除</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 編輯活動 -->
+  <div class="card p-3 mt-4" *ngIf="editingEvent">
+    <h4>編輯活動</h4>
+    <input type="text" class="form-control mb-2" [(ngModel)]="editingEvent.name">
+    <input type="text" class="form-control mb-2" [(ngModel)]="editingEvent.location">
+    <input type="date" class="form-control mb-2" [(ngModel)]="editingEvent.startDate">
+    <input type="date" class="form-control mb-2" [(ngModel)]="editingEvent.endDate">
+    <textarea class="form-control mb-2" [(ngModel)]="editingEvent.description"></textarea>
+    <button class="btn btn-success" (click)="updateEvent()">更新</button>
+    <button class="btn btn-secondary" (click)="editingEvent = null">取消</button>
+  </div>
+</div>

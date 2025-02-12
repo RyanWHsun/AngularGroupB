@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-event',
@@ -8,75 +9,121 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EventComponent implements OnInit {
   events: any[] = [];
-  userId = 1;  // 測試用假登入 ID
+  filteredEvents: any[] = [];
+  displayedEvents: any[] = [];
+  savedEvents: any[] = [];
+  uniqueLocations: string[] = [];
+  uniqueDurations: number[] = [1, 2, 3, 5, 7]; // ✅ 預設一些行程天數
+  currentIndex = 0;
+  eventsPerPage = 3;
+  apiUrl = 'https://localhost:7112/api';
+  isLoading = false;
 
-  constructor(private http: HttpClient) {}
+  filters = {
+    location: '',
+    departDate: '',
+    returnDate: '',
+    days: '' // ✅ 新增天數篩選
+  };
+
+  constructor(private http: HttpClient, private router: Router, private cdRef: ChangeDetectorRef) {}
 
   ngOnInit() {
+    this.loadSavedEvents();
     this.loadEvents();
   }
 
+  /** 🚀 從 API 載入活動 */
   loadEvents() {
-    this.http.get<any>('https://localhost:7112/api/Event').subscribe(
+    this.isLoading = true;
+    this.http.get<any>(`${this.apiUrl}/Event`).subscribe(
       (data) => {
-        console.log("✅ API 回應:", data);
+        this.events = Array.isArray(data) ? data : data?.$values || [];
 
-        // 確保 `data` 是正確的陣列格式
-        const eventsArray = Array.isArray(data) ? data : data.$values;
+        this.events.forEach(event => {
+          event.fLocation = event.location ?? '未知地點';
+          event.fParticipant = event.participantCount ?? 0;
+          event.fEventImageUrl = event.imageUrl ?? 'assets/images/noImage.jpg'; // 預設圖片
+        });
 
-        if (!Array.isArray(eventsArray)) {
-          console.error("❌ API 回應不是陣列:", data);
-          return;
-        }
-
-        this.events = eventsArray.map(event => ({
-          fEventId: event.fEventId,
-          fEventName: event.fEventName,
-          fEventDescription: event.fEventDescription,
-          fEventImageUrl: event.fEventImages?.length > 0
-            ? `data:image/jpeg;base64,${event.fEventImages[0].fEventImage}`
-            : 'assets/images/noImage.jpg',
-            fLocation: event.locations && event.locations.length > 0
-            ? event.locations.map((l: { fLocationName: string }) => l.fLocationName).join(', ') // ✅ 修正 TypeScript 類型
-            : '未提供地點',
-          fDuration: this.calculateDuration(event.fEventStartDate, event.fEventEndDate),
-          fParticipant: Math.floor(Math.random() * 20) + 1,
-          fRating: (Math.random() * 2 + 3).toFixed(1),
-          fReviews: Math.floor(Math.random() * 500),
-          fPrice: (Math.random() * 200 + 100).toFixed(0)
-        }));
-
-        console.log("🎯 轉換後的活動列表:", this.events);
+        this.extractUniqueFilters();
+        this.searchEvents();
+        this.isLoading = false;
       },
       (error) => {
-        console.error("🚨 API 請求失敗:", error);
+        console.error("🚨 無法獲取活動:", error);
+        this.isLoading = false;
       }
     );
   }
 
-  calculateDuration(startDate: string, endDate: string): number {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)); // 轉換為天數
+  /** 🏷️ 取得所有篩選選項 */
+  extractUniqueFilters() {
+    this.uniqueLocations = [...new Set(this.events.map(e => e.fLocation))];
+    this.uniqueDurations = [...new Set(this.events.map(e => e.fDuration || 1))]; // ✅ 確保天數有值
   }
 
-  registerForEvent(eventId: number) {
-    const registrationData = {
-      FUserId: this.userId,
-      FEventId: eventId,  // ⬅️ 加上活動 ID
-      FRegistrationStatus: "已報名"
-    };
+  /** 🔍 依據篩選條件搜尋活動 */
+  searchEvents() {
+    this.filteredEvents = this.events.filter(e =>
+      (!this.filters.location || e.fLocation.toLowerCase().includes(this.filters.location.toLowerCase())) &&
+      (!this.filters.departDate || new Date(e.fEventStartDate) >= new Date(this.filters.departDate)) &&
+      (!this.filters.returnDate || new Date(e.fEventEndDate) <= new Date(this.filters.returnDate)) &&
+      (!this.filters.days || e.fDuration == +this.filters.days)
+    );
 
-    this.http.post(`http://localhost:7112/api/EventRegistration`, registrationData)
-      .subscribe(
-        response => {
-          alert("✅ 報名成功！");
-          console.log(response);
-        },
-        error => {
-          alert("❌ 報名失敗：" + (error.error.message || "發生未知錯誤"));
-          console.error("報名錯誤:", error);
-        }
-      );
+    this.currentIndex = 0;
+    this.updateDisplayedEvents();
+  }
+
+  /** 📌 更新顯示的活動 (處理分頁) */
+  updateDisplayedEvents() {
+    this.displayedEvents = this.filteredEvents.slice(this.currentIndex, this.currentIndex + this.eventsPerPage);
+  }
+
+  /** ◀️ 上一頁 */
+  prevEvent() {
+    if (this.currentIndex > 0) {
+      this.currentIndex -= this.eventsPerPage;
+      this.updateDisplayedEvents();
+    }
+  }
+
+  /** ▶️ 下一頁 */
+  nextEvent() {
+    if (this.currentIndex + this.eventsPerPage < this.filteredEvents.length) {
+      this.currentIndex += this.eventsPerPage;
+      this.updateDisplayedEvents();
+    }
+  }
+
+  /** ⭐ 收藏/取消收藏活動 */
+  toggleSaveEvent(event: any) {
+    this.savedEvents = this.savedEvents.some(e => e.fEventId === event.fEventId)
+      ? this.savedEvents.filter(e => e.fEventId !== event.fEventId)
+      : [...this.savedEvents, event];
+
+    localStorage.setItem('savedEvents', JSON.stringify(this.savedEvents));
+    this.cdRef.detectChanges();
+  }
+
+  /** 🔍 檢查活動是否已收藏 */
+  isEventSaved(eventId: number) {
+    return this.savedEvents.some(e => e.fEventId === eventId);
+  }
+
+  /** ⭐ 載入已收藏的活動 */
+  loadSavedEvents() {
+    const saved = localStorage.getItem('savedEvents');
+    if (saved) {
+      this.savedEvents = JSON.parse(saved);
+    }
+  }
+
+  /** ⏪ 回到首頁 */
+  navigateToHome() {
+    this.router.navigate(['/']);
   }
 }
+
+
