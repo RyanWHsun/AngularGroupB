@@ -33,7 +33,13 @@ export class EventComponent implements OnInit {
   ngOnInit() {
     this.loadSavedEvents();
     this.loadEvents();
+
+    // 🚀 自動輪播，每 3 秒執行 nextEvent()
+    setInterval(() => {
+      this.nextEvent();
+    }, 3000);
   }
+
 
   /** 🚀 從 API 載入活動 */
   loadEvents() {
@@ -100,21 +106,25 @@ export class EventComponent implements OnInit {
   }
 
 
-  /** ◀️ 上一頁 */
-  prevEvent() {
-    if (this.currentIndex > 0) {
-      this.currentIndex -= this.eventsPerPage;
-      this.updateDisplayedEvents();
-    }
+  /** ▶️ 下一頁 (支援循環播放) */
+nextEvent() {
+  if (this.currentIndex + this.eventsPerPage < this.filteredEvents.length) {
+    this.currentIndex += this.eventsPerPage;
+  } else {
+    this.currentIndex = 0; // 🔄 如果到最後則回到第一個
   }
+  this.updateDisplayedEvents();
+}
 
-  /** ▶️ 下一頁 */
-  nextEvent() {
-    if (this.currentIndex + this.eventsPerPage < this.filteredEvents.length) {
-      this.currentIndex += this.eventsPerPage;
-      this.updateDisplayedEvents();
-    }
+/** ◀️ 上一頁 (支援循環播放) */
+prevEvent() {
+  if (this.currentIndex > 0) {
+    this.currentIndex -= this.eventsPerPage;
+  } else {
+    this.currentIndex = this.filteredEvents.length - this.eventsPerPage; // 🔄 回到最後一組
   }
+  this.updateDisplayedEvents();
+}
 
   /** ⭐ 收藏/取消收藏活動 */
   toggleSaveEvent(event: any) {
