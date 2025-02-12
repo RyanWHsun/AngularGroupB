@@ -25,7 +25,7 @@ export class EventComponent implements OnInit {
     returnDate: '',
     days: '',
     minPrice: 0, // ✅ 最低價格篩選
-    maxPrice: 999999 // ✅ 最高價格篩選
+    maxPrice: '' // ✅ 最高價格篩選
   };
 
   constructor(private http: HttpClient, private router: Router, private cdRef: ChangeDetectorRef) {}

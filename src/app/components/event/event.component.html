@@ -12,7 +12,7 @@
   </div>
 
   <!-- 🔍 搜尋區塊 -->
-  <div class="container-fluid search-container position-absolute w-100" style="top: 80%; left: 50%; transform: translate(-50%, -50%);">
+  <div class="container-fluid search-container position-absolute w-100" style="left: 50%; transform: translate(-50%, -50%);">
     <div class="container search-box shadow p-4 bg-white rounded">
       <div class="row align-items-center">
         <div class="col-md-2">
@@ -34,10 +34,7 @@
           </select>
         </div>
         <div class="col-md-2">
-          <input type="number" class="form-control" [(ngModel)]="filters.minPrice" placeholder="最低價格">
-        </div>
-        <div class="col-md-2">
-          <input type="number" class="form-control" [(ngModel)]="filters.maxPrice" placeholder="最高價格">
+          <input type="number" class="form-control" [(ngModel)]="filters.maxPrice" placeholder="價格">
         </div>
         <div class="col-md-1">
           <button class="btn btn-success btn-block" (click)="searchEvents()">搜尋</button>
