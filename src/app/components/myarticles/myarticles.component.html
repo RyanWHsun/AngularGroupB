@@ -14,53 +14,27 @@
 <!-- Header End -->
 
 <!-- Booking Start -->
-<div class="container-fluid booking mt-5 pb-5">
+<div class="container-fluid booking mt-5 pb-5 search-bar-container">
   <div class="container pb-5">
     <div class="bg-light shadow" style="padding: 30px;">
       <div class="row align-items-center" style="min-height: 60px;">
-        <div class="col-md-10">
-          <div class="row">
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <select class="custom-select px-4" style="height: 47px;">
-                  <option selected>Destination</option>
-                  <option value="1">Destination 1</option>
-                  <option value="2">Destination 1</option>
-                  <option value="3">Destination 1</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <div class="date" id="date1" data-target-input="nearest">
-                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Depart Date"
-                    data-target="#date1" data-toggle="datetimepicker" />
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <div class="date" id="date2" data-target-input="nearest">
-                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Return Date"
-                    data-target="#date2" data-toggle="datetimepicker" />
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <select class="custom-select px-4" style="height: 47px;">
-                  <option selected>Duration</option>
-                  <option value="1">Duration 1</option>
-                  <option value="2">Duration 1</option>
-                  <option value="3">Duration 1</option>
-                </select>
-              </div>
-            </div>
-          </div>
+        <div class="col-md-3">
+          <button class="btn btn-primary btn-block" style="height: 47px;" data-toggle="modal" data-target="#modal"
+            (click)="reset()"><i class="fa-solid fa-pencil"></i> 寫文章</button>
         </div>
-        <div class="col-md-2">
-          <button class="btn btn-primary btn-block" type="submit"
-            style="height: 47px; margin-top: -2px;">Submit</button>
+        <div class="col-md-3">
+          <select class="form-select w-100" style="height: 47px;">
+            <option value="">類別</option>
+            <option value="tech">健行</option>
+            <option value="lifestyle">美食</option>
+          </select>
+        </div>
+        <div class="col-md-3 input-group" style="height: 47px;">
+          <input type="date" class="form-control" style="height: 47px;">
+          <button class="btn btn-primary ml-1"><i class="fa fa-search"></i></button>
+        </div>
+        <div class="col-md-3" style="height: 47px;">
+          <input type="text" class="form-control" style="height: 47px;" placeholder="關鍵字搜尋">
         </div>
       </div>
     </div>
@@ -69,18 +43,21 @@
 <!-- Booking End -->
 
 <!-- start your coding here-->
-<div class="container mt-4">
+<div>{{editorData}}</div>
+<div [innerHTML]="finalData">123</div>
+
+<div id="myArticle" class="container">
   <div class="row">
-    <div *ngFor="let data of datas" class="col-4" style="padding:0 10px 10px 10px;">
+    <div *ngFor="let data of datas" class="col-4">
       <div *ngIf="imageData[data['fPostId']] && imageData[data['fPostId']].length > 0" class="image-container">
-        <img [src]="imageData[data['fPostId']][0]" />
+        <img [src]="imageData[data['fPostId']][0]" class="w-100" />
         <div class="overlay">
           <p><i class="fas fa-heart"></i> 120</p>
           <p><i class="fas fa-comment"></i> 45</p>
         </div>
       </div>
       <div *ngIf="!imageData[data['fPostId']] || imageData[data['fPostId']].length == 0" class="image-container">
-        <img src="/assets/images/noImage.jpg" />
+        <img src="/assets/images/noImage.jpg" class="w-100" />
         <div class="overlay">
           <p><i class="fas fa-heart"></i> 10</p>
           <p><i class="fas fa-comment"></i> 10</p>
@@ -89,3 +66,41 @@
     </div>
   </div>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-custom modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">建立新貼文</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-8">
+            <img [src]="imagePreview || 'assets/images/noImage.jpg'" class="w-100 h-100" style="object-fit: cover;
+    object-position: center;">
+          </div>
+          <div class="col-4">
+            <input type="text" class="form-control mb-3" placeholder="請輸入文章標題!" [(ngModel)]="articleTitle">
+            <div class="editor-container">
+              <ckeditor [editor]="Editor" [config]="config" [(ngModel)]="editorData" *ngIf="Editor && config" />
+            </div>
+            <button type="button" class="btn btn-secondary" (click)="fileInput.click()">選擇圖片</button>
+            <input type="file" #fileInput (change)="onFileSelected($event)" class="d-none">
+            <label for="articleStatus" class="mt-3 ml-1">文章狀態：</label>
+            <select id="articleStatus" [(ngModel)]="articleStatus">
+              <option *ngFor="let status of statuses" [value]="status.value">
+                {{ status.label }}
+              </option>
+            </select>
+            <button type="button" class="btn btn-primary mt-2 float-right" data-dismiss="modal"
+              (click)="save()">確認</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

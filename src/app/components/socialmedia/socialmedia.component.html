@@ -14,53 +14,25 @@
 <!-- Header End -->
 
 <!-- Booking Start -->
-<div class="container-fluid booking mt-5 pb-5">
+<div class="container-fluid booking mt-5 pb-5 search-bar-container">
   <div class="container pb-5">
     <div class="bg-light shadow" style="padding: 30px;">
       <div class="row align-items-center" style="min-height: 60px;">
-        <div class="col-md-10">
-          <div class="row">
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <select class="custom-select px-4" style="height: 47px;">
-                  <option selected>Destination</option>
-                  <option value="1">Destination 1</option>
-                  <option value="2">Destination 1</option>
-                  <option value="3">Destination 1</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <div class="date" id="date1" data-target-input="nearest">
-                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Depart Date"
-                    data-target="#date1" data-toggle="datetimepicker" />
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <div class="date" id="date2" data-target-input="nearest">
-                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Return Date"
-                    data-target="#date2" data-toggle="datetimepicker" />
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <select class="custom-select px-4" style="height: 47px;">
-                  <option selected>Duration</option>
-                  <option value="1">Duration 1</option>
-                  <option value="2">Duration 1</option>
-                  <option value="3">Duration 1</option>
-                </select>
-              </div>
-            </div>
-          </div>
+        <div class="col-md-3">
+          <button class="btn btn-primary btn-block" style="height: 47px;">最新文章</button>
         </div>
-        <div class="col-md-2">
-          <button class="btn btn-primary btn-block" type="submit"
-            style="height: 47px; margin-top: -2px;">Submit</button>
+        <div class="col-md-3">
+          <button class="btn btn-primary btn-block" style="height: 47px;">熱門文章</button>
+        </div>
+        <div class="col-md-3">
+          <select class="form-select w-100" style="height: 47px;">
+            <option value="">類別</option>
+            <option value="tech">健行</option>
+            <option value="lifestyle">美食</option>
+          </select>
+        </div>
+        <div class="col-md-3" style="height: 47px;">
+          <input type="text" class="form-control" style="height: 47px;" placeholder="關鍵字搜尋">
         </div>
       </div>
     </div>
@@ -69,37 +41,125 @@
 <!-- Booking End -->
 
 <!-- start your coding here-->
-<div class="container" style="max-width: 35%;">
-  <div *ngFor="let data of datas">
-    <!-- Post Wrapper -->
-    <div class="post border rounded p-3 mb-4">
-      <!-- Header -->
-      <div class="d-flex align-items-center mb-2">
-        <img src="/assets/images/noImage.jpg" class="rounded-circle me-2" style="width: 5%;">
-        <strong>tytwowow</strong>
+<div class="container">
+  <div class="row">
+    <!-- 推薦 -->
+    <div class="col-2">
+      <div class="mb-5 fixed-sidebar">
+        <h4 class="text-uppercase mb-2" style="letter-spacing: 5px;">推薦商品</h4>
+        <a class="d-flex flex-column align-items-center text-decoration-none bg-white mb-3" href="">
+          <img class="img-fluid" src="/assets/images/noImage.jpg" alt="">
+          <h6 class="text-center">Diam lorem</h6>
+        </a>
+        <a class="d-flex flex-column align-items-center text-decoration-none bg-white mb-3" href="">
+          <img class="img-fluid" src="/assets/images/noImage.jpg" alt="">
+          <h6 class="text-center">Diam lorem</h6>
+        </a>
+        <a class="d-flex flex-column align-items-center text-decoration-none bg-white mb-3" href="">
+          <img class="img-fluid" src="/assets/images/noImage.jpg" alt="">
+          <h6 class="text-center">Diam lorem</h6>
+        </a>
       </div>
+    </div>
+    <!-- 文章 -->
+    <div class="col-8">
+      <div *ngFor="let data of datas" class="container-fluid mb-3" style="width: 90%;">
+        <!-- Post Wrapper -->
+        <div class="post border rounded p-3">
+          <!-- Header -->
+          <div class="d-flex align-items-center mb-2">
+            <img src="/assets/images/noImage.jpg" class="rounded-circle me-2" style="width: 5%;">
+            <strong>tytwowow</strong>
+          </div>
 
-      <!-- Image -->
-      <div *ngIf="imageData[data['fPostId']] && imageData[data['fPostId']].length > 0" class="mb-2">
-        <img [src]="imageData[data['fPostId']][0]" class="w-100" style='height: auto;object-fit: cover' />
+          <!-- Image -->
+          <div *ngIf="imageData[data['fPostId']] && imageData[data['fPostId']].length > 0" class="mb-2">
+            <img [src]="imageData[data['fPostId']][0]" class="w-100" style='height: 444.75px;object-fit: cover' />
+          </div>
+
+          <div *ngIf="!imageData[data['fPostId']] || imageData[data['fPostId']].length == 0" class="mb-2">
+            <img src="/assets/images/noImage.jpg" class="w-100" style='height: 444.75px;object-fit: cover' />
+          </div>
+
+          <!-- Actions -->
+          <div class="d-flex justify-content-start mb-2">
+            <button class="btn mr-2 shadow-none"><i class="fa-regular fa-heart" style="color: #000000;"></i></button>
+            <button class="btn mr-2 shadow-none" (click)="openComments(data['fPostId'])"><i
+                class="fa-regular fa-comment" style="color: #000000;"></i></button>
+          </div>
+
+          <!-- Likes and Caption -->
+          <p class="mb-1"><strong>6萬個讚</strong></p>
+          <p><strong>tytwowow</strong> 點點點！</p>
+
+          <!-- Comment Section -->
+          <input type="text" class="form-control" placeholder="留言......">
+        </div>
+        <div class="comments-container" *ngIf="activePostIds.includes(data['fPostId'])">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <strong>留言</strong>
+              <button class="btn-close"></button>
+            </div>
+            <div class="card-body">
+              <p>test</p>
+              <p>test2</p>
+              <p>test3</p>
+              <p>test4</p>
+              <p>test5</p>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div *ngIf="!imageData[data['fPostId']] || imageData[data['fPostId']].length == 0" class="mb-2">
-        <img src="/assets/images/noImage.jpg" class="w-100" style='height: auto;object-fit: cover' />
+    </div>
+    <div class="col-2">
+      <div class="contacts-list fixed-sidebar">
+        <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">聯絡人</h4>
+        <div class="contact-card">
+          <img src="/assets/images/noImage.jpg" class="avatar">
+          <span class="name">asdasdasd</span>
+        </div>
+        <div class="contact-card">
+          <img src="/assets/images/noImage.jpg" class="avatar">
+          <span class="name">asdasdasd</span>
+        </div>
+        <div class="contact-card">
+          <img src="/assets/images/noImage.jpg" class="avatar">
+          <span class="name">asdasdasd</span>
+        </div>
+        <div class="contact-card">
+          <img src="/assets/images/noImage.jpg" class="avatar">
+          <span class="name">asdasdasd</span>
+        </div>
+        <div class="contact-card">
+          <img src="/assets/images/noImage.jpg" class="avatar">
+          <span class="name">asdasdasd</span>
+        </div>
+        <div class="contact-card">
+          <img src="/assets/images/noImage.jpg" class="avatar">
+          <span class="name">asdasdasd</span>
+        </div>
+        <div class="contact-card">
+          <img src="/assets/images/noImage.jpg" class="avatar">
+          <span class="name">asdasdasd</span>
+        </div>
+        <div class="contact-card">
+          <img src="/assets/images/noImage.jpg" class="avatar">
+          <span class="name">asdasdasd</span>
+        </div>
+        <div class="contact-card">
+          <img src="/assets/images/noImage.jpg" class="avatar">
+          <span class="name">asdasdasd</span>
+        </div>
+        <div class="contact-card">
+          <img src="/assets/images/noImage.jpg" class="avatar">
+          <span class="name">asdasdasd</span>
+        </div>
+        <div class="contact-card">
+          <img src="/assets/images/noImage.jpg" class="avatar">
+          <span class="name">asdasdasd</span>
+        </div>
       </div>
-
-      <!-- Actions -->
-      <div class="d-flex justify-content-start mb-2">
-        <button class="btn mr-2 shadow-none"><i class="fa-regular fa-heart" style="color: #000000;"></i></button>
-        <button class="btn mr-2 shadow-none"><i class="fa-regular fa-comment" style="color: #000000;"></i></button>
-      </div>
-
-      <!-- Likes and Caption -->
-      <p class="mb-1"><strong>6萬個讚</strong></p>
-      <p><strong>tytwowow</strong> 點點點！</p>
-
-      <!-- Comment Section -->
-      <input type="text" class="form-control" placeholder="留言......">
     </div>
   </div>
 </div>

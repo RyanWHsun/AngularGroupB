@@ -1,6 +1,5 @@
-img {
-  width: 300px;
-  height: 300px;
+#myArticle img {
+  height: 262.5px;
   object-fit: cover;
 }
 
@@ -45,4 +44,34 @@ img {
 
 .overlay i {
   margin-right: 5px;
+}
+
+.modal-custom {
+  max-width: 1000px;
+}
+
+::ng-deep .ck-editor__editable_inline {
+  min-height: 500px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.search-bar-container {
+  position: sticky;
+  top: 0;
+}
+
+.form-select {
+  text-align: center;
+  letter-spacing: 5px;
+}
+
+.col-4 {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.row {
+  padding-left: 10px;
+  padding-right: 10px;
 }

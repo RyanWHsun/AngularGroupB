@@ -24,6 +24,7 @@ import { UserEditComponent } from './components/user-edit/user-edit.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { MyarticlesComponent } from './components/myarticles/myarticles.component';
 import { LayoutComponent } from './components/layout/layout.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { EventDetailComponent } from './components/event-detail/event-detail.component';
 import { EventManagementComponent } from './components/event-management/event-management.component';
 
@@ -64,6 +65,8 @@ import { ProductPipe } from './pipes/product.pipe';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    AgGridModule,
+    CKEditorModule,
     AgGridModule,
     MatDialogModule,
     AgGridModule,
