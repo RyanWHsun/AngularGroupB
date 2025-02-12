@@ -86,7 +86,6 @@ export class AttractionTicketComponent {
   }
 
   changeTicketQty() {
-    console.log('before', this.buyTicketModal.attractionTicketQuantity);
     if (typeof this.buyTicketModal.attractionTicketQuantity !== 'number') {
       this.buyTicketModal.attractionTicketQuantity = 0;
     } else if (this.buyTicketModal.attractionTicketQuantity! >= 15) {
@@ -98,7 +97,6 @@ export class AttractionTicketComponent {
         this.buyTicketModal.attractionTicketQuantity;
     }
     this.setAddToCartBtn();
-    console.log('after', this.buyTicketModal.attractionTicketQuantity);
   }
 
   setImage(tickets: IAttractionTicket[]) {
@@ -132,7 +130,6 @@ export class AttractionTicketComponent {
       this.attractionTicketService
         .getAttractionTicketsById(ticket.fAttractionId!)
         .subscribe((data) => {
-          //console.log(data);
           this.buyTicketModal.attractionTicketType = data.map(
             (item) => item.fTicketType!
           );
@@ -141,7 +138,7 @@ export class AttractionTicketComponent {
           );
         });
     } catch (error) {
-      console.log('showTicketModal ERROR! ', error);
+      console.error('showTicketModal ERROR! ', error);
     }
     this.buyTicketModal.attractionTicketQuantity = 0;
     this.buyTicketModal.imageSrc = ticket.fimageSrc;
@@ -215,7 +212,6 @@ export class AttractionTicketComponent {
   // 把訂購的門票加入購物車
   addTicketToShoppingCart(buyTicketModal: IBuyTicketModal) {
     this.setShoppingCartTicket(buyTicketModal);
-    console.log(`add to cart ${JSON.stringify(this.shoppingCartTicket)}`);
     this.attractionTicketShoppingCartService
       .postAttractionTicketToShoppingCart(this.shoppingCartTicket)
       .subscribe({
@@ -271,6 +267,7 @@ export class AttractionTicketComponent {
       .pipe(take(1))
       .subscribe((qty) => {
         this.setPages(Math.ceil(qty / 9));
+        console.log(this.pages)
         this.showPartialAttractionTickets(0);
       });
   }
@@ -282,7 +279,6 @@ export class AttractionTicketComponent {
   setViewMode(mode: 'grid' | 'list') {
     this.viewMode = mode;
     this.viewModeIsActive = !this.viewModeIsActive;
-    console.log(this.viewMode);
   }
 
   // 點選頁碼，設定 selectedPageIndex

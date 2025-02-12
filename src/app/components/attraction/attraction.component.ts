@@ -1,6 +1,7 @@
+/// <reference types="google.maps" />
 import { AttractionCommentService } from './../../services/attraction-comment.service';
 import { AttractionImageService } from './../../services/attraction-image.service';
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { IAttraction } from 'src/app/interfaces/IAttraction';
 import { AttractionService } from 'src/app/services/attraction.service';
 import * as $ from 'jquery';
@@ -22,14 +23,30 @@ import {
 import { IAttractionComment } from 'src/app/interfaces/IAttractionComment';
 import { GoogleMapAPIService } from 'src/app/services/google-map-api.service';
 
+// 宣告全域變數 google
+// 在 Google Maps JavaScript API 中，google 這個物件是由 API 動態載入的，而不是直接在 TypeScript 環境中定義的。
+// 因此，TypeScript 預設不知道 google 這個變數的型別，會報錯
 declare var google: any;
+
+// 在 TypeScript 全域環境 (global scope) 中，擴充 window 物件，使其包含 google 和 initMap 屬性。
+// declare global:
+// 這是 TypeScript 的全域擴充 (Global Augmentation) 機制，讓 TypeScript 知道我們正在修改內建的 Window 介面 (interface Window)。
+declare global {
+  // Window 是瀏覽器內建的全域物件
+  interface Window {
+    google: typeof google;
+    initMap: () => void; // 讓 window.initMap 變數成為一個 callback function
+  }
+}
 
 @Component({
   selector: 'app-attraction',
   templateUrl: './attraction.component.html',
   styleUrls: ['./attraction.component.css'],
 })
-export class AttractionComponent implements AfterViewInit {
+export class AttractionComponent {
+  @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef;
+
   attraction: IAttraction = {};
   partialAttractions: IAttraction[] = [];
   attractionCategories: IAttractionCategory[] = [];
@@ -44,34 +61,132 @@ export class AttractionComponent implements AfterViewInit {
     pages: [] as number[],
   };
 
-  googleMapsApiKey: string = '';
-  address: string = '台北101';
-  geocodeResult: any;
+  googleMap = {
+    googleMapApiKey: '',
+    addressName: '',
+    geocodeResult: null,
+  };
 
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      if (typeof google !== 'undefined' && google.maps) {
+  // Geocoding API - 透過地址獲取經緯度
+  geocodeAddress(address: string): Promise<{ lat: number; lng: number }> {
+    return new Promise((resolve, reject) => {
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode(
+        { address },
+        (
+          results: google.maps.GeocoderResult[] | null,
+          status: google.maps.GeocoderStatus
+        ) => {
+          if (status === 'OK' && results && results[0]) {
+            const location = results[0].geometry.location;
+            resolve({ lat: location.lat(), lng: location.lng() });
+          } else {
+            reject(`地址轉換失敗: ${status}`);
+          }
+        }
+      );
+    });
+  }
+
+  // 從後端 API 取得 Google Map API Key 的值，並設定 googleMapApiKey
+  setGoogleMapAPIKey$(): Observable<void> {
+    return this.googleMapsService.getApiKey().pipe(
+      tap((data) => {
+        if (!data.apiKey) {
+          console.error('API Key 無效');
+        } else {
+          this.googleMap.googleMapApiKey = data.apiKey;
+          //console.log('成功取得 API Key: ', this.googleMap.googleMapApiKey);
+        }
+      }),
+      map(() => void 0)
+    );
+  }
+
+  // 載入 Google Maps API
+  loadGoogleMaps$(): Observable<void> {
+    return new Observable((observer) => {
+      // 如果 `window.google` 和 `window.google.maps` 已經存在，代表 Google Maps API 已載入，直接執行 this.loadMap() 來初始化地圖
+      if (window.google && window.google.maps) {
+        console.log('Google Maps 已載入，直接初始化地圖');
         this.loadMap();
-      } else {
-        console.error('Google Maps API 未載入');
+        observer.next(); // 發送成功訊號，告訴訂閱者可以繼續
+        observer.complete(); // 標記這個 Observable 已結束，確保它不會無限運行
+        return;
       }
-    }, 5000);
+
+      // 設定 `initMap` 回呼函式，當 Google Maps 載入後執行 `loadMap`
+      (window as any).initMap = () => {
+        this.loadMap();
+        observer.next();
+        observer.complete();
+      };
+
+      // 建立 `<script>` 並動態載入 Google Maps API
+      const script = document.createElement('script');
+      // callback=initMap 告訴 Google Maps API 載入完成後要執行 window.initMap()。
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${this.googleMap.googleMapApiKey}&callback=initMap`;
+      script.async = true; // 讓 API 非同步載入，不會阻塞頁面
+      script.defer = true; // 讓 API 等到 HTML 解析完成後才執行，避免 document.getElementById('map') 這類操作找不到元素。
+      script.onerror = () => {
+        console.error('Google Maps API 載入失敗');
+        observer.error('Google Maps API 載入失敗');
+      };
+
+      document.head.appendChild(script); // 動態新增一個 <script> 標籤到 <head>，開始下載並執行 Google Maps API。
+    });
   }
 
   loadMap() {
-    const map = new google.maps.Map(
-      document.getElementById('map') as HTMLElement,
-      {
-        center: { lat: 25.033964, lng: 121.564468 }, // 台北101
-        zoom: 15,
-      }
-    );
+    // 確保地圖容器 (mapContainer) 存在，否則顯示錯誤訊息
+    // this.mapContainer 是 透過 @ViewChild('mapContainer') 獲取的地圖容器。
+    if (!this.mapContainer || !this.mapContainer.nativeElement) {
+      console.error('地圖元素未找到');
+      return;
+    }
 
-    new google.maps.Marker({
-      position: { lat: 25.033964, lng: 121.564468 },
-      map: map,
-      title: '這是標記',
-    });
+    // 檢查是否有指定地址
+    if (!this.googleMap.addressName) {
+      console.error('未提供有效的地址');
+      return;
+    }
+
+    // 呼叫 Geocoding API 取得該地址的座標
+    this.geocodeAddress(this.googleMap.addressName)
+      .then(({ lat, lng }) => {
+        // 創建 Google 地圖物件，並將其綁定到 `this.mapContainer.nativeElement`
+        // new google.maps.Map() 會建立一個 Google Maps 物件。
+        // this.mapContainer.nativeElement 是地圖要顯示的 HTML 容器。
+        const map = new google.maps.Map(this.mapContainer.nativeElement, {
+          center: { lat, lng }, // 動態設定地圖中心
+          zoom: 15, // zoom: 15 設定縮放層級，數字越大，放大越近。
+        });
+
+        // 在該位置放置標記 (Marker)
+        new google.maps.Marker({
+          position: { lat, lng }, // position 設定標記的位置。
+          map: map, // map: map 指定該標記要放在哪個地圖上。
+          title: this.googleMap.addressName, // title: '這是標記' 讓滑鼠懸停時會顯示這個標記的說明。
+        });
+      })
+      .catch((error) => {
+        console.error('地理編碼失敗:', error);
+      });
+
+    // 創建 Google 地圖物件，並將其綁定到 `this.mapContainer.nativeElement`
+    // new google.maps.Map() 會建立一個 Google Maps 物件。
+    // this.mapContainer.nativeElement 是地圖要顯示的 HTML 容器。
+    // const map = new google.maps.Map(this.mapContainer.nativeElement, {
+    //   center: { lat: 25.033964, lng: 121.564468 }, // center 指定地圖的中心點 (台北101)。
+    //   zoom: 15, // zoom: 15 設定縮放層級，數字越大，放大越近。
+    // });
+
+    // 在地圖上新增一個標記 (Marker)
+    // new google.maps.Marker({
+    //   position: { lat: 25.033964, lng: 121.564468 }, // position 設定標記的位置（台北101）。
+    //   map: map, // map: map 指定該標記要放在哪個地圖上。
+    //   title: '這是標記', // title: '這是標記' 讓滑鼠懸停時會顯示這個標記的說明。
+    // });
   }
 
   constructor(
@@ -82,16 +197,16 @@ export class AttractionComponent implements AfterViewInit {
     private googleMapsService: GoogleMapAPIService
   ) {}
 
-  searchAddress() {
-    this.googleMapsService
-      .getGeocodeAddress(this.address)
-      .subscribe((result) => {
-        this.geocodeResult = result;
-        console.log(result);
-      });
-  }
+  // searchAddress() {
+  //   this.googleMapsService
+  //     .getGeocodeAddress(this.googleMap.address)
+  //     .subscribe((result) => {
+  //       this.googleMap.geocodeResult = result;
+  //       console.log(result);
+  //     });
+  // }
 
-  // showImagesByAttractionId$():Observable<void> {}
+  //showImagesByAttractionId$():Observable<void> {}
 
   // 根據 attractionId 顯示評論
   showCommentsByAttractionId$(id: number): Observable<void> {
@@ -108,6 +223,9 @@ export class AttractionComponent implements AfterViewInit {
     return this.attractionService.getAttractionById(id).pipe(
       tap((data) => {
         this.attraction = data;
+        if (data.fAttractionName)
+          this.googleMap.addressName = data.fAttractionName;
+        else this.googleMap.addressName = '';
       }),
       map(() => void 0)
     );
@@ -116,15 +234,11 @@ export class AttractionComponent implements AfterViewInit {
   // 點擊"詳細資訊"按鈕時，要顯示某個景點的詳細資訊
   clickShowDetail(id: number) {
     this.showAttractionById$(id)
-      .pipe(switchMap(() => this.showCommentsByAttractionId$(id)))
+      .pipe(
+        switchMap(() => this.showCommentsByAttractionId$(id)),
+        switchMap(() => this.loadGoogleMaps$())
+      )
       .subscribe();
-    setTimeout(() => {
-      if (typeof google !== 'undefined' && google.maps) {
-        this.loadMap();
-      } else {
-        console.error('Google Maps API 未載入');
-      }
-    }, 5000);
   }
 
   // 按上一頁，顯示上一頁的景點
@@ -252,21 +366,17 @@ export class AttractionComponent implements AfterViewInit {
     // 3. showPartialImages$()
     // 迴圈 this.partialAttractions，並為每個景點請求一張圖片。
     // 確保所有圖片請求完成後，才會進入 subscribe()。
-    this.showPartialAttractions$(0)
+    this.setGoogleMapAPIKey$()
       // 在 RxJS 中，pipe() 用來組合不同的 RxJS operators，這裡我們使用 switchMap() 來鏈接非同步操作，確保它們按順序執行。
       .pipe(
         // switchMap() 會：
         // 等待前一個 Observable 完成，然後再執行新的 Observable。
         // 如果前一個 Observable 尚未完成，則取消它，改執行新的 Observable（但這裡不會有這種情況，因為我們的流程是線性的）。
         // 返回新的 Observable，讓它接著執行。
-        switchMap(() => this.initPage$()), // 等待 initPartialAttractions 完成後再執行 initPage
-        switchMap(() => this.showPartialImages$()) // 等待 initPage 完成後再執行 showPartialImages
+        switchMap(() => this.showPartialAttractions$(0)), // 等待 initPartialAttractions 完成後再執行 initPage
+        switchMap(() => this.initPage$()), // 等待 initPage 完成後再執行 showPartialImages
+        switchMap(() => this.showPartialImages$())
       )
       .subscribe();
-    // this.googleMapsService.getApiKey().subscribe((response) => {
-    //   this.googleMapsApiKey = response.apiKey;
-    //   console.log(this.googleMapsApiKey);
-    // });
-    //this.searchAddress();
   }
 }
