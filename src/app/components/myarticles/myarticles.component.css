@@ -1,5 +1,5 @@
 #myArticle img {
-  height: 262.5px;
+  height: 272.5px;
   object-fit: cover;
 }
 
@@ -31,6 +31,7 @@
   opacity: 0;
   /* 預設不顯示 */
   transition: opacity 0.3s ease-in-out;
+  border-radius: 5px
 }
 
 .image-container:hover .overlay {
