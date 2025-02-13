@@ -49,6 +49,10 @@
 
 .tags {
   margin-top: 10px;
+  white-space: nowrap;  /* 防止換行 */
+  overflow: hidden;  /* 超出範圍隱藏 */
+  text-overflow: ellipsis;  /* 顯示省略號 */
+  max-width: 100%;  /* 確保不會超出容器範圍 */
 }
 
 .tags span {

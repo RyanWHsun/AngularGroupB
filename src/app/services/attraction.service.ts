@@ -24,6 +24,7 @@ export class AttractionService {
     return this.client.get<IAttraction[]>(`${this.baseUrl}/Search?keyword=${word}&pageSize=${size}&pageIndex=${index}`)
   }
 
+  // 取得景點總數
   getAttractionQuantities(){
     return this.client.get<number>(`${this.baseUrl}/Count`);
   }

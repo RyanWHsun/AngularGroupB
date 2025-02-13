@@ -26,7 +26,8 @@
     "types": [
       "jquery",
       "jasmine",
-      "node"
+      "node",
+      "google.maps"
     ]
   },
   "angularCompilerOptions": {
