@@ -66,6 +66,11 @@
           <div class="package-item bg-white mb-2">
             <!-- 設定固定的圖片高度，避免卡片因圖片大小不一致 -->
             <img class="img-fluid event-image" [src]="event.fEventImageUrl || 'assets/images/noImage.jpg'" alt="活動圖片">
+            <!-- 更換圖片按鈕 -->
+    <div class="text-center mt-2">
+      <input type="file" #fileInput (change)="onFileSelected(event.fEventId, fileInput.files)" style="display: none;">
+      <button class="btn btn-sm btn-outline-primary" (click)="fileInput.click()">更換圖片</button>
+    </div>
 
             <div class="p-4">
               <div class="d-flex justify-content-between mb-3">

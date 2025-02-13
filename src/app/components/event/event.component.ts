@@ -34,12 +34,11 @@ export class EventComponent implements OnInit {
     this.loadSavedEvents();
     this.loadEvents();
 
-    // 🚀 自動輪播，每 3 秒執行 nextEvent()
-    setInterval(() => {
-      this.nextEvent();
-    }, 3000);
+    // 🚀 自動輪播，每 8 秒執行 nextEvent()
+    // setInterval(() => {
+    //   this.nextEvent();
+    // }, 8000);
   }
-
 
   /** 🚀 從 API 載入活動 */
   loadEvents() {
@@ -80,7 +79,7 @@ export class EventComponent implements OnInit {
       (!this.filters.location || e.fLocation.toLowerCase().includes(this.filters.location.toLowerCase())) &&
       (!this.filters.departDate || new Date(e.fEventStartDate) >= new Date(this.filters.departDate)) &&
       (!this.filters.returnDate || new Date(e.fEventEndDate) <= new Date(this.filters.returnDate)) &&
-      (!this.filters.days || e.fDuration == +this.filters.days) // ✅ 確保天數篩選沒問題
+      (!this.filters.days || e.fDuration == +this.filters.days)
     );
 
     this.currentIndex = 0;
@@ -90,41 +89,27 @@ export class EventComponent implements OnInit {
   /** 📌 更新顯示的活動 (處理分頁) */
   updateDisplayedEvents() {
     this.displayedEvents = this.filteredEvents.slice(this.currentIndex, this.currentIndex + this.eventsPerPage);
-
-    console.log("📌 總活動數量:", this.events.length);
-    console.log("📌 篩選後的活動數量:", this.filteredEvents.length);
-    console.log("📌 當前顯示的活動數量:", this.displayedEvents.length);
-
-    // 🔍 檢查 eventsPerPage 是否正確
-    console.log("📌 每頁應顯示:", this.eventsPerPage);
-
-    // 🛠️ 如果只有 1 個活動，強制修正
-    if (this.displayedEvents.length < this.eventsPerPage && this.filteredEvents.length >= this.eventsPerPage) {
-      console.warn("🚨 顯示的活動數量異常，自動修正");
-      this.displayedEvents = this.filteredEvents.slice(0, this.eventsPerPage);
-    }
   }
-
 
   /** ▶️ 下一頁 (支援循環播放) */
-nextEvent() {
-  if (this.currentIndex + this.eventsPerPage < this.filteredEvents.length) {
-    this.currentIndex += this.eventsPerPage;
-  } else {
-    this.currentIndex = 0; // 🔄 如果到最後則回到第一個
+  nextEvent() {
+    if (this.currentIndex + this.eventsPerPage < this.filteredEvents.length) {
+      this.currentIndex += this.eventsPerPage;
+    } else {
+      this.currentIndex = 0; // 🔄 如果到最後則回到第一個
+    }
+    this.updateDisplayedEvents();
   }
-  this.updateDisplayedEvents();
-}
 
-/** ◀️ 上一頁 (支援循環播放) */
-prevEvent() {
-  if (this.currentIndex > 0) {
-    this.currentIndex -= this.eventsPerPage;
-  } else {
-    this.currentIndex = this.filteredEvents.length - this.eventsPerPage; // 🔄 回到最後一組
+  /** ◀️ 上一頁 (支援循環播放) */
+  prevEvent() {
+    if (this.currentIndex > 0) {
+      this.currentIndex -= this.eventsPerPage;
+    } else {
+      this.currentIndex = this.filteredEvents.length - this.eventsPerPage; // 🔄 回到最後一組
+    }
+    this.updateDisplayedEvents();
   }
-  this.updateDisplayedEvents();
-}
 
   /** ⭐ 收藏/取消收藏活動 */
   toggleSaveEvent(event: any) {
@@ -153,7 +138,32 @@ prevEvent() {
   navigateToHome() {
     this.router.navigate(['/']);
   }
+
+  /** 📸 當選擇圖片時，執行上傳 */
+  onFileSelected(eventId: number, files: FileList | null) {
+    if (files && files.length > 0) {
+      const file = files[0];
+      this.uploadEventImage(eventId, file);
+    }
+  }
+
+  /** 🚀 上傳活動圖片 */
+  uploadEventImage(eventId: number, file: File) {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    this.http.put(`${this.apiUrl}/${eventId}/image`, formData).subscribe(
+      (response) => {
+        console.log("✅ 圖片更新成功", response);
+        this.loadEvents(); // 重新載入活動以更新圖片
+      },
+      (error) => {
+        console.error("❌ 圖片更新失敗", error);
+      }
+    );
+  }
 }
+
 
 
 
