@@ -10674,7 +10674,6 @@ h6,
 
 .back-to-top {
   position: fixed;
-  display: none;
   right: 45px;
   bottom: 45px;
   z-index: 11;

@@ -3,6 +3,15 @@ td {
   text-align: center;
 }
 
+.topBtn {
+  cursor: pointer
+}
+
+.search-bar-container {
+  position: sticky;
+  top: 0;
+}
+
 .nav-tabs .nav-link {
   color: black;
   font-weight: bold;
