@@ -13,17 +13,19 @@ export class EventComponent implements OnInit {
   displayedEvents: any[] = [];
   savedEvents: any[] = [];
   uniqueLocations: string[] = [];
-  uniqueDurations: number[] = [1, 2, 3, 5, 7]; // ✅ 預設一些行程天數
+  uniqueDurations: number[] = [1, 2, 3, 5, 7]; // ✅ 預設行程天數
   currentIndex = 0;
   eventsPerPage = 3;
-  apiUrl = 'https://localhost:7112/api';
+  apiUrl = 'https://localhost:7112/api/Event';
   isLoading = false;
 
   filters = {
     location: '',
     departDate: '',
     returnDate: '',
-    days: '' // ✅ 新增天數篩選
+    days: '',
+    minPrice: 0, // ✅ 最低價格篩選
+    maxPrice: '' // ✅ 最高價格篩選
   };
 
   constructor(private http: HttpClient, private router: Router, private cdRef: ChangeDetectorRef) {}
@@ -31,19 +33,28 @@ export class EventComponent implements OnInit {
   ngOnInit() {
     this.loadSavedEvents();
     this.loadEvents();
+
+    // 🚀 自動輪播，每 3 秒執行 nextEvent()
+    setInterval(() => {
+      this.nextEvent();
+    }, 8000);
   }
+
 
   /** 🚀 從 API 載入活動 */
   loadEvents() {
     this.isLoading = true;
-    this.http.get<any>(`${this.apiUrl}/Event`).subscribe(
+    this.http.get<any>(this.apiUrl).subscribe(
       (data) => {
+        console.log("📌 API 回傳資料:", data);
         this.events = Array.isArray(data) ? data : data?.$values || [];
 
         this.events.forEach(event => {
           event.fLocation = event.location ?? '未知地點';
-          event.fParticipant = event.participantCount ?? 0;
-          event.fEventImageUrl = event.imageUrl ?? 'assets/images/noImage.jpg'; // 預設圖片
+          event.fParticipant = event.fParticipants ?? 0; // ✅ 設定參加人數
+          event.fDuration = event.fDuration ?? 1; // ✅ 設定行程天數
+          event.fPrice = event.registrationFee ?? 0; // ✅ 設定報名費
+          event.fEventImageUrl = event.imageBase64 ?? 'assets/images/noImage.jpg'; // ✅ 設定圖片
         });
 
         this.extractUniqueFilters();
@@ -69,7 +80,7 @@ export class EventComponent implements OnInit {
       (!this.filters.location || e.fLocation.toLowerCase().includes(this.filters.location.toLowerCase())) &&
       (!this.filters.departDate || new Date(e.fEventStartDate) >= new Date(this.filters.departDate)) &&
       (!this.filters.returnDate || new Date(e.fEventEndDate) <= new Date(this.filters.returnDate)) &&
-      (!this.filters.days || e.fDuration == +this.filters.days)
+      (!this.filters.days || e.fDuration == +this.filters.days) // ✅ 確保天數篩選沒問題
     );
 
     this.currentIndex = 0;
@@ -79,23 +90,41 @@ export class EventComponent implements OnInit {
   /** 📌 更新顯示的活動 (處理分頁) */
   updateDisplayedEvents() {
     this.displayedEvents = this.filteredEvents.slice(this.currentIndex, this.currentIndex + this.eventsPerPage);
-  }
 
-  /** ◀️ 上一頁 */
-  prevEvent() {
-    if (this.currentIndex > 0) {
-      this.currentIndex -= this.eventsPerPage;
-      this.updateDisplayedEvents();
+    console.log("📌 總活動數量:", this.events.length);
+    console.log("📌 篩選後的活動數量:", this.filteredEvents.length);
+    console.log("📌 當前顯示的活動數量:", this.displayedEvents.length);
+
+    // 🔍 檢查 eventsPerPage 是否正確
+    console.log("📌 每頁應顯示:", this.eventsPerPage);
+
+    // 🛠️ 如果只有 1 個活動，強制修正
+    if (this.displayedEvents.length < this.eventsPerPage && this.filteredEvents.length >= this.eventsPerPage) {
+      console.warn("🚨 顯示的活動數量異常，自動修正");
+      this.displayedEvents = this.filteredEvents.slice(0, this.eventsPerPage);
     }
   }
 
-  /** ▶️ 下一頁 */
-  nextEvent() {
-    if (this.currentIndex + this.eventsPerPage < this.filteredEvents.length) {
-      this.currentIndex += this.eventsPerPage;
-      this.updateDisplayedEvents();
-    }
+
+  /** ▶️ 下一頁 (支援循環播放) */
+nextEvent() {
+  if (this.currentIndex + this.eventsPerPage < this.filteredEvents.length) {
+    this.currentIndex += this.eventsPerPage;
+  } else {
+    this.currentIndex = 0; // 🔄 如果到最後則回到第一個
   }
+  this.updateDisplayedEvents();
+}
+
+/** ◀️ 上一頁 (支援循環播放) */
+prevEvent() {
+  if (this.currentIndex > 0) {
+    this.currentIndex -= this.eventsPerPage;
+  } else {
+    this.currentIndex = this.filteredEvents.length - this.eventsPerPage; // 🔄 回到最後一組
+  }
+  this.updateDisplayedEvents();
+}
 
   /** ⭐ 收藏/取消收藏活動 */
   toggleSaveEvent(event: any) {
@@ -125,5 +154,6 @@ export class EventComponent implements OnInit {
     this.router.navigate(['/']);
   }
 }
+
 
 

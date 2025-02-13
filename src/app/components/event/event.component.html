@@ -11,20 +11,20 @@
     </div>
   </div>
 
-  <!-- 🔍 懸浮搜尋區塊 -->
-  <div class="container-fluid search-container position-absolute w-100" style="top: 80%; left: 50%; transform: translate(-50%, -50%);">
+  <!-- 🔍 搜尋區塊 -->
+  <div class="container-fluid search-container position-absolute w-100" style="left: 50%; transform: translate(-50%, -50%);">
     <div class="container search-box shadow p-4 bg-white rounded">
       <div class="row align-items-center">
-        <div class="col-md-3">
+        <div class="col-md-2">
           <select class="custom-select" [(ngModel)]="filters.location">
             <option value="">選擇地點</option>
             <option *ngFor="let location of uniqueLocations" [value]="location">{{ location }}</option>
           </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
           <input type="date" class="form-control" [(ngModel)]="filters.departDate">
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
           <input type="date" class="form-control" [(ngModel)]="filters.returnDate">
         </div>
         <div class="col-md-2">
@@ -33,7 +33,10 @@
             <option *ngFor="let day of uniqueDurations" [value]="day">{{ day }} 天</option>
           </select>
         </div>
-        <div class="col-md-1">
+        <div class="col-md-2">
+          <input type="number" class="form-control" [(ngModel)]="filters.maxPrice" placeholder="價格">
+        </div>
+        <div class="col-md-2 d-flex justify-content-center">
           <button class="btn btn-success btn-block" (click)="searchEvents()">搜尋</button>
         </div>
       </div>
@@ -61,7 +64,9 @@
       <div class="carousel-content row">
         <div class="col-lg-4 col-md-6 mb-4" *ngFor="let event of displayedEvents">
           <div class="package-item bg-white mb-2">
+            <!-- 設定固定的圖片高度，避免卡片因圖片大小不一致 -->
             <img class="img-fluid event-image" [src]="event.fEventImageUrl || 'assets/images/noImage.jpg'" alt="活動圖片">
+
             <div class="p-4">
               <div class="d-flex justify-content-between mb-3">
                 <small><i class="fa fa-map-marker-alt text-primary mr-2"></i>{{ event.fLocation }}</small>
@@ -96,5 +101,6 @@
     </div>
   </div>
 </div>
+
 
 
