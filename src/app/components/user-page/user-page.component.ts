@@ -1,6 +1,6 @@
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
-import { userMaterial } from './../../interfaces/user';
+import { userEditMaterial, userMaterial, userRankMaterial } from './../../interfaces/user';
 import { Component, OnInit } from '@angular/core';
 import { data, error } from 'jquery';
 import { UserService } from 'src/app/services/user.service';
@@ -15,6 +15,13 @@ export class UserPageComponent {
 
   user: userMaterial | null = null;  // 用來儲存用戶資料
   userId: number | null = null;  // 儲存從本地存儲中取得的 userId
+
+  userRank: userRankMaterial = {
+    fUserRankId: 0,
+    fUserName: "",
+    fUserNickName: "",
+  };
+
 
   constructor(private userService: UserService, private router: Router, private authService: AuthService) { }
 
@@ -60,7 +67,7 @@ export class UserPageComponent {
 
   //前往購物車
   goToShoppingCart() {
-    this.router.navigate(['']);
+    this.router.navigate(['/products/cart']);
   }
   //前往修改資料
   goToUserEdit() {
@@ -69,16 +76,34 @@ export class UserPageComponent {
 
 
 
+  //註銷帳號
+  setRank() {
+    this.setRankTo2(this.userId!);
+  }
+
+  setRankTo2(userId: number) {
+    this.userRank.fUserRankId = 2;
+    console.log(this.userRank);
+
+    // this.userService.putuserRank(userId, this.userRank).subscribe({
+    //   next: () => {
+    //     console.log("修改成功", this.userRank);
+    //   },
+    //   error: (error) => {
+    //     console.log("修改失敗", error);
+    //   }
+    // })
+
+  }
+
+
 
   logOut() {
     if (confirm('確定要登出嗎？')) {
       this.authService.logout().subscribe({
-        next: (a) => {
-          //清除本地儲存的 Token
-          localStorage.removeItem('jwt_token');
-          sessionStorage.removeItem('jwt_token');
+        next: () => {
           alert("Token 已刪除，開始登出");
-          this.router.navigate(['/user/login']);
+          this.router.navigate(['/user/login']).then(() => { window.location.reload(); });
         },
         error: (error) => {
           console.error("登出 API 失敗:", error);
@@ -87,6 +112,7 @@ export class UserPageComponent {
       });
     };
   }
+
 
 }
 

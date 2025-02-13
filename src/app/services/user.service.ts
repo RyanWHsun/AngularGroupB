@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { userEditMaterial, userMaterial } from '../interfaces/user';
+import { userEditMaterial, userMaterial, userRankMaterial } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +19,11 @@ export class UserService {
   //修改資料
   putuser(userId: number, user: userEditMaterial): Observable<userEditMaterial> {
     return this.userclient.put<userEditMaterial>(`${this.baseAddress}api/TUsers/${userId}`, user, { withCredentials: true })
+  }
+
+  //修改資料
+  putuserRank(userId: number, user: userRankMaterial): Observable<userRankMaterial> {
+    return this.userclient.put<userRankMaterial>(`${this.baseAddress}api/TUsers/${userId}`, user, { withCredentials: true })
   }
 
   //新增資料

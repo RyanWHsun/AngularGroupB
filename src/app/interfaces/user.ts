@@ -23,3 +23,10 @@ export interface userEditMaterial {
   fUserBirthday: string;
   fUserAddress: string;
 }
+
+//修改Rank
+export interface userRankMaterial {
+  fUserRankId: number;
+  fUserName: string;
+  fUserNickName: string;
+}

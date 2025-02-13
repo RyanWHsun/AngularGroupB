@@ -88,7 +88,7 @@ export class UserEditComponent {
       next: (response) => {
         console.log('成功:', response);
         alert('帳號修改成功！');
-        this.router.navigate(['/user/page']);
+        this.goToUserPage();
         window.scrollTo(0, 0);
       },
       error: (error) => {
@@ -99,6 +99,12 @@ export class UserEditComponent {
   }
 
 
+
+
+  //前往用戶頁
+  goToUserPage() {
+    this.router.navigate(['/user/page']);
+  }
 
 
 
