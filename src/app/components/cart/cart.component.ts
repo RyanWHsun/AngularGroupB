@@ -1,8 +1,9 @@
 import { CartService } from './../../services/cart.service';
-import { Component } from '@angular/core';
-import { Seller, ShoppingCartItem } from 'src/app/interfaces/shoppingCart';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { itemsForOrder, Seller, ShoppingCartItem, userInfo } from 'src/app/interfaces/shoppingCart';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+declare var $: any; // 宣告 jQuery
 
 @Component({
   selector: 'app-cart',
@@ -14,18 +15,57 @@ export class CartComponent {
   tickets: ShoppingCartItem[] = []; //門票項目
   eventFee: ShoppingCartItem[] = []; //活動費用
   sellers: Seller[] = []; //賣家分組
-
+  userInfo: userInfo | null = null;
   selectedCartItemIds: number[] = []; //選取的項目id
   selectAllTickets = false;
   selectAllEvents = false;
   totalPrice = 0;
   selectedCount = 0;
+  fPaymentMethod: string = ''; // 預設付款方式
 
   constructor(private cartService: CartService, private authService: AuthService, private router: Router) { }
+  @ViewChild('popoverButton', { static: false }) popoverButton!: ElementRef;
+
 
   ngOnInit(): void {
     this.loadCart();
+    console.log("初始化付款方式:", this.fPaymentMethod);
+  };
+
+  ngAfterViewInit() {
+    this.cartService.getUserInfo().subscribe({
+      next: (response) => {
+        console.log('用戶資訊', response);
+        this.userInfo = { ...response };  // 確保userInfo是完整的物件
+
+        setTimeout(() => {  // 確保 DOM 元素已渲染
+          if (this.popoverButton?.nativeElement) {
+            const formattedBalance = this.userInfo?.totalBalance
+              ? new Intl.NumberFormat('zh-TW').format(this.userInfo.totalBalance)
+              : '0';
+
+            $(this.popoverButton.nativeElement).popover({
+              trigger: 'hover',
+              placement: 'top',
+              content: `錢包餘額：${formattedBalance}`,
+              html: true
+            });
+          }
+        }, 0);
+      },
+      error: (error) => {
+        console.error("獲取用戶資訊失敗", error);
+        this.userInfo = {
+          fUserId: 0,
+          fUserName: '',
+          fUserPhone: '',
+          fUserAddress: '',
+          totalBalance: 0,
+        };
+      }
+    });
   }
+
 
   loadCart(): void {
     this.cartService.getCartItems().subscribe({
@@ -63,17 +103,20 @@ export class CartComponent {
     this.carItems.forEach(item => {
       if (item.fItemType === 'attractionTicket') {
         this.tickets.push(item);
+        //console.log('景點票券:', this.tickets);
       } else if (item.fItemType === 'eventFee') {
         this.eventFee.push(item);
-      } else { item.fItemType === 'product' } {
+        //console.log('行程費用:', this.eventFee);
+      } else if (item.fItemType === 'product') {
         //依據fSellerName分組
-        let sellerName = item.fSellerName ?? '未知賣家';
+        let sellerName = item.fSellerName ?? '';
         let seller = this.sellers.find(s => s.name === sellerName);
         if (!seller) {
           seller = { name: sellerName, selected: false, products: [] };
           this.sellers.push(seller);
         }
         seller.products.push(item);
+        //console.log('商品', this.sellers);
       }
     })
   }
@@ -89,8 +132,10 @@ export class CartComponent {
   // 切換所有景點票券的選取狀態
   toggleAllTickets() {
     this.selectAllTickets = !this.selectAllTickets;
-    this.tickets.forEach(ticket => {
-      ticket.selected = this.selectAllEvents
+
+    //console.log("翻轉後 selectAllTickets:", this.selectAllTickets);
+    this.tickets.forEach(item => {
+      item.selected = this.selectAllTickets
     });
     this.calculateTotal();
   }
@@ -137,7 +182,7 @@ export class CartComponent {
         this.selectedCartItemIds.push(event.fCartItemId);
       }
     });
-    // 更新全選 checkbox 狀態
+
     this.selectAllTickets = this.tickets.every(ticket => ticket.selected);
     this.selectAllEvents = this.eventFee.every(event => event.selected);
 
@@ -170,6 +215,11 @@ export class CartComponent {
     }
   }
 
+  updatePaymentMethod(method: string) {
+    this.fPaymentMethod = method;
+    //console.log("目前付款方式:", this.fPaymentMethod);
+  }
+
   removeItem(fCartItemId: number) {
     this.cartService.removeCartItem(fCartItemId).subscribe({
       next: (response) => {
@@ -192,7 +242,7 @@ export class CartComponent {
     }
     this.cartService.removeCartItems(removeItemsIds).subscribe({
       next: (response) => {
-        console.log(response);
+        //console.log(response);
         this.cartService.loadCartCount();
         this.loadCart();
       }, error: (error) => {
@@ -203,7 +253,70 @@ export class CartComponent {
     this.totalPrice = 0;
   }
 
+  hasSelectedProduct(): boolean {
+    return this.sellers.some(seller => seller.products.some(product => product.selected));
+  }
+
   checkOut() {
-    this.router.navigate(['products/payment']);
+    const selectedItems: itemsForOrder[] = [];
+
+    // 取得所有勾選的商品、票券、活動
+    this.sellers.forEach(seller => {
+      seller.products.forEach(product => {
+        if (product.selected) {
+          selectedItems.push({
+            fCartItemId: product.fCartItemId,
+            fItemType: product.fItemType,
+            fItemId: product.fItemId,
+            fQuantity: product.fQuantity
+          });
+        }
+      });
+    });
+
+    this.tickets.forEach(ticket => {
+      if (ticket.selected) {
+        selectedItems.push({
+          fCartItemId: ticket.fCartItemId,
+          fItemType: ticket.fItemType,
+          fItemId: ticket.fItemId,
+          fQuantity: ticket.fQuantity
+        });
+      }
+    });
+
+    this.eventFee.forEach(event => {
+      if (event.selected) {
+        selectedItems.push({
+          fCartItemId: event.fCartItemId,
+          fItemType: event.fItemType,
+          fItemId: event.fItemId,
+          fQuantity: event.fQuantity
+        });
+      }
+    });
+
+    const userInfo: userInfo = {
+      fUserId: this.userInfo?.fUserId ?? 0,  // 預設為 0 避免 null
+      fUserName: this.userInfo?.fUserName ?? '',
+      fUserPhone: this.userInfo?.fUserPhone ?? '',
+      fUserAddress: this.userInfo?.fUserAddress ?? '',
+      totalBalance: this.userInfo?.totalBalance ?? 0,
+    };
+
+
+    // 檢查是否有選擇商品
+    if (selectedItems.length === 0) {
+      alert("請選擇至少一個商品進行結帳！");
+      return;
+    }
+    // 檢查是否有選擇付款方式
+    if (!this.fPaymentMethod) {
+      alert("請選擇付款方式！");
+      return;
+    }
+    console.log('會員資訊:', userInfo);
+    console.log('選取的商品:', selectedItems);
+    console.log("目前付款方式:", this.fPaymentMethod);
   }
 }

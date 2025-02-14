@@ -25,3 +25,24 @@ export interface addProductToCart {
   fPrice: number;
   fQuantity: number;
 }
+
+export interface userInfo {
+  fUserId: number;
+  fUserName: string;
+  fUserPhone: string;
+  fUserAddress: string;
+  totalBalance: number;
+}
+
+export interface CheckoutRequest {
+  userInfo: userInfo; // 使用者資訊
+  selectedItems: itemsForOrder[]; // 選取的購物車項目
+  fPaymentMethod: string;
+}
+
+export interface itemsForOrder {
+  fCartItemId: number;
+  fItemType: string;
+  fItemId: number;
+  fQuantity: number;
+}

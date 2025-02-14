@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { addProductToCart, ShoppingCartItem } from '../interfaces/shoppingCart';
+import { addProductToCart, ShoppingCartItem, userInfo } from '../interfaces/shoppingCart';
 import { BehaviorSubject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Injectable({
@@ -55,6 +55,11 @@ export class CartService {
   removeCartItems(cartItemIds: number[]): Observable<{ message: string }> {
     const url = `${this.baseAddress}api/TShoppingCarts/removeBatch`
     return this.http.post<{ message: string }>(url, cartItemIds, { withCredentials: true })
+  }
+
+  getUserInfo(): Observable<userInfo> {
+    const url = `${this.baseAddress}api/TOrders/getUserInfo`
+    return this.http.get<userInfo>(url, { withCredentials: true })
   }
 }
 

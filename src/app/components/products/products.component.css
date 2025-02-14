@@ -30,3 +30,36 @@
 .text-dark.categorySelected.active {
   font-weight: bold;
 }
+
+.card {
+  transition: all 0.3s ease-in-out;
+  /* 讓動畫更流暢 */
+}
+
+.card:hover {
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+  /* 增加陰影 */
+  transform: translateY(-10px);
+  /* 略微上移 */
+}
+
+a.product-item {
+  display: block;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+a.product-item:hover {
+  transform: scale(1.05);
+  /* 略微放大 */
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+  /* 增加陰影 */
+}
+
+.favorite-btn {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  /* 如果有額外邊框也一起移除 */
+  background: transparent !important;
+  /* 確保沒有背景色 */
+}

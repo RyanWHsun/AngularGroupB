@@ -26,6 +26,8 @@ export class ProductsComponent {
   selectedProductId: number | null = null;  // 當前選中的商品
   hotKeywords: string[] = ['行李箱', 'RIWAWA', '露營', '爆爆瑪特', '外套', '娃娃', 'Golumbia', '帳篷', '日本', '登山', '公仔', '台灣', '手錶', '麻將', 'Germès']
   latestProducts: latestProducts[] = []; //最新商品
+  favorites: boolean[] = new Array(this.products.length).fill(false);
+
 
   constructor(private productService: ProductsService, private cartService: CartService, private router: Router) { }
 
@@ -172,6 +174,10 @@ export class ProductsComponent {
         console.error('最新商品載入錯誤:', error)
       }
     })
+  }
+
+  toggleFavorite(index: number) {
+    this.favorites[index] = !this.favorites[index];
   }
 }
 

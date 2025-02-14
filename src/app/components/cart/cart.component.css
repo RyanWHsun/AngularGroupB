@@ -1,17 +1,19 @@
 .productCart {
-  background-color: rgb(122, 183, 48);
+  background-color: #8cae78;
   font-weight: bold;
-  color:white
+  color: white
 }
 
 .ticketCart {
-  background-color: lightblue;
+  background-color: #b0b0b0;
   font-weight: bold;
+  color: white
 }
 
 .eventCart {
-  background-color: lightpink;
+  background-color: #ebbaba;
   font-weight: bold;
+  color: white
 }
 
 img {

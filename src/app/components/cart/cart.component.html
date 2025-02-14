@@ -19,17 +19,15 @@
 
   <!-- 景點 -->
   <div class="container mt-3" *ngIf="tickets.length>0">
-    <div class="row" *ngFor="let ticket of tickets">
+    <div class="row">
       <div class="col-12">
         <div class="card p-2 mb-2 shadow rounded">
           <div class="row align-items-center ticketCart border-bottom p-2 mb-1">
             <div class="col-1 text-center">
-              <input type="checkbox" [(ngModel)]="selectAllTickets" (change)="toggleAllTickets()" />
+              <input type="checkbox" [(ngModel)]="selectAllTickets" (click)="toggleAllTickets()" />
             </div>
-            <div class="col-1 text-center">
-              <strong class="h6">票券</strong>
+            <div class="col-3 text-left">景點票券
             </div>
-            <div class="col-2 text-left">景點名稱</div>
             <div class="col-1 text-center">票種</div>
             <div class="col-2 text-center">單價</div>
             <div class="col-2 text-center">數量</div>
@@ -38,7 +36,8 @@
           </div>
           <div class="row align-items-center p-2" *ngFor="let item of tickets">
             <div class="col-1 text-center">
-              <input type="checkbox" [(ngModel)]="item.selected" (change)="calculateTotal()" />
+              <input type="checkbox" [(ngModel)]="item.selected" [checked]="item.selected"
+                (change)="processCartItems()" />
             </div>
             <div class="col-1 text-center">
               <img *ngIf="item.fSingleImage" [src]="'data:image/png;base64,' + item.fSingleImage"
@@ -87,7 +86,7 @@
         <div class="card p-2 mb-2 shadow rounded">
           <div class=" row align-items-center eventCart border-bottom p-2 mb-1">
             <div class="col-1 text-center">
-              <input type="checkbox" [(ngModel)]="selectAllEvents" (change)="toggleAllEvents()" />
+              <input type="checkbox" [(ngModel)]="selectAllEvents" (click)="toggleAllEvents()" />
             </div>
             <div class="col-1 text-center">
               <strong class="h6">活動</strong>
@@ -101,7 +100,8 @@
           </div>
           <div class="row align-items-center p-2" *ngFor="let item of eventFee">
             <div class="col-1 text-center">
-              <input type="checkbox" [(ngModel)]="item.selected" (change)="calculateTotal()" />
+              <input type="checkbox" [(ngModel)]="item.selected" [checked]="item.selected"
+                (change)="processCartItems()" />
             </div>
             <div class="col-1 text-center">
               <img *ngIf="item.fSingleImage" [src]="'data:image/png;base64,' + item.fSingleImage"
@@ -203,18 +203,59 @@
 
   <!-- 固定在底部的結帳欄位 -->
   <div class="row fixed-bottom bg-white shadow-lg p-3 d-flex justify-content-between align-items-center">
-    <div class="form-inline col-4">
-      <label class="mr-2 font-weight-bold">優惠券</label>
-      <input type="text" class="form-control" placeholder="輸入優惠代碼" />
-    </div>
-    <div class="col-5 text-right">
-      <span class="font-weight-bold">總金額 ({{ selectedCount }} 個商品): </span>
-      <span class="text-danger font-weight-bold h5">NT${{ totalPrice | number:'1.0-0' }}</span>
-    </div>
-    <div class="col-3 text-center">
-      <button class="btn btn-primary btn-lg-square rounded text-center m-2" style="width: 100px;"
-        (click)="checkOut()"><i class="fa-solid fa-cash-register"></i>&nbsp;&nbsp;去買單</button>
-      <button class="btn btn-secondary btn-lg-square rounded text-center" style="width: 100px;"
-        (click)="removeSelectedItems()"><i class="fa-solid fa-trash"></i>&nbsp;&nbsp;刪除</button>
+    <div class="d-flex align-items-center w-100" *ngIf="userInfo">
+      <!-- 收件人 -->
+      <div class="input-group  mx-3" style="width: 180px;">
+        <div class="input-group-prepend">
+          <span class="input-group-text">購買人</span>
+        </div>
+        <input type="text" class="form-control" [(ngModel)]="userInfo.fUserName">
+      </div>
+
+      <!-- 電話 -->
+      <div class="input-group mr-3" style="width:200px;">
+        <div class="input-group-prepend">
+          <span class="input-group-text">電話</span>
+        </div>
+        <input type="text" class="form-control" [(ngModel)]="userInfo.fUserPhone">
+      </div>
+
+      <!-- 地址 -->
+      <div class="input-group mr-3" style="width: 350px;" *ngIf="hasSelectedProduct()">
+        <div class="input-group-prepend">
+          <span class="input-group-text">地址</span>
+        </div>
+        <input type="text" class="form-control" [(ngModel)]="userInfo.fUserAddress">
+      </div>
+
+      <!-- 付款方式 -->
+      <!-- Popover 按鈕 (Angular) -->
+      <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <label class="btn btn-outline-primary rounded" [class.active]="fPaymentMethod === 'LinePay'">
+          <input type="radio" name="paymentMethod" value="LinePay" (click)="updatePaymentMethod('LinePay')"> Line Pay
+        </label>
+        <label class="btn btn-outline-primary rounded" #popoverButton data-toggle="popover" data-placement="top"
+          data-content="" [class.active]="fPaymentMethod === 'Wallet'">
+          <input type="radio" name="paymentMethod" value="Wallet" (click)="updatePaymentMethod('Wallet')">平台錢包
+        </label>
+      </div>
+
+      <!-- 總金額 -->
+      <div class="ml-auto text-left">
+        <span class="font-weight-bold">總金額 ({{ selectedCount }} 個商品): </span>
+        <span class="text-danger font-weight-bold">NT${{ totalPrice | number:'1.0-0' }}</span>
+      </div>
+
+      <!-- 按鈕 -->
+      <div class="ml-3">
+        <button class="btn btn-primary btn-sm btn-square rounded text-center mr-2" style="width: 100px;"
+          (click)="checkOut()">
+          <i class="fa-solid fa-cash-register"></i>&nbsp;&nbsp;買單
+        </button>
+        <button class="btn btn-secondary btn-sm btn-square rounded text-center mr-2" style="width: 100px;"
+          (click)="removeSelectedItems()">
+          <i class="fa-solid fa-trash"></i>&nbsp;&nbsp;刪除
+        </button>
+      </div>
     </div>
   </div>
