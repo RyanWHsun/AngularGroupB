@@ -1,8 +1,9 @@
 import { CartService } from './../../services/cart.service';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { itemsForOrder, Seller, ShoppingCartItem, userInfo } from 'src/app/interfaces/shoppingCart';
+import { CheckoutRequest, itemsForOrder, Seller, ShoppingCartItem, userInfo } from 'src/app/interfaces/shoppingCart';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { OrderService } from 'src/app/services/order.service';
 declare var $: any; // 宣告 jQuery
 
 @Component({
@@ -15,7 +16,14 @@ export class CartComponent {
   tickets: ShoppingCartItem[] = []; //門票項目
   eventFee: ShoppingCartItem[] = []; //活動費用
   sellers: Seller[] = []; //賣家分組
-  userInfo: userInfo | null = null;
+  userInfo: userInfo = {
+    fUserId: 0,
+    fUserName: '',
+    fUserPhone: '',
+    fUserAddress: '',
+    totalBalance: 0
+  };
+
   selectedCartItemIds: number[] = []; //選取的項目id
   selectAllTickets = false;
   selectAllEvents = false;
@@ -23,19 +31,23 @@ export class CartComponent {
   selectedCount = 0;
   fPaymentMethod: string = ''; // 預設付款方式
 
-  constructor(private cartService: CartService, private authService: AuthService, private router: Router) { }
+  constructor(private cartService: CartService, private authService: AuthService, private router: Router, private orderService: OrderService) { }
   @ViewChild('popoverButton', { static: false }) popoverButton!: ElementRef;
 
 
   ngOnInit(): void {
     this.loadCart();
-    console.log("初始化付款方式:", this.fPaymentMethod);
+    //console.log("初始化付款方式:", this.fPaymentMethod);
   };
 
   ngAfterViewInit() {
+    this.loadUserWallet();
+  }
+
+  loadUserWallet() {
     this.cartService.getUserInfo().subscribe({
       next: (response) => {
-        console.log('用戶資訊', response);
+        //console.log('用戶資訊', response);
         this.userInfo = { ...response };  // 確保userInfo是完整的物件
 
         setTimeout(() => {  // 確保 DOM 元素已渲染
@@ -109,12 +121,19 @@ export class CartComponent {
         //console.log('行程費用:', this.eventFee);
       } else if (item.fItemType === 'product') {
         //依據fSellerName分組
-        let sellerName = item.fSellerName ?? '';
-        let seller = this.sellers.find(s => s.name === sellerName);
+        let sellerId = item.fSellerId ?? 0;
+        let seller = this.sellers.find(s => s.sellerId == sellerId);
+        // 如果賣家不存在，則新增
         if (!seller) {
-          seller = { name: sellerName, selected: false, products: [] };
+          seller = {
+            sellerId: sellerId,
+            name: item.fSellerName ?? '未知賣家', // 仍保留賣家名稱
+            selected: false,
+            products: []
+          };
           this.sellers.push(seller);
         }
+        // 將商品加入對應的賣家分組
         seller.products.push(item);
         //console.log('商品', this.sellers);
       }
@@ -186,7 +205,7 @@ export class CartComponent {
     this.selectAllTickets = this.tickets.every(ticket => ticket.selected);
     this.selectAllEvents = this.eventFee.every(event => event.selected);
 
-    console.log(this.selectedCartItemIds);
+    //console.log(this.selectedCartItemIds);
     return this.selectedCartItemIds;
   }
   // 計算總金額與已選商品數量
@@ -268,7 +287,8 @@ export class CartComponent {
             fCartItemId: product.fCartItemId,
             fItemType: product.fItemType,
             fItemId: product.fItemId,
-            fQuantity: product.fQuantity
+            fQuantity: product.fQuantity,
+            fSellerId: product.fSellerId
           });
         }
       });
@@ -280,7 +300,8 @@ export class CartComponent {
           fCartItemId: ticket.fCartItemId,
           fItemType: ticket.fItemType,
           fItemId: ticket.fItemId,
-          fQuantity: ticket.fQuantity
+          fQuantity: ticket.fQuantity,
+          fSellerId: ticket.fSellerId
         });
       }
     });
@@ -291,7 +312,8 @@ export class CartComponent {
           fCartItemId: event.fCartItemId,
           fItemType: event.fItemType,
           fItemId: event.fItemId,
-          fQuantity: event.fQuantity
+          fQuantity: event.fQuantity,
+          fSellerId: event.fSellerId
         });
       }
     });
@@ -315,8 +337,31 @@ export class CartComponent {
       alert("請選擇付款方式！");
       return;
     }
-    console.log('會員資訊:', userInfo);
-    console.log('選取的商品:', selectedItems);
-    console.log("目前付款方式:", this.fPaymentMethod);
+    //console.log('會員資訊:', userInfo);
+    //console.log('選取的商品:', selectedItems);
+    //console.log("目前付款方式:", this.fPaymentMethod);
+
+    // 組合checkoutRequest
+    const checkoutRequest: CheckoutRequest = {
+      userInfo: this.userInfo,
+      selectedItems: selectedItems,
+      fPaymentMethod: this.fPaymentMethod
+    };
+    console.log('準備發送訂單資料:', checkoutRequest);
+
+    //呼叫後端API
+    this.orderService.checkOut(checkoutRequest).subscribe({
+      next: (response) => {
+        alert(response.message);
+        window.location.reload(); //刷新頁面
+        this.loadUserWallet();
+      },
+      error: (error) => {
+        const errorMessage = error.error?.message || "訂單建立失敗，請稍後再試";
+        alert(errorMessage)
+        console.log('訂單建立失敗', error);
+        window.location.reload(); //刷新頁面
+      }
+    });
   }
 }

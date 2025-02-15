@@ -61,5 +61,6 @@ export class CartService {
     const url = `${this.baseAddress}api/TOrders/getUserInfo`
     return this.http.get<userInfo>(url, { withCredentials: true })
   }
+
 }
 

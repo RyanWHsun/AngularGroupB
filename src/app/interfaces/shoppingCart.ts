@@ -7,6 +7,7 @@ export interface ShoppingCartItem {
   fQuantity: number;
   fItemName: string;
   fSingleImage: string;
+  fSellerId: number;
   fSellerName: string | null;
   fSpecification: string | null;
   selected?: boolean | null;
@@ -14,6 +15,7 @@ export interface ShoppingCartItem {
 }
 
 export interface Seller {
+  sellerId: number;
   name: string;
   selected?: boolean; //全選賣家
   products: ShoppingCartItem[];
@@ -45,4 +47,5 @@ export interface itemsForOrder {
   fItemType: string;
   fItemId: number;
   fQuantity: number;
+  fSellerId: number;
 }
