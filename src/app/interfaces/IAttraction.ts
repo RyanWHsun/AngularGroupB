@@ -16,4 +16,5 @@ export interface IAttraction {
   fTrafficInformation?: string | null;
   fLongitude?: string | null;
   fLatitude?: string | null;
+  fattractionViewCount?: number | 0;
 }

@@ -16,7 +16,8 @@ export class GoogleMapAPIService {
     });
   }
 
-  getApiKey(): Observable<any> {
-    return this.client.get<any>(`${this.baseUrl}/load-map`);
+  getMapData(): Observable<any> {
+    return this.client.get(`${this.baseUrl}/getMapData`, { responseType: 'text' });
   }
+
 }

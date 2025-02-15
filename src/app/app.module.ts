@@ -27,8 +27,6 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { EventDetailComponent } from './components/event-detail/event-detail.component';
 import { EventManagementComponent } from './components/event-management/event-management.component';
-
-
 import { CreateProductComponent } from './components/create-product/create-product.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CartComponent } from './components/cart/cart.component';

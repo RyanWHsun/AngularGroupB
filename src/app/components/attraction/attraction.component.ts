@@ -22,6 +22,8 @@ import {
 } from 'rxjs';
 import { IAttractionComment } from 'src/app/interfaces/IAttractionComment';
 import { GoogleMapAPIService } from 'src/app/services/google-map-api.service';
+import { AttractionViewCookieService } from 'src/app/services/attraction-view-cookie.service';
+import { IAttractionViewCount } from 'src/app/interfaces/IAttractionViewCount';
 
 // 宣告全域變數 google
 // 在 Google Maps JavaScript API 中，google 這個物件是由 API 動態載入的，而不是直接在 TypeScript 環境中定義的。
@@ -53,6 +55,7 @@ export class AttractionComponent {
   partialImages: IAttractionImage[] = [];
   imageSrc: string[] = [];
   attractionComment: IAttractionComment[] = [];
+  viewRecords: IAttractionViewCount[] = []; // 景點觀看次數的紀錄
 
   Page = {
     size: 0,
@@ -62,10 +65,51 @@ export class AttractionComponent {
   };
 
   googleMap = {
-    googleMapApiKey: '',
     addressName: '',
     geocodeResult: null,
   };
+
+  constructor(
+    private attractionService: AttractionService,
+    private attractionCategoryService: AttractionCategoryService,
+    private attractionImageService: AttractionImageService,
+    private attractionCommentService: AttractionCommentService,
+    private googleMapsService: GoogleMapAPIService,
+    private attractionViewCookieService: AttractionViewCookieService
+  ) {}
+
+  // 顯示景點觀看次數
+  showAttractionViewCount$() {
+    return this.attractionViewCookieService.getAllViewCount().pipe(
+      tap((data) => {
+        this.viewRecords = data;
+        console.log(`viewRecords: ${JSON.stringify(this.viewRecords)}`);
+        // 建立一個 Map 來快速查找 fAttractionId 對應的 fViewCount
+        const viewCountMap = new Map(
+          this.viewRecords.map((record) => [
+            record.fAttractionId,
+            record.fViewCount,
+          ])
+        );
+
+        for (const attraction of this.partialAttractions) {
+          attraction.fattractionViewCount =
+            viewCountMap.get(attraction.fAttractionId) || 0;
+        }
+      }),
+      map(() => void 0)
+    );
+  }
+
+  // 點擊"詳細資訊"按鈕時，要增加景點的觀看次數
+  addViewCount$(id: number): Observable<void> {
+    return this.attractionViewCookieService.increaseViewCount(id).pipe(
+      tap((data) => {
+        console.log(data);
+      }),
+      map(() => void 0)
+    );
+  }
 
   // Geocoding API - 透過地址獲取經緯度
   geocodeAddress(address: string): Promise<{ lat: number; lng: number }> {
@@ -88,20 +132,39 @@ export class AttractionComponent {
     });
   }
 
-  // 從後端 API 取得 Google Map API Key 的值，並設定 googleMapApiKey
-  setGoogleMapAPIKey$(): Observable<void> {
-    return this.googleMapsService.getApiKey().pipe(
-      tap((data) => {
-        if (!data.apiKey) {
-          console.error('API Key 無效');
-        } else {
-          this.googleMap.googleMapApiKey = data.apiKey;
-          //console.log('成功取得 API Key: ', this.googleMap.googleMapApiKey);
-        }
-      }),
-      map(() => void 0)
-    );
-  }
+  // 載入 Google Maps API
+  // loadGoogleMaps$(): Observable<void> {
+  //   return new Observable((observer) => {
+  //     // 如果 `window.google` 和 `window.google.maps` 已經存在，代表 Google Maps API 已載入，直接執行 this.loadMap() 來初始化地圖
+  //     if (window.google && window.google.maps) {
+  //       console.log('Google Maps 已載入，直接初始化地圖');
+  //       this.loadMap();
+  //       observer.next(); // 發送成功訊號，告訴訂閱者可以繼續
+  //       observer.complete(); // 標記這個 Observable 已結束，確保它不會無限運行
+  //       return;
+  //     }
+
+  //     // 設定 `initMap` 回呼函式，當 Google Maps 載入後執行 `loadMap`
+  //     (window as any).initMap = () => {
+  //       this.loadMap();
+  //       observer.next();
+  //       observer.complete();
+  //     };
+
+  //     // 建立 `<script>` 並動態載入 Google Maps API
+  //     const script = document.createElement('script');
+  //     // callback=initMap 告訴 Google Maps API 載入完成後要執行 window.initMap()。
+  //     script.src = `https://maps.googleapis.com/maps/api/js?key=${this.googleMap.googleMapApiKey}&callback=initMap`;
+  //     script.async = true; // 讓 API 非同步載入，不會阻塞頁面
+  //     script.defer = true; // 讓 API 等到 HTML 解析完成後才執行，避免 document.getElementById('map') 這類操作找不到元素。
+  //     script.onerror = () => {
+  //       console.error('Google Maps API 載入失敗');
+  //       observer.error('Google Maps API 載入失敗');
+  //     };
+
+  //     document.head.appendChild(script); // 動態新增一個 <script> 標籤到 <head>，開始下載並執行 Google Maps API。
+  //   });
+  // }
 
   // 載入 Google Maps API
   loadGoogleMaps$(): Observable<void> {
@@ -115,25 +178,28 @@ export class AttractionComponent {
         return;
       }
 
-      // 設定 `initMap` 回呼函式，當 Google Maps 載入後執行 `loadMap`
+      //設定 `initMap` 回呼函式，當 Google Maps 載入後執行 `loadMap`
       (window as any).initMap = () => {
         this.loadMap();
         observer.next();
         observer.complete();
       };
 
-      // 建立 `<script>` 並動態載入 Google Maps API
-      const script = document.createElement('script');
-      // callback=initMap 告訴 Google Maps API 載入完成後要執行 window.initMap()。
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${this.googleMap.googleMapApiKey}&callback=initMap`;
-      script.async = true; // 讓 API 非同步載入，不會阻塞頁面
-      script.defer = true; // 讓 API 等到 HTML 解析完成後才執行，避免 document.getElementById('map') 這類操作找不到元素。
-      script.onerror = () => {
-        console.error('Google Maps API 載入失敗');
-        observer.error('Google Maps API 載入失敗');
-      };
-
-      document.head.appendChild(script); // 動態新增一個 <script> 標籤到 <head>，開始下載並執行 Google Maps API。
+      // 呼叫後端取得 Google Maps API
+      this.googleMapsService.getMapData().subscribe({
+        next: (script) => {
+          // 建立 `<script>` 並動態載入 Google Maps API
+          const scriptElement = document.createElement('script');
+          scriptElement.text = script; // 直接插入回應的 JavaScript 代碼
+          document.body.appendChild(scriptElement);
+          observer.next();
+          observer.complete();
+        },
+        error: (err) => {
+          console.error('Google Maps API 載入失敗', err);
+          observer.error('Google Maps API 載入失敗');
+        },
+      });
     });
   }
 
@@ -172,30 +238,7 @@ export class AttractionComponent {
       .catch((error) => {
         console.error('地理編碼失敗:', error);
       });
-
-    // 創建 Google 地圖物件，並將其綁定到 `this.mapContainer.nativeElement`
-    // new google.maps.Map() 會建立一個 Google Maps 物件。
-    // this.mapContainer.nativeElement 是地圖要顯示的 HTML 容器。
-    // const map = new google.maps.Map(this.mapContainer.nativeElement, {
-    //   center: { lat: 25.033964, lng: 121.564468 }, // center 指定地圖的中心點 (台北101)。
-    //   zoom: 15, // zoom: 15 設定縮放層級，數字越大，放大越近。
-    // });
-
-    // 在地圖上新增一個標記 (Marker)
-    // new google.maps.Marker({
-    //   position: { lat: 25.033964, lng: 121.564468 }, // position 設定標記的位置（台北101）。
-    //   map: map, // map: map 指定該標記要放在哪個地圖上。
-    //   title: '這是標記', // title: '這是標記' 讓滑鼠懸停時會顯示這個標記的說明。
-    // });
   }
-
-  constructor(
-    private attractionService: AttractionService,
-    private attractionCategoryService: AttractionCategoryService,
-    private attractionImageService: AttractionImageService,
-    private attractionCommentService: AttractionCommentService,
-    private googleMapsService: GoogleMapAPIService
-  ) {}
 
   // searchAddress() {
   //   this.googleMapsService
@@ -236,7 +279,9 @@ export class AttractionComponent {
     this.showAttractionById$(id)
       .pipe(
         switchMap(() => this.showCommentsByAttractionId$(id)),
-        switchMap(() => this.loadGoogleMaps$())
+        switchMap(() => this.loadGoogleMaps$()),
+        switchMap(() => this.addViewCount$(id)),
+        switchMap(() => this.showAttractionViewCount$())
       )
       .subscribe();
   }
@@ -246,7 +291,10 @@ export class AttractionComponent {
     if (this.Page.selectedPageIndex <= 0) return;
     this.Page.selectedPageIndex--;
     this.showPartialAttractions$(this.Page.selectedPageIndex)
-      .pipe(switchMap(() => this.showPartialImages$()))
+      .pipe(
+        switchMap(() => this.showPartialImages$()),
+        switchMap(() => this.showAttractionViewCount$())
+      )
       .subscribe();
     this.scrollToTop();
   }
@@ -256,7 +304,10 @@ export class AttractionComponent {
     if (this.Page.selectedPageIndex >= this.Page.pages.length - 1) return;
     this.Page.selectedPageIndex++;
     this.showPartialAttractions$(this.Page.selectedPageIndex)
-      .pipe(switchMap(() => this.showPartialImages$()))
+      .pipe(
+        switchMap(() => this.showPartialImages$()),
+        switchMap(() => this.showAttractionViewCount$())
+      )
       .subscribe();
     this.scrollToTop();
   }
@@ -265,7 +316,10 @@ export class AttractionComponent {
   setSelectedPageIndex(index: number) {
     this.Page.selectedPageIndex = index;
     this.showPartialAttractions$(this.Page.selectedPageIndex)
-      .pipe(switchMap(() => this.showPartialImages$()))
+      .pipe(
+        switchMap(() => this.showPartialImages$()),
+        switchMap(() => this.showAttractionViewCount$())
+      )
       .subscribe();
     this.scrollToTop();
   }
@@ -366,16 +420,16 @@ export class AttractionComponent {
     // 3. showPartialImages$()
     // 迴圈 this.partialAttractions，並為每個景點請求一張圖片。
     // 確保所有圖片請求完成後，才會進入 subscribe()。
-    this.setGoogleMapAPIKey$()
+    this.showPartialAttractions$(0)
       // 在 RxJS 中，pipe() 用來組合不同的 RxJS operators，這裡我們使用 switchMap() 來鏈接非同步操作，確保它們按順序執行。
       .pipe(
         // switchMap() 會：
         // 等待前一個 Observable 完成，然後再執行新的 Observable。
         // 如果前一個 Observable 尚未完成，則取消它，改執行新的 Observable（但這裡不會有這種情況，因為我們的流程是線性的）。
         // 返回新的 Observable，讓它接著執行。
-        switchMap(() => this.showPartialAttractions$(0)), // 等待 initPartialAttractions 完成後再執行 initPage
-        switchMap(() => this.initPage$()), // 等待 initPage 完成後再執行 showPartialImages
-        switchMap(() => this.showPartialImages$())
+        switchMap(() => this.initPage$()), // 等待 initPartialAttractions 完成後再執行 initPage
+        switchMap(() => this.showPartialImages$()), // 等待 initPage 完成後再執行 showPartialImages
+        switchMap(() => this.showAttractionViewCount$())
       )
       .subscribe();
   }
