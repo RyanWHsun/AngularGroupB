@@ -47,6 +47,22 @@ declare global {
   styleUrls: ['./attraction.component.css'],
 })
 export class AttractionComponent {
+  // 在 TypeScript 內部存取 Angular 模板中的 DOM 元素或元件
+  //
+  // 在 HTML 模板中 找一個 #mapContainer 參考的元素。
+  // mapContainer 屬性將被 ElementRef 物件賦值，允許 TypeScript 直接操作該 DOM 元素。
+  //
+  // { static: false }：控制何時獲取元素
+  // static: false
+  // 在 ngAfterViewInit() 之後才會獲取到。
+  // 適用於 動態變更的元素（如 *ngIf 控制的元素）。
+  // static: true：
+  // 在 ngOnInit() 就能獲取到。
+  // 適用於 靜態元素（沒有 *ngIf 控制的元素）。
+  //
+  // mapContainer!： ! 表示 TypeScript 非空斷言，確保編譯器不會報錯（但如果實際上 mapContainer 沒有獲取到，可能導致錯誤）。
+  //
+  // ElementRef: ElementRef 是 Angular 提供的一個 封裝 DOM 元素的類別，讓 TypeScript 可以 直接存取 HTML 元素。
   @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef;
 
   attraction: IAttraction = {};
@@ -77,6 +93,91 @@ export class AttractionComponent {
     private googleMapsService: GoogleMapAPIService,
     private attractionViewCookieService: AttractionViewCookieService
   ) {}
+
+  // carousel
+  setCarouselImages$(attractionId: number): Observable<void> {
+    return new Observable((observer) => {
+      const $carouselInner = $('#displayImageContainer');
+      $carouselInner.empty(); //清空原有的 carousel-inner 內容
+
+      this.attractionImageService
+        .getAttractionImageById(attractionId)
+        .subscribe((images) => {
+           // no image
+          if (images.length === 0) {
+            // 建立 carousel-item 元素
+            const $carouselItem = $(`
+              <div class="carousel-item active" data-bs-interval="2000">
+                <img src="assets/images/noImage.jpg" class="d-block w-100" alt="景點圖片" style="height: 300px">
+              </div>
+            `);
+            $carouselInner.append($carouselItem);  // 加入到 carousel-inner
+          } else {
+             // 遍歷圖片陣列並生成 carousel-item
+          // $.each 是 jQuery 提供的迴圈方法，用來遍歷 images 陣列。
+          // images 是一個陣列，其中每個元素 image 可能包含圖片的 URL。
+          // index 是陣列中當前元素的索引。
+          // image 是陣列中當前的圖片物件。
+            $.each(images, (index, image) => {
+              const isActive = index === 0 ? 'active' : ''; // 第一張圖片設為 active
+               // 如果 fImage 是 Base64 格式的圖片資料，應確保它有正確的 MIME 類型前綴
+            // <img src="data:image/jpeg;base64,{Base64 字串}">
+              let imageSrc = `data:image/jpeg;base64,${image.fImage}`;
+               // 建立 carousel-item 元素
+              const $carouselItem = $(`
+                <div class="carousel-item ${isActive}" data-bs-interval="2000">
+                  <img src="${imageSrc}" class="d-block w-100" alt="景點圖片" style="height: 300px">
+                </div>
+              `);
+              $carouselInner.append($carouselItem); // 加入到 carousel-inner
+            });
+          }
+          observer.next(); // 完成
+          observer.complete();
+        });
+    });
+
+
+
+    // //清空原有的 carousel-inner 內容
+    // const $carouselInner = $('#displayImageContainer');
+    // $carouselInner.empty();
+
+    // this.attractionImageService
+    //   .getAttractionImageById(attractionId)
+    //   .subscribe((images) => {
+    //     //console.log(images);
+    //     // no image
+    //     if (images.length === 0) {
+    //       // 建立 carousel-item 元素
+    //       const $carouselItem = $(
+    //         `<div class="carousel-item active" data-bs-interval="2000"><img src="assets/images/noImage.jpg" class="d-block w-100" alt="景點圖片" style="height: 300px"></div>`
+    //       );
+    //       // 加入到 carousel-inner
+    //       $carouselInner.append($carouselItem);
+    //       return;
+    //     } else {
+    //       // 遍歷圖片陣列並生成 carousel-item
+    //       // $.each 是 jQuery 提供的迴圈方法，用來遍歷 images 陣列。
+    //       // images 是一個陣列，其中每個元素 image 可能包含圖片的 URL。
+    //       // index 是陣列中當前元素的索引。
+    //       // image 是陣列中當前的圖片物件。
+    //       $.each(images, (index, image) => {
+    //         const isActive = index === 0 ? 'active' : ''; // 第一張圖片設為 active
+    //         // 如果 fImage 是 Base64 格式的圖片資料，應確保它有正確的 MIME 類型前綴
+    //         // <img src="data:image/jpeg;base64,{Base64 字串}">
+    //         let imageSrc = `data:image/jpeg;base64,${image.fImage}`;
+    //         // 建立 carousel-item 元素
+    //         const $carouselItem = $(
+    //           `<div class="carousel-item ${isActive}" data-bs-interval="2000"><img src="${imageSrc}" class="d-block w-100" alt="景點圖片" style="height: 300px"></div>`
+    //         );
+
+    //         // 加入到 carousel-inner
+    //         $carouselInner.append($carouselItem);
+    //       });
+    //     }
+    //   });
+  }
 
   // 顯示景點觀看次數
   showAttractionViewCount$() {
@@ -281,9 +382,11 @@ export class AttractionComponent {
         switchMap(() => this.showCommentsByAttractionId$(id)),
         switchMap(() => this.loadGoogleMaps$()),
         switchMap(() => this.addViewCount$(id)),
-        switchMap(() => this.showAttractionViewCount$())
+        switchMap(() => this.showAttractionViewCount$()),
+        switchMap(() => this.setCarouselImages$(id))
       )
       .subscribe();
+    this.setCarouselImages$(id);
   }
 
   // 按上一頁，顯示上一頁的景點

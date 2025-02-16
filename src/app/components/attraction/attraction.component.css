@@ -64,19 +64,108 @@
   margin: 2px;
 }
 
+.modal-custom-width {
+  max-width: 70%;
+}
+/* 設定 Modal 內容區塊的最大寬度為 80% 並置中 */
+.modal-content-wrapper {
+  max-width: 80%;
+  margin: 0 auto; /* 水平置中 */
+}
+/* 調整 Modal 標題下方的灰線 */
+.modal-header {
+  border-bottom: 1px solid #ddd; /* 保留 Bootstrap 原本的灰線 */
+  width: 80%; /* 設定與 Modal 內容一致的寬度 */
+  margin: 0 auto; /* 讓標題區置中 */
+}
+
+/* Modal 內容排版 */
+.modal-flex {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* 左側圖片區 */
+.modal-image-container {
+  flex: 1;
+  min-width: 40%;
+}
+
+.modal-image-container .carousel-inner {
+  border-radius: 10px;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
 .modal-content {
-  border-radius: 20px;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+/* 景點名稱 (最大字體) */
+.modal-title {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
 }
 
 .edit-button-container {
   margin-top: 20px;
 }
 
-.carousel-inner {
-  border: solid 3px;
-  border-color: rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
+/* 右側資訊區 */
+.modal-info-container {
+  flex: 1;
+  min-width: 55%;
 }
+.carousel-inner {
+  border-radius: 10px;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+}
+.map-container {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.map-content {
+  width: 100%;
+  height: 300px; /* 預設高度 */
+  max-height: 400px;
+  min-height: 200px;
+}
+.info-section {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* 資訊標題 */
+.info-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* 評論區域 */
+.comment-section {
+  margin-top: 30px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* 評論標題 (比景點名稱小，但比其他標題大) */
+.comment-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* 評論內容 */
+.comment-content {
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+/* 修改 */
 
 .btn-detail, .btn-delete {
   margin: 10px 5px;
@@ -101,3 +190,5 @@
   background-color: #7ab730; /* 當前頁面的背景色 */
   border-color: #7ab730; /* 當前頁面的邊框色 */
 }
+
+
