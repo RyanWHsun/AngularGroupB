@@ -79,8 +79,8 @@
         <div class="post border rounded p-3">
           <!-- Header -->
           <div class="d-flex align-items-center mb-2">
-            <img src="/assets/images/head006.jpg" class="rounded-circle mr-2" style="width: 5%;">
-            <strong>林阿明</strong>
+            <img [src]="userData[data['fUserId']].image" class="rounded-circle mr-2" style="width: 5%;">
+            <strong>{{userData[data['fUserId']].nickName}}</strong>
           </div>
 
           <!-- Image -->
@@ -101,7 +101,7 @@
 
           <!-- Likes and Caption -->
           <p class="mb-1"><strong>10個讚</strong></p>
-          <p><strong>林阿明 </strong>海邊走走</p>
+          <p><strong>{{userData[data['fUserId']].nickName}} </strong>{{data['fTitle']}}</p>
 
           <!-- Comment Section -->
           <input type="text" class="form-control" placeholder="留言......">
