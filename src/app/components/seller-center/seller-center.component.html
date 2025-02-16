@@ -1,0 +1,73 @@
+<!-- Header Start -->
+<div class="container-fluid page-header">
+  <div class="container">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+      <h3 class="display-4 text-white text-uppercase">賣家中心</h3>
+      <div class="d-inline-flex text-white">
+        <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase">賣家中心</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Header End -->
+
+<!-- Booking Start -->
+<div class="container-fluid booking mt-5 pb-5">
+  <div class="container">
+    <div class="bg-light shadow" style="padding: 20px;">
+      <div class="row justify-content-center" style="min-height: 60px;">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="w-100 p-1 mb-3 topBtn" [routerLink]="['/products', 'sellerOrder']"
+                style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
+                <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-dolly"></i></h4>
+                  <div>
+                    <h4 class="mb-0 text-white">我的銷售</h4>
+                  </div>
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-angles-down"></i></h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="w-100 p-1 mb-3 topBtn" [routerLink]="['/products', 'sellerCenter']"
+                style="border-radius:15px;border: solid 3px; border-color:#b0b0b0;; background-color: #ffffff;">
+                <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #b0b0b0;">
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-chart-line"></i></h4>
+                  <div>
+                    <h4 class="mb-0 text-white">賣場分析</h4>
+                  </div>
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-angles-down"></i></h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="w-100 p-1 mb-3 topBtn" [routerLink]="['/products', 'myProduct']"
+                style="border-radius:15px;border: solid 3px; border-color:#ebbaba;; background-color: #ffffff;">
+                <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #ebbaba;">
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-box"></i></h4>
+                  <div>
+                    <h4 class="mb-0 text-white">我的商品</h4>
+                  </div>
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-angles-down"></i></h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Booking End -->
+
+
+<!-- start your coding here-->
+<!-- Title -->
+<div class="text-center">
+  <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Seller Center</h6>
+  <h1>賣場分析</h1>
+</div>

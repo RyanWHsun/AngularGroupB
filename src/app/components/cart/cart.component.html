@@ -17,6 +17,15 @@
 <div class="container  py-1 mt-2">
 
 
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="text-center my-3">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <p>努力載入中...</p>
+  </div>
+
   <!-- 景點 -->
   <div class="container mt-3" *ngIf="tickets.length>0">
     <div class="row">

@@ -1,0 +1,208 @@
+<!-- Header Start -->
+<div class="container-fluid page-header">
+  <div class="container">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+      <h3 class="display-4 text-white text-uppercase">賣家中心</h3>
+      <div class="d-inline-flex text-white">
+        <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase">賣家中心</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Header End -->
+
+<!-- Booking Start -->
+<div class="container-fluid booking mt-5 pb-5">
+  <div class="container">
+    <div class="bg-light shadow" style="padding: 20px;">
+      <div class="row justify-content-center" style="min-height: 60px;">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="w-100 p-1 mb-3 topBtn" [routerLink]="['/products', 'sellerOrder']"
+                style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
+                <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-dolly"></i></h4>
+                  <div>
+                    <h4 class="mb-0 text-white">我的銷售</h4>
+                  </div>
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-angles-down"></i></h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="w-100 p-1 mb-3 topBtn" [routerLink]="['/products', 'sellerCenter']"
+                style="border-radius:15px;border: solid 3px; border-color:#b0b0b0;; background-color: #ffffff;">
+                <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #b0b0b0;">
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-chart-line"></i></h4>
+                  <div>
+                    <h4 class="mb-0 text-white">賣場分析</h4>
+                  </div>
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-angles-down"></i></h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="w-100 p-1 mb-3 topBtn" [routerLink]="['/products', 'myProduct']"
+                style="border-radius:15px;border: solid 3px; border-color:#ebbaba;; background-color: #ffffff;">
+                <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #ebbaba;">
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-box"></i></h4>
+                  <div>
+                    <h4 class="mb-0 text-white">我的商品</h4>
+                  </div>
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-angles-down"></i></h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Booking End -->
+
+
+<!-- start your coding here-->
+<!-- Title -->
+<div class="text-center">
+  <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Seller Center</h6>
+  <h1>我的銷售列表</h1>
+</div>
+
+<div class="container-fluid py-5 ">
+  <div class="container bg-light shadow p-3">
+    <!-- 訂單篩選 Tabs -->
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" href="#">全部</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">待付款</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">待出貨</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">待收貨 (1)</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">已完成</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">取消</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">退貨/退款</a>
+      </li>
+    </ul>
+
+    <!-- 搜尋欄 -->
+    <div class="input-group mt-3">
+      <input type="text" class="form-control" placeholder="輸入訂單編號或商品名稱">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button">搜尋</button>
+      </div>
+    </div>
+
+    <!-- 訂單列表 -->
+    <div class="mt-4" id="accordion">
+      <!-- 單筆訂單 (可收折) -->
+      <div class="card mb-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span><strong>商店：</strong>安德瑪 Under Armour 官方旗艦店</span>
+          <span class="badge badge-warning">待收貨</span>
+        </div>
+
+        <!-- 訂單主體 -->
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <span><strong>訂單金額：</strong><span class="text-danger">NT$600</span></span>
+            <button class="btn btn-outline-primary btn-sm" data-toggle="collapse" data-target="#order1">
+              展開/收合
+            </button>
+          </div>
+        </div>
+
+        <!-- 訂單內容 (可展開收折) -->
+        <div id="order1" class="collapse" data-parent="#accordion">
+          <div class="card-body border-top">
+            <!-- 商品1 -->
+            <div class="d-flex">
+              <img src="https://via.placeholder.com/80" class="img-thumbnail" alt="商品圖片">
+              <div class="ml-3">
+                <h5 class="card-title">【UNDER ARMOUR】UA慢跑鞋 男女多款任選</h5>
+                <p class="card-text">規格：女A款, US 8</p>
+                <p class="card-text">數量：x1</p>
+              </div>
+            </div>
+            <hr>
+            <!-- 商品2 -->
+            <div class="d-flex">
+              <img src="https://via.placeholder.com/80" class="img-thumbnail" alt="商品圖片">
+              <div class="ml-3">
+                <h5 class="card-title">【UNDER ARMOUR】UA運動短褲</h5>
+                <p class="card-text">規格：男款, M</p>
+                <p class="card-text">數量：x2</p>
+              </div>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between">
+              <button class="btn btn-outline-primary btn-sm">聯絡賣家</button>
+              <button class="btn btn-outline-secondary btn-sm">查看詳情</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 第二筆訂單 -->
+      <div class="card mb-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span><strong>商店：</strong>蝦皮直營特選</span>
+          <span class="badge badge-success">已完成</span>
+        </div>
+
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <span><strong>訂單金額：</strong><span class="text-danger">NT$305</span></span>
+            <button class="btn btn-outline-primary btn-sm" data-toggle="collapse" data-target="#order2">
+              展開/收合
+            </button>
+          </div>
+        </div>
+
+        <!-- 訂單內容 (可展開收折) -->
+        <div id="order2" class="collapse" data-parent="#accordion">
+          <div class="card-body border-top">
+            <!-- 商品1 -->
+            <div class="d-flex">
+              <img src="https://via.placeholder.com/80" class="img-thumbnail" alt="商品圖片">
+              <div class="ml-3">
+                <h5 class="card-title">【蝦皮特選】舒潔抽取衛生紙</h5>
+                <p class="card-text">規格：90抽x6包</p>
+                <p class="card-text">數量：x1</p>
+              </div>
+            </div>
+            <hr>
+            <!-- 商品2 -->
+            <div class="d-flex">
+              <img src="https://via.placeholder.com/80" class="img-thumbnail" alt="商品圖片">
+              <div class="ml-3">
+                <h5 class="card-title">【蝦皮特選】舒潔濕式衛生紙</h5>
+                <p class="card-text">規格：40抽x3包</p>
+                <p class="card-text">數量：x1</p>
+              </div>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between">
+              <button class="btn btn-outline-primary btn-sm">聯絡賣家</button>
+              <button class="btn btn-outline-secondary btn-sm">查看詳情</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

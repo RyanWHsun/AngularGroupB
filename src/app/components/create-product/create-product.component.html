@@ -102,8 +102,9 @@
           <!-- 預覽圖片區域 -->
           <div class="container">
             <div class="row d-flex row-cols-3 flex-wrap justify-content-start">
-              <div *ngFor="let image of imagePreviews; let i = index" class="col-auto position-relative p-2"
-                draggable="true" (dragstart)="onDragStart($event, i)" (dragover)="onDragOverImage($event)"
+              <div *ngFor="let image of imagePreviews; let i = index"
+                class="col-auto preview-image position-relative p-2" draggable="true"
+                (dragstart)="onDragStart($event, i)" (dragover)="onDragOverImage($event)"
                 (drop)="onDropImage($event, i)">
                 <div class="position-absolute top-0 start-0" style="top: 4px; left: 8px;">
                   <!-- 封面標籤 -->
@@ -116,7 +117,7 @@
                   </button>
                 </div>
                 <!-- 預覽圖片 -->
-                <img [src]="image" class="preview-image" style="width: 160px; height:160px; object-fit: contain;">
+                <img [src]="image" class="" style="width: 160px; height:160px; object-fit: contain;">
               </div>
             </div>
           </div>

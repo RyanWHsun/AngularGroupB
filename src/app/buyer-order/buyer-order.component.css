@@ -1,0 +1,8 @@
+.step {
+  width: 25%;
+  text-align: center;
+}
+
+.filter:hover {
+  cursor: pointer;
+}

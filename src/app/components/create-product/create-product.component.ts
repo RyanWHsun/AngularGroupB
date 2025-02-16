@@ -115,8 +115,8 @@ export class CreateProductComponent implements OnInit {
   }
 
   onDragStart(event: DragEvent, index: number): void {
-    this.draggedIndex = index;
-    event.dataTransfer?.setData('text/plain', index.toString());
+    this.draggedIndex = index; // 記錄被拖曳的圖片索引
+    event.dataTransfer?.setData('text/plain', index.toString());  // 將索引存入拖曳數據
   }
 
   onDragOverImage(event: DragEvent): void {
@@ -148,12 +148,13 @@ export class CreateProductComponent implements OnInit {
 
 
   onImageSelected(event: any): void {
-    const files: FileList = event.target.files;
+    const files: FileList = event.target.files; //取得使用者選擇的圖片
+    //上傳+已存在的圖片不可超出最大上限
     if (files.length + this.imagePreviews.length > this.maxImages) {
-      alert('最多只能上傳 6 張圖片');
+      alert(`最多只能上傳 ${this.maxImages} 張圖片`);
       return;
     }
-    this.handleImageUpload(files);
+    this.handleImageUpload(files); //把上傳圖片傳到方法
   }
 
 
@@ -164,7 +165,7 @@ export class CreateProductComponent implements OnInit {
         const reader = new FileReader();
         reader.onload = () => {
           this.imagePreviews.push(reader.result as string);
-          console.log("目前預覽圖片:", this.imagePreviews);
+          //console.log("目前預覽圖片:", this.imagePreviews);
         };
         reader.readAsDataURL(file);
       }

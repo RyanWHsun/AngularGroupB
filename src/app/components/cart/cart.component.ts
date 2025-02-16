@@ -23,7 +23,7 @@ export class CartComponent {
     fUserAddress: '',
     totalBalance: 0
   };
-
+  isLoading = false;
   selectedCartItemIds: number[] = []; //選取的項目id
   selectAllTickets = false;
   selectAllEvents = false;
@@ -38,6 +38,7 @@ export class CartComponent {
   ngOnInit(): void {
     this.loadCart();
     //console.log("初始化付款方式:", this.fPaymentMethod);
+    this.isLoading = true;
   };
 
   ngAfterViewInit() {
@@ -63,7 +64,8 @@ export class CartComponent {
               html: true
             });
           }
-        }, 0);
+          this.isLoading = false;
+        }, 300);
       },
       error: (error) => {
         console.error("獲取用戶資訊失敗", error);

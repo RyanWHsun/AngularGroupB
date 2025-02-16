@@ -36,6 +36,9 @@ import { PaymentComponent } from './components/payment/payment.component';
 import { ProductPipe } from './pipes/product.pipe';
 import { AttractionTicketComponent } from './components/attraction-ticket/attraction-ticket.component';
 import { AttractionAdminComponent } from './components/attraction-admin/attraction-admin.component';
+import { SellerOrderComponent } from './components/seller-order/seller-order.component';
+import { SellerCenterComponent } from './components/seller-center/seller-center.component';
+import { BuyerOrderComponent } from './buyer-order/buyer-order.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +66,9 @@ import { AttractionAdminComponent } from './components/attraction-admin/attracti
     ProductPipe,
     AttractionTicketComponent,
     AttractionAdminComponent,
+    SellerOrderComponent,
+    SellerCenterComponent,
+    BuyerOrderComponent,
   ],
   imports: [
     BrowserModule,

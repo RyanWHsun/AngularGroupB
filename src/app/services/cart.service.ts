@@ -41,7 +41,7 @@ export class CartService {
         this.cartItemCount.next(response.count)
       },
       error: (error) => {
-        console.error('無法獲取數量', error);
+        //console.error('無法獲取數量', error);
         this.cartItemCount.next(0);
       }
     });
