@@ -11,10 +11,10 @@ export class SocialmediaComponent {
   datas: any[] = [];
   imageData: { [key: number]: string[] } = {};
   activePostIds: number[] = [];
-  page: number = 1;  // 當前頁數
-  pageSize: number = 2;  // 每次載入的文章數量
-  loading: boolean = false;  // 控制「載入中」狀態
-  hasMore: boolean = true;  // 是否還有更多文章
+  page: number = 1;
+  pageSize: number = 2;
+  loading: boolean = false;
+  hasMore: boolean = true;
   constructor(private socialmediaService: SocialmediaService) { };
   ngOnInit(): void {
     this.loadArticles();
@@ -24,15 +24,6 @@ export class SocialmediaComponent {
       this.imageData[postId] = data.map((imageBase64: string) => 'data:image/jpeg;base64,' + imageBase64);
     })
   }
-  // get() {
-  //   this.socialmediaService.getPublicArticles().subscribe(data => {
-  //     // console.log('api', data);
-  //     this.datas = data;
-  //     this.datas.forEach(post => {
-  //       this.loadImages(post['fPostId']);
-  //     });
-  //   })
-  // }
   loadArticles() {
     if (!this.hasMore || this.loading) return;  // 如果沒有更多文章或正在載入則不執行
 
