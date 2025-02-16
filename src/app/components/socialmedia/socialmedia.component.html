@@ -72,7 +72,8 @@
       </div>
     </div>
     <!-- 文章 -->
-    <div class="col-8">
+    <div class="col-8" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="300"
+      (scrolled)="onScroll()">
       <div *ngFor="let data of datas" class="container-fluid mb-3" style="width: 90%;">
         <!-- Post Wrapper -->
         <div class="post border rounded p-3">
