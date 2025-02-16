@@ -2,6 +2,8 @@ import { OrderDetail, OrderDetailsResponse, OrderStatusHistory } from '../../int
 import { Component } from '@angular/core';
 import { buyerOrderAll } from '../../interfaces/order';
 import { OrderService } from '../../services/order.service';
+import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-buyer-order',
@@ -17,7 +19,7 @@ export class BuyerOrderComponent {
   OrderDetail: OrderDetailsResponse | null = null;
   isLoading: boolean = false;
 
-  constructor(private orderService: OrderService) { }
+  constructor(private orderService: OrderService, private swal: SweetAlert2Service, private router: Router) { }
 
   ngOnInit(): void {
     this.loadOrders();
@@ -36,7 +38,10 @@ export class BuyerOrderComponent {
       },
       error: (error) => {
         console.log('取得訂單有錯誤', error);
-        alert(error);
+        if (error.status === 404) {
+          this.swal.showEasyError(error.error.message);
+          this.router.navigate(['products']);
+        }
       }
     })
   }

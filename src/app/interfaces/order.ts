@@ -36,6 +36,7 @@ export interface sellerOrderAll {
   fShipAddress: string;
   fOrderDate: string;
   fOrderAmount: number;
+  fExtraInfo: string;
   buyerName: string;
   statusHistory: OrderStatusHistory[];
 }

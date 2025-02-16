@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CheckoutRequest } from '../interfaces/shoppingCart';
 import { Observable } from 'rxjs';
@@ -33,6 +33,17 @@ export class OrderService {
   getSellerOrders(): Observable<sellerOrderAll[]> {
     const url = `${this.baseAddress}api/TOrders/getSellerOrder`
     return this.http.get<sellerOrderAll[]>(url, { withCredentials: true })
+  }
+
+  //賣家修改狀態
+  shipOrder(orderId: number, extraInfo: string): Observable<{ message: string }> {
+    const url = `${this.baseAddress}api/TOrders/shipOrder/${orderId}`
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    const body = JSON.stringify({ extraInfo }); // 封裝成 JSON
+    console.log('傳送中', body);
+    return this.http.put<{ message: string }>(url, body, { headers })
   }
 }
 

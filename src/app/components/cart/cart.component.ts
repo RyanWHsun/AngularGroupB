@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { OrderService } from 'src/app/services/order.service';
 declare var $: any; // 宣告 jQuery
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cart',

@@ -146,8 +146,13 @@
             <!-- <button class="btn btn-primary btn-sm mr-2">
               <i class="fa-solid fa-circle-info"></i>&nbsp;訂單明細
             </button> -->
-            <button class="btn btn-warning btn-sm">
-              <i class="fa-solid fa-truck-fast"></i>&nbsp;寄件訊息
+            <button *ngIf="order.fOrderStatusId === 1 || order.fOrderStatusId === 2"
+              class="btn btn-warning btn-sm shadow" (click)="shipOrder(order.fOrderId,order.fExtraInfo)">
+              <i class=" fa-solid fa-truck-fast"></i>&nbsp;寄件訊息
+            </button>
+            <button *ngIf="order.fOrderStatusId==3" class="btn btn-warning btn-sm shadow"
+              (click)="confirmOrder(order.fExtraInfo)">
+              <i class=" fa-solid fa-truck-fast"></i>&nbsp;寄件訊息
             </button>
           </td>
         </tr>
