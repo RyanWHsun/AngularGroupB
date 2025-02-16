@@ -50,8 +50,8 @@ export class EventComponent implements OnInit {
         this.events = Array.isArray(data) ? data : data?.$values || [];
 
         this.events.forEach(event => {
-          event.fLocation = event.location ?? '未知地點';
-          event.fParticipant = event.fParticipants ?? 0; // ✅ 設定參加人數
+          event.fLocation = event.fLocation ?? '未知地點'; // ✅ 確保地點正確
+          event.fParticipant = event.fParticipant ?? 0; // ✅ 確保人數正確
           event.fDuration = event.fDuration ?? 1; // ✅ 設定行程天數
           event.fPrice = event.registrationFee ?? 0; // ✅ 設定報名費
           event.fEventImageUrl = event.imageBase64 ?? 'assets/images/noImage.jpg'; // ✅ 設定圖片

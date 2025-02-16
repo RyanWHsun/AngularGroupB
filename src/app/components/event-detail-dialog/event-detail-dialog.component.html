@@ -1,9 +1,9 @@
 <div class="event-detail-modal" *ngIf="event">
   <div class="container mt-5">
     <div class="card">
-      <img class="card-img-top"
-        [src]="event.fEventImageUrl && event.fEventImageUrl.trim() !== '' ? event.fEventImageUrl : 'assets/images/noImage.jpg'"
-        alt="活動圖片">
+      <img class="event-image"
+  [src]="event.fEventImageUrl && event.fEventImageUrl.trim() !== '' ? event.fEventImageUrl : 'assets/images/noImage.jpg'"
+  alt="活動圖片">
       <div class="card-body">
         <h3 class="card-title">{{ event.fEventName }}</h3>
         <p class="card-text">{{ event.fEventDescription || '無活動描述' }}</p>
