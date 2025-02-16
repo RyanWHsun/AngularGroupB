@@ -24,8 +24,8 @@ export class EventComponent implements OnInit {
     departDate: '',
     returnDate: '',
     days: '',
-    minPrice: 0, // ✅ 最低價格篩選
-    maxPrice: '' // ✅ 最高價格篩選
+    minPrice: 0,
+    maxPrice: ''
   };
 
   constructor(private http: HttpClient, private router: Router, private cdRef: ChangeDetectorRef) {}
@@ -34,12 +34,11 @@ export class EventComponent implements OnInit {
     this.loadSavedEvents();
     this.loadEvents();
 
-    // 🚀 自動輪播，每 3 秒執行 nextEvent()
-    setInterval(() => {
-      this.nextEvent();
-    }, 8000);
+    // 🚀 自動輪播
+    // setInterval(() => {
+    //   this.nextEvent();
+    // }, 8000);
   }
-
 
   /** 🚀 從 API 載入活動 */
   loadEvents() {
@@ -50,11 +49,11 @@ export class EventComponent implements OnInit {
         this.events = Array.isArray(data) ? data : data?.$values || [];
 
         this.events.forEach(event => {
-          event.fLocation = event.fLocation ?? '未知地點'; // ✅ 確保地點正確
-          event.fParticipant = event.fParticipant ?? 0; // ✅ 確保人數正確
-          event.fDuration = event.fDuration ?? 1; // ✅ 設定行程天數
-          event.fPrice = event.registrationFee ?? 0; // ✅ 設定報名費
-          event.fEventImageUrl = event.imageBase64 ?? 'assets/images/noImage.jpg'; // ✅ 設定圖片
+          event.fLocation = event.fLocation ?? '未知地點';
+          event.fParticipant = event.fParticipant ?? 0;
+          event.fDuration = event.fDuration ?? 1;
+          event.fPrice = event.registrationFee ?? 0;
+          event.fEventImageUrl = event.imageBase64 ?? 'assets/images/noImage.jpg';
         });
 
         this.extractUniqueFilters();
@@ -71,7 +70,7 @@ export class EventComponent implements OnInit {
   /** 🏷️ 取得所有篩選選項 */
   extractUniqueFilters() {
     this.uniqueLocations = [...new Set(this.events.map(e => e.fLocation))];
-    this.uniqueDurations = [...new Set(this.events.map(e => e.fDuration || 1))]; // ✅ 確保天數有值
+    this.uniqueDurations = [...new Set(this.events.map(e => e.fDuration || 1))];
   }
 
   /** 🔍 依據篩選條件搜尋活動 */
@@ -80,7 +79,7 @@ export class EventComponent implements OnInit {
       (!this.filters.location || e.fLocation.toLowerCase().includes(this.filters.location.toLowerCase())) &&
       (!this.filters.departDate || new Date(e.fEventStartDate) >= new Date(this.filters.departDate)) &&
       (!this.filters.returnDate || new Date(e.fEventEndDate) <= new Date(this.filters.returnDate)) &&
-      (!this.filters.days || e.fDuration == +this.filters.days) // ✅ 確保天數篩選沒問題
+      (!this.filters.days || e.fDuration == +this.filters.days)
     );
 
     this.currentIndex = 0;
@@ -90,41 +89,27 @@ export class EventComponent implements OnInit {
   /** 📌 更新顯示的活動 (處理分頁) */
   updateDisplayedEvents() {
     this.displayedEvents = this.filteredEvents.slice(this.currentIndex, this.currentIndex + this.eventsPerPage);
+  }
 
-    console.log("📌 總活動數量:", this.events.length);
-    console.log("📌 篩選後的活動數量:", this.filteredEvents.length);
-    console.log("📌 當前顯示的活動數量:", this.displayedEvents.length);
-
-    // 🔍 檢查 eventsPerPage 是否正確
-    console.log("📌 每頁應顯示:", this.eventsPerPage);
-
-    // 🛠️ 如果只有 1 個活動，強制修正
-    if (this.displayedEvents.length < this.eventsPerPage && this.filteredEvents.length >= this.eventsPerPage) {
-      console.warn("🚨 顯示的活動數量異常，自動修正");
-      this.displayedEvents = this.filteredEvents.slice(0, this.eventsPerPage);
+  /** ▶️ 下一頁 */
+  nextEvent() {
+    if (this.currentIndex + this.eventsPerPage < this.filteredEvents.length) {
+      this.currentIndex += this.eventsPerPage;
+    } else {
+      this.currentIndex = 0;
     }
+    this.updateDisplayedEvents();
   }
 
-
-  /** ▶️ 下一頁 (支援循環播放) */
-nextEvent() {
-  if (this.currentIndex + this.eventsPerPage < this.filteredEvents.length) {
-    this.currentIndex += this.eventsPerPage;
-  } else {
-    this.currentIndex = 0; // 🔄 如果到最後則回到第一個
+  /** ◀️ 上一頁 */
+  prevEvent() {
+    if (this.currentIndex > 0) {
+      this.currentIndex -= this.eventsPerPage;
+    } else {
+      this.currentIndex = this.filteredEvents.length - this.eventsPerPage;
+    }
+    this.updateDisplayedEvents();
   }
-  this.updateDisplayedEvents();
-}
-
-/** ◀️ 上一頁 (支援循環播放) */
-prevEvent() {
-  if (this.currentIndex > 0) {
-    this.currentIndex -= this.eventsPerPage;
-  } else {
-    this.currentIndex = this.filteredEvents.length - this.eventsPerPage; // 🔄 回到最後一組
-  }
-  this.updateDisplayedEvents();
-}
 
   /** ⭐ 收藏/取消收藏活動 */
   toggleSaveEvent(event: any) {
@@ -153,6 +138,48 @@ prevEvent() {
   navigateToHome() {
     this.router.navigate(['/']);
   }
+
+   /** 📌 點擊圖片，觸發 input file */
+   triggerFileInput(eventId: number) {
+    const fileInput = document.querySelector(`#fileInput${eventId}`) as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  /** 📤 處理圖片選擇並上傳 */
+  onFileSelected(event: any, eventId: number) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.uploadImage(eventId, file);
+    }
+  }
+
+  /** 📤 上傳圖片到 API */
+  uploadImage(eventId: number, file: File) {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    this.http.post<{ imageUrl: string }>(`${this.apiUrl}/UploadEventImage/${eventId}`, formData)
+      .subscribe(
+        (res) => {
+          alert("圖片上傳成功！");
+
+          // ✅ 直接更新本地圖片
+          const eventIndex = this.events.findIndex(e => e.fEventId === eventId);
+          if (eventIndex !== -1) {
+            this.events[eventIndex].fEventImageUrl = res.imageUrl; // ✅ 更新圖片 URL
+          }
+
+          this.cdRef.detectChanges(); // ✅ 手動觸發變更偵測
+        },
+        (error) => {
+          console.error('🚨 圖片上傳失敗:', error);
+          alert('圖片上傳失敗，請稍後再試');
+        }
+      );
+  }
+
 }
 
 

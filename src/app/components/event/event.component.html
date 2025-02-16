@@ -11,7 +11,19 @@
       <div class="carousel-content row">
         <div class="col-lg-4 col-md-6 mb-4" *ngFor="let event of displayedEvents">
           <div class="package-item bg-white mb-2">
-            <img class="img-fluid event-image" [src]="event.fEventImageUrl || 'assets/images/noImage.jpg'" alt="活動圖片">
+
+            <!-- ✅ 點擊圖片上傳 -->
+            <img class="img-fluid event-image"
+                 [src]="event.fEventImageUrl || 'assets/images/noImage.jpg'"
+                 alt="活動圖片"
+                 (click)="triggerFileInput(event.fEventId)">
+
+            <!-- ✅ 隱藏的 input file，綁定 eventId -->
+            <input type="file"
+                   [id]="'fileInput' + event.fEventId"
+                   (change)="onFileSelected($event, event.fEventId)"
+                   style="display: none;">
+
             <div class="p-4">
               <div class="d-flex justify-content-between mb-3">
                 <small><i class="fa fa-map-marker-alt text-primary mr-2"></i>{{ event.fLocation }}</small>
@@ -23,19 +35,15 @@
               <p class="text-muted">{{ event.fEventDescription }}</p>
 
               <div class="border-top mt-4 pt-4">
-                <div class="d-flex justify-content-between">
-                  <h5 class="m-0">NT$ {{ event.fPrice | number }}</h5>
-                </div>
+                <h5 class="m-0">NT$ {{ event.fPrice | number }}</h5>
               </div>
 
-              <!-- ⭐ 收藏按鈕 -->
               <button class="btn btn-outline-warning mt-3" (click)="toggleSaveEvent(event)">
                 <i class="fa" [ngClass]="{'fa-star': isEventSaved(event.fEventId), 'fa-star-o': !isEventSaved(event.fEventId)}"></i>
                 收藏
               </button>
 
-              <!-- 🔍 查看詳情按鈕 -->
-              <a class="btn btn-primary mt-3" *ngIf="event.fEventId" [routerLink]="['/event/detail', event.fEventId]">查看詳情</a>
+              <a class="btn btn-primary mt-3" [routerLink]="['/event/detail', event.fEventId]">查看詳情</a>
             </div>
           </div>
         </div>
