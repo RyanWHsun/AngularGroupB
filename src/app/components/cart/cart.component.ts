@@ -64,8 +64,8 @@ export class CartComponent {
               html: true
             });
           }
-          this.isLoading = false;
         }, 300);
+        this.isLoading = false;
       },
       error: (error) => {
         console.error("獲取用戶資訊失敗", error);
@@ -87,6 +87,7 @@ export class CartComponent {
         this.carItems = items;
         //console.log(this.carItems);
         this.sortItems();
+        this.isLoading = false;
       }, error: (error) => {
         if (error.status === 404) {
           console.log(error);

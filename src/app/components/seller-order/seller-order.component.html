@@ -72,137 +72,86 @@
   <h1>我的銷售列表</h1>
 </div>
 
+<!-- Content -->
 <div class="container-fluid py-5 ">
-  <div class="container bg-light shadow p-3">
-    <!-- 訂單篩選 Tabs -->
-    <ul class="nav nav-tabs">
-      <li class="nav-item">
-        <a class="nav-link active" href="#">全部</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">待付款</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">待出貨</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">待收貨 (1)</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">已完成</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">取消</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">退貨/退款</a>
-      </li>
-    </ul>
-
-    <!-- 搜尋欄 -->
-    <div class="input-group mt-3">
-      <input type="text" class="form-control" placeholder="輸入訂單編號或商品名稱">
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary" type="button">搜尋</button>
-      </div>
-    </div>
-
-    <!-- 訂單列表 -->
-    <div class="mt-4" id="accordion">
-      <!-- 單筆訂單 (可收折) -->
-      <div class="card mb-3">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <span><strong>商店：</strong>安德瑪 Under Armour 官方旗艦店</span>
-          <span class="badge badge-warning">待收貨</span>
+  <div class="container bg-light shadow p-3 ">
+    <!--Navbar for Filtering -->
+    <!-- Navbar for Filtering -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm rounded mb-3">
+      <ul class="nav nav-tabs border-0">
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{'active-tab': selectedStatus === null}" (click)="filterOrders(null)">全部訂單</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{'active-tab': selectedStatus === 1}" (click)="filterOrders(1)">待出貨</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{'active-tab': selectedStatus === 2}" (click)="filterOrders(2)">待收貨</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{'active-tab': selectedStatus === 3}" (click)="filterOrders(3)">訂單完成</a>
+        </li>
+      </ul>
+      <form class="form-inline ml-auto">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="輸入訂單編號" name="searchText" [(ngModel)]="searchText">
+          <div class="input-group-append">
+            <button class="btn btn-success" (click)="searchOrders()"><i class="fa fa-search"></i> 搜尋</button>
+            <button class="btn btn-primary" (click)="resetSearch()"><i class="fa fa-sync"></i> 重置</button>
+          </div>
         </div>
+      </form>
+    </nav>
 
-        <!-- 訂單主體 -->
-        <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <span><strong>訂單金額：</strong><span class="text-danger">NT$600</span></span>
-            <button class="btn btn-outline-primary btn-sm" data-toggle="collapse" data-target="#order1">
-              展開/收合
+    <!-- table -->
+    <table class="table table-striped text-center align-middle table-hover table-custom">
+      <thead>
+        <tr class=" table-success ">
+          <th>訂單編號</th>
+          <th>訂單金額</th>
+          <th>待出貨</th>
+          <th>待收貨</th>
+          <th>訂單完成</th>
+          <th>訂購人</th>
+          <th>寄件地址</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of filteredOrders">
+          <td>#{{order.fOrderId}}</td>
+          <td>NT$&nbsp;{{order.fOrderAmount}}</td>
+          <td>
+            <span class="badge rounded-pill badge-lg"
+              [ngClass]="{'badge-success': getBadgeText(order, 1) === '進行中', 'badge-secondary': getBadgeText(order, 1) === '待接續'}">
+              {{ getBadgeText(order, 1) }}
+            </span>
+          </td>
+          <td>
+            <span class="badge rounded-pill badge-lg"
+              [ngClass]="{'badge-success': getBadgeText(order, 2) === '進行中', 'badge-secondary': getBadgeText(order, 2) === '待接續'}">
+              {{ getBadgeText(order, 2) }}
+            </span>
+          </td>
+          <td>
+            <span class="badge rounded-pill badge-lg"
+              [ngClass]="{'badge-success': getBadgeText(order, 3) === '進行中', 'badge-secondary': getBadgeText(order, 3) === '待接續'}">
+              {{ getBadgeText(order, 3) }}
+            </span>
+          </td>
+          <td>{{order.buyerName}}</td>
+          <td>{{order.fShipAddress}}</td>
+          <!-- 操作按鈕 -->
+          <td>
+            <!-- <button class="btn btn-primary btn-sm mr-2">
+              <i class="fa-solid fa-circle-info"></i>&nbsp;訂單明細
+            </button> -->
+            <button class="btn btn-warning btn-sm">
+              <i class="fa-solid fa-truck-fast"></i>&nbsp;寄件訊息
             </button>
-          </div>
-        </div>
-
-        <!-- 訂單內容 (可展開收折) -->
-        <div id="order1" class="collapse" data-parent="#accordion">
-          <div class="card-body border-top">
-            <!-- 商品1 -->
-            <div class="d-flex">
-              <img src="https://via.placeholder.com/80" class="img-thumbnail" alt="商品圖片">
-              <div class="ml-3">
-                <h5 class="card-title">【UNDER ARMOUR】UA慢跑鞋 男女多款任選</h5>
-                <p class="card-text">規格：女A款, US 8</p>
-                <p class="card-text">數量：x1</p>
-              </div>
-            </div>
-            <hr>
-            <!-- 商品2 -->
-            <div class="d-flex">
-              <img src="https://via.placeholder.com/80" class="img-thumbnail" alt="商品圖片">
-              <div class="ml-3">
-                <h5 class="card-title">【UNDER ARMOUR】UA運動短褲</h5>
-                <p class="card-text">規格：男款, M</p>
-                <p class="card-text">數量：x2</p>
-              </div>
-            </div>
-            <hr>
-            <div class="d-flex justify-content-between">
-              <button class="btn btn-outline-primary btn-sm">聯絡賣家</button>
-              <button class="btn btn-outline-secondary btn-sm">查看詳情</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 第二筆訂單 -->
-      <div class="card mb-3">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <span><strong>商店：</strong>蝦皮直營特選</span>
-          <span class="badge badge-success">已完成</span>
-        </div>
-
-        <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <span><strong>訂單金額：</strong><span class="text-danger">NT$305</span></span>
-            <button class="btn btn-outline-primary btn-sm" data-toggle="collapse" data-target="#order2">
-              展開/收合
-            </button>
-          </div>
-        </div>
-
-        <!-- 訂單內容 (可展開收折) -->
-        <div id="order2" class="collapse" data-parent="#accordion">
-          <div class="card-body border-top">
-            <!-- 商品1 -->
-            <div class="d-flex">
-              <img src="https://via.placeholder.com/80" class="img-thumbnail" alt="商品圖片">
-              <div class="ml-3">
-                <h5 class="card-title">【蝦皮特選】舒潔抽取衛生紙</h5>
-                <p class="card-text">規格：90抽x6包</p>
-                <p class="card-text">數量：x1</p>
-              </div>
-            </div>
-            <hr>
-            <!-- 商品2 -->
-            <div class="d-flex">
-              <img src="https://via.placeholder.com/80" class="img-thumbnail" alt="商品圖片">
-              <div class="ml-3">
-                <h5 class="card-title">【蝦皮特選】舒潔濕式衛生紙</h5>
-                <p class="card-text">規格：40抽x3包</p>
-                <p class="card-text">數量：x1</p>
-              </div>
-            </div>
-            <hr>
-            <div class="d-flex justify-content-between">
-              <button class="btn btn-outline-primary btn-sm">聯絡賣家</button>
-              <button class="btn btn-outline-secondary btn-sm">查看詳情</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

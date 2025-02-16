@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CheckoutRequest } from '../interfaces/shoppingCart';
 import { Observable } from 'rxjs';
-import { buyerOrderAll, OrderDetailsResponse } from '../interfaces/order';
+import { buyerOrderAll, OrderDetailsResponse, sellerOrderAll } from '../interfaces/order';
 
 @Injectable({
   providedIn: 'root'
@@ -23,9 +23,16 @@ export class OrderService {
     return this.http.get<buyerOrderAll[]>(url, { withCredentials: true })
   }
 
+  //買家訂單明細
   getOrderDetail(orderId: number): Observable<OrderDetailsResponse> {
     const url = `${this.baseAddress}api/TOrders/details/${orderId}`
     return this.http.get<OrderDetailsResponse>(url)
+  }
+
+  //賣家訂單
+  getSellerOrders(): Observable<sellerOrderAll[]> {
+    const url = `${this.baseAddress}api/TOrders/getSellerOrder`
+    return this.http.get<sellerOrderAll[]>(url, { withCredentials: true })
   }
 }
 

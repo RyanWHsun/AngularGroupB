@@ -38,7 +38,7 @@ import { AttractionTicketComponent } from './components/attraction-ticket/attrac
 import { AttractionAdminComponent } from './components/attraction-admin/attraction-admin.component';
 import { SellerOrderComponent } from './components/seller-order/seller-order.component';
 import { SellerCenterComponent } from './components/seller-center/seller-center.component';
-import { BuyerOrderComponent } from './buyer-order/buyer-order.component';
+import { BuyerOrderComponent } from './components/buyer-order/buyer-order.component';
 
 @NgModule({
   declarations: [

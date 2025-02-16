@@ -28,3 +28,14 @@ export interface OrderDetailsResponse {
   orderDetails: OrderDetail[];
   statusHistory: OrderStatusHistory[];
 }
+
+export interface sellerOrderAll {
+  fOrderId: number;
+  fOrderStatusId: number;
+  fStatusName: string;
+  fShipAddress: string;
+  fOrderDate: string;
+  fOrderAmount: number;
+  buyerName: string;
+  statusHistory: OrderStatusHistory[];
+}

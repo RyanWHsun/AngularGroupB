@@ -1,7 +1,7 @@
-import { OrderDetail, OrderDetailsResponse, OrderStatusHistory } from './../interfaces/order';
+import { OrderDetail, OrderDetailsResponse, OrderStatusHistory } from '../../interfaces/order';
 import { Component } from '@angular/core';
-import { buyerOrderAll } from '../interfaces/order';
-import { OrderService } from '../services/order.service';
+import { buyerOrderAll } from '../../interfaces/order';
+import { OrderService } from '../../services/order.service';
 
 @Component({
   selector: 'app-buyer-order',
@@ -81,7 +81,7 @@ export class BuyerOrderComponent {
     //呼叫API
     this.orderService.getOrderDetail(orderId).subscribe({
       next: (data) => {
-        console.log(data);
+        //console.log(data);
         this.OrderDetail = data;
         setTimeout(() => {
           this.isLoading = false;
