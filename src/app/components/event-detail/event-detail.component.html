@@ -12,20 +12,43 @@
 
     <!-- ✅ 文字內容區塊 -->
     <div class="event-info">
-      <p><strong>活動地點:</strong> {{ event.fLocation?.trim() ? event.fLocation : '未提供' }}</p>
-      <p><strong>開始時間:</strong> {{ event.fEventStartDate ? (event.fEventStartDate | date:'yyyy-MM-dd') : '未提供' }}</p>
-      <p><strong>結束時間:</strong> {{ event.fEventEndDate ? (event.fEventEndDate | date:'yyyy-MM-dd') : '未提供' }}</p>
-      <p><strong>報名人數:</strong> {{ event.fParticipant }} 人</p>
+      <p><strong>活動地點:</strong> {{ event.fLocation?.trim() ? event.fLocation : "未提供" }}</p>
+      <p><strong>開始時間:</strong> {{ event.fEventStartDate ? (event.fEventStartDate | date: "yyyy-MM-dd") : "未提供" }}</p>
+      <p><strong>結束時間:</strong> {{ event.fEventEndDate ? (event.fEventEndDate | date: "yyyy-MM-dd") : "未提供" }}</p>
+      <p><strong>報名人數:</strong> {{ event.fParticipant || 0 }} / {{ event.fMaxParticipants || '不限' }}</p>
+      <p><strong>活動費用:</strong> {{ event.fEventPrice ? ('NT$ ' + (event.fEventPrice | number: '1.0-0')) : '免費' }}</p>
       <p><strong>活動描述:</strong> {{ event.fEventDescription }}</p>
     </div>
 
-    <!-- ✅ 報名按鈕 -->
+    <!-- ✅ 報名按鈕（根據條件顯示不同狀態） -->
     <div class="event-registration">
-      <button class="btn btn-primary" (click)="registerForEvent()">
-        立即報名
+      <button class="btn btn-primary"
+        *ngIf="!isAuthenticated"
+        (click)="redirectToLogin()">
+        請先登入
+      </button>
+
+      <button class="btn btn-secondary"
+        *ngIf="isAuthenticated && isRegistered"
+        disabled>
+        ✅ 已報名
+      </button>
+
+      <button class="btn btn-danger"
+        *ngIf="isAuthenticated && !isRegistered && isFull"
+        disabled>
+        ⛔ 報名已滿
+      </button>
+
+      <button class="btn btn-success"
+        *ngIf="isAuthenticated && !isRegistered && !isFull"
+        (click)="registerForEvent()">
+        🎟 立即報名
       </button>
     </div>
   </div>
 </div>
+
+
 
 
