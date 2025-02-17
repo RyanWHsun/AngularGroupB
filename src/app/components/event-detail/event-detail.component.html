@@ -18,5 +18,14 @@
       <p><strong>報名人數:</strong> {{ event.fParticipant }} 人</p>
       <p><strong>活動描述:</strong> {{ event.fEventDescription }}</p>
     </div>
+
+    <!-- ✅ 報名按鈕 -->
+    <div class="event-registration">
+      <button class="btn btn-primary" (click)="registerForEvent()">
+        立即報名
+      </button>
+    </div>
   </div>
 </div>
+
+
