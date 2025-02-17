@@ -105,7 +105,7 @@
             </strong>{{data['fTitle']}}</p>
 
           <!-- Comment Section -->
-          <div *ngIf="activePostIds.includes(data['fPostId'])">
+          <div *ngIf="activePostIds.includes(data['fPostId'])" class="comment-container">
             <p><strong>{{userData[data['fUserId']].nickName}} </strong>{{data['fTitle']}}</p>
             <div [innerHTML]="contentData[data['fPostId']]">
             </div>
@@ -113,7 +113,12 @@
             <p *ngFor="let comments of commentDatas[data['fPostId']]"><strong>{{comments.fUserNickName}}
               </strong>{{comments.fContent}}</p>
           </div>
-          <input type="text" class="form-control" placeholder="留言......">
+          <div class="comment-input-box">
+            <input type="text" class="commentInput w-100 ml-2" placeholder="留言......"
+              [(ngModel)]="commentTexts[data['fPostId']]">
+            <a role="button" class="mr-2" (click)="submitComment(data['fPostId'])"><i
+                class="fa-solid fa-paper-plane"></i></a>
+          </div>
         </div>
 
       </div>

@@ -1,10 +1,7 @@
-import { Component, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { forkJoin } from 'rxjs';
 import { IPostComment } from 'src/app/interfaces/IPostComment';
-import { AuthService } from 'src/app/services/auth.service';
 import { SocialmediaService } from 'src/app/services/socialmedia.service';
-import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-socialmedia',
@@ -18,6 +15,7 @@ export class SocialmediaComponent {
   contentData: { [key: number]: SafeHtml } = {};
   commentDatas: { [postId: number]: IPostComment[] } = {};
   activePostIds: number[] = [];
+  commentTexts: { [postId: string]: string } = {};
   page: number = 1;
   pageSize: number = 3;
   loading: boolean = false;
@@ -60,6 +58,7 @@ export class SocialmediaComponent {
           this.loadImages(post['fPostId']);
           this.loadUserInfo(post['fUserId']);
           this.contentData[post['fPostId']] = this.sanitizer.bypassSecurityTrustHtml(post['fContent']) as SafeHtml;
+          this.commentTexts[post['fPostId']] = '';
         });
         // console.log(this.userData);
         this.page++;
@@ -81,6 +80,20 @@ export class SocialmediaComponent {
     } else {
       this.activePostIds.splice(index, 1);
     }
+  }
+  submitComment(postId: number) {
+    console.log(postId, this.commentTexts[postId], typeof (this.commentTexts[postId]));
+    this.socialmediaService.postArticleComment({
+      FPostId: postId,
+      FContent: this.commentTexts[postId]
+    }).subscribe(() => {
+      this.commentTexts[postId] = '';
+      if (this.activePostIds.includes(postId)) {
+        this.loadComments(postId);
+      } else {
+        this.toggleComments(postId);
+      }
+    })
   }
 
   onScroll() {

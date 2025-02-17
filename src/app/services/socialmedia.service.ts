@@ -35,4 +35,7 @@ export class SocialmediaService {
   getArticleComments(postId: number): Observable<any> {
     return this.httpClient.get(`https://localhost:7112/api/TPostComments/${postId}`)
   }
+  postArticleComment(commentData: any): Observable<any> {
+    return this.httpClient.post('https://localhost:7112/api/TPostComments', commentData, { withCredentials: true })
+  }
 }
