@@ -39,6 +39,7 @@ import { AttractionAdminComponent } from './components/attraction-admin/attracti
 import { SellerOrderComponent } from './components/seller-order/seller-order.component';
 import { SellerCenterComponent } from './components/seller-center/seller-center.component';
 import { BuyerOrderComponent } from './components/buyer-order/buyer-order.component';
+import { WalletComponent } from './components/wallet/wallet.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { BuyerOrderComponent } from './components/buyer-order/buyer-order.compon
     SellerOrderComponent,
     SellerCenterComponent,
     BuyerOrderComponent,
+    WalletComponent,
   ],
   imports: [
     BrowserModule,

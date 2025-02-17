@@ -151,7 +151,6 @@ export class BuyerOrderComponent {
       this.swal.showEasyError('找不到訂單資訊，請洽客服');
       return;
     }
-
     const extraInfo = order.fExtraInfo ? order.fExtraInfo : '賣家未提供寄件資訊';
     Swal.fire({
       title: "寄件資訊",
@@ -163,5 +162,66 @@ export class BuyerOrderComponent {
       confirmButtonColor: '#28a746',
       focusConfirm: false,
     });
+  }
+
+  addressUpdate(orderId: number, fShipAddress: string) {
+    Swal.fire({
+      title: '請填寫要更新的地址',
+      input: 'text',
+      inputPlaceholder: '請輸入地址及補充資訊',
+      inputValue: fShipAddress,
+      showCancelButton: true,
+      confirmButtonText: '確定',
+      confirmButtonColor: '#28a746',
+      cancelButtonText: '取消',
+      cancelButtonColor: '#b0b0b0',
+      inputValidator: (value) => {
+        if (value.length > 255) {
+          return '文字長度不可超過255字';
+        }
+        return null;
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const newAddress = result.value || ''; //允許空值
+        console.log(newAddress);
+        this.orderService.buyerUpdateAddress(orderId, newAddress).subscribe({
+          next: (response) => {
+            //console.log(response);
+            this.swal.showEasySuccess(response.message);
+            this.loadOrders();
+          }, error: (error) => {
+            console.log(error);
+            this.swal.showEasyError(error.error.message)
+          }
+        })
+      }
+    })
+  }
+
+  buyerCompleteOrder(orderId: number) {
+    Swal.fire({
+      title: '確定已收到商品且無誤?',
+      text: '一旦確認完成後，款項將撥給賣家',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '確定',
+      cancelButtonText: '取消',
+      confirmButtonColor: '#28a746',
+      cancelButtonColor: '#d33'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.orderService.completeOrder(orderId).subscribe({
+          next: (response) => {
+            this.swal.showEasySuccess(response.message);
+            this.loadOrders();
+          },
+          error: (error) => {
+            this.swal.showEasyError(error.error.message);
+            console.error('完成訂單失敗', error)
+          }
+        })
+      }
+    })
   }
 }

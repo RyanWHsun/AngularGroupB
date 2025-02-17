@@ -42,8 +42,25 @@ export class OrderService {
       'Content-Type': 'application/json'
     });
     const body = JSON.stringify({ extraInfo }); // 封裝成 JSON
-    console.log('傳送中', body);
+    //console.log('傳送中', body);
     return this.http.put<{ message: string }>(url, body, { headers })
+  }
+
+  //買家修改地址
+  buyerUpdateAddress(orderId: number, FShipAddress: string): Observable<{ message: string }> {
+    const url = `${this.baseAddress}api/TOrders/buyerUpdateAddress/${orderId}`
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    const body = JSON.stringify({ FShipAddress }); // 封裝成 JSON
+    //console.log('傳送中', body);
+    return this.http.put<{ message: string }>(url, body, { headers })
+  }
+
+  //買家完成訂單
+  completeOrder(orderId: number): Observable<{ message: string }> {
+    const url = `${this.baseAddress}api/TOrders/completeOrder/${orderId}`
+    return this.http.put<{ message: string }>(url, orderId)
   }
 }
 
