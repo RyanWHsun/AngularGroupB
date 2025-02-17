@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 
@@ -11,16 +11,30 @@ export class EventDetailComponent implements OnInit {
   eventId!: number;
   event: any;
   isAuthenticated = false; // ✅ 是否已登入
-  isRegistered = false; // ✅ 是否已報名
-  isFull = false; // ✅ 是否已滿
-  apiUrl = "https://localhost:7112/api/EventRegistration";
+  apiUrl = "https://localhost:7112/api/TShoppingCarts/addProductToCart"; // ✅ 加入購物車 API
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.eventId = Number(this.route.snapshot.paramMap.get("id"));
-    this.isAuthenticated = !!localStorage.getItem("userId"); // ✅ 確認是否登入
+
+    // ✅ 確保登入狀態正確
+    this.checkAuthentication();
+    window.addEventListener("storage", () => this.checkAuthentication());
+
+    // ✅ 載入活動詳細資訊
     this.loadEventDetail();
+  }
+
+  /** ✅ 確認使用者是否登入 */
+  checkAuthentication() {
+    this.isAuthenticated = !!localStorage.getItem("userId");
+    this.cdr.detectChanges(); // ✅ 確保 UI 變更
   }
 
   /** ✅ 載入活動詳細資訊 */
@@ -29,18 +43,12 @@ export class EventDetailComponent implements OnInit {
       (data) => {
         this.event = data;
 
-        // ✅ 確保圖片是完整 URL 或 Base64
+        // ✅ 確保圖片顯示
         if (this.event.imageBase64?.startsWith("data:image")) {
           this.event.fEventImageUrl = this.event.imageBase64;
         } else {
           this.event.fEventImageUrl = this.event.imageBase64 || "assets/images/noImage.jpg";
         }
-
-        // ✅ 檢查是否已報名
-        this.isRegistered = this.event.userHasRegistered || false;
-
-        // ✅ 檢查是否額滿
-        this.isFull = this.event.fMaxParticipants && this.event.fParticipant >= this.event.fMaxParticipants;
       },
       (error) => {
         console.error("載入活動失敗:", error);
@@ -48,7 +56,7 @@ export class EventDetailComponent implements OnInit {
     );
   }
 
-  /** ✅ 活動報名 */
+  /** ✅ 點擊「我要報名」，將活動加入購物車 */
   registerForEvent() {
     if (!this.isAuthenticated) {
       alert("請先登入才能報名活動！");
@@ -56,22 +64,20 @@ export class EventDetailComponent implements OnInit {
       return;
     }
 
-    const registrationData = {
-      fEventId: this.eventId,
-      fUserId: localStorage.getItem("userId"),
-      fRegistrationDate: new Date().toISOString(),
-      fRegistrationStatus: "Pending"
+    const cartData = {
+      fItemType: "eventFee", // ✅ 活動類型
+      fItemId: this.eventId,  // ✅ 活動 ID
+      fQuantity: 1,          // ✅ 預設數量 1
+      fPrice: this.event.fEventPrice || 0 // ✅ 如果免費，則設為 0
     };
 
-    this.http.post(this.apiUrl, registrationData, { withCredentials: true }).subscribe(
+    this.http.post(this.apiUrl, cartData, { withCredentials: true }).subscribe(
       () => {
-        alert("🎉 報名成功！");
-        this.isRegistered = true; // ✅ 更新狀態
-        this.event.fParticipant += 1; // ✅ 增加報名人數
-        this.isFull = this.event.fMaxParticipants && this.event.fParticipant >= this.event.fMaxParticipants;
+        alert("🎉 活動已加入購物車！");
+        this.router.navigate(["/cart"]); // ✅ 直接導向購物車頁面
       },
       (error) => {
-        alert("⚠ 報名失敗：" + error.message);
+        alert("⚠ 加入購物車失敗：" + error.message);
       }
     );
   }
@@ -81,6 +87,9 @@ export class EventDetailComponent implements OnInit {
     this.router.navigate(["/login"]);
   }
 }
+
+
+
 
 
 

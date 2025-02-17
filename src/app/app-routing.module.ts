@@ -6,7 +6,6 @@ import { AttractionComponent } from './components/attraction/attraction.componen
 import { EventComponent } from './components/event/event.component';
 import { EventDetailComponent } from './components/event-detail/event-detail.component'; // ✅ 修正為頁面
 import { EventManagementComponent } from './components/event-management/event-management.component';
-import { EventRegistrationComponent } from './pages/event-registration/event-registration.component'; // ✅ 確保這行存在
 import { ProductsComponent } from './components/products/products.component';
 import { SocialmediaComponent } from './components/socialmedia/socialmedia.component';
 import { UserComponent } from './components/user/user.component';
@@ -51,11 +50,7 @@ const routes: Routes = [
   },
   {
     path: 'events',
-    component: EventManagementComponent
-  }, // ✅ 讓 /events 直接對應到管理頁面
-  {
-    path: 'event-registration',
-    component: EventRegistrationComponent // ✅ 改成活動報名
+    component: EventManagementComponent // ✅ 讓 /events 直接對應到管理頁面
   },
   {
     path: 'event',
@@ -68,7 +63,8 @@ const routes: Routes = [
       {
         path: 'detail/:id',
         component: EventDetailComponent
-      }]
+      }
+    ]
   },
   {
     path: 'products',
