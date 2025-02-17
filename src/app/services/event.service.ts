@@ -23,13 +23,23 @@ export class EventService {
     return this.http.get<Event[]>(this.apiUrl);
   }
 
-  /** ✅ 新增活動 */
-  createEvent(eventData: FormData): Observable<any> {
-    return this.http.post(`${this.apiUrl}`, eventData);
+  /** ✅ 新增活動 (傳送 JSON，而非 FormData) */
+  createEvent(eventData: any): Observable<any> {
+    const formData = new FormData();
+    formData.append('Name', eventData.fEventName);
+    formData.append('Description', eventData.fEventDescription);
+    formData.append('StartDate', eventData.fEventStartDate);
+    formData.append('EndDate', eventData.fEventEndDate);
+
+    if (eventData.imageFile) {
+      formData.append('Image', eventData.imageFile);
+    }
+
+    return this.http.post(`${this.apiUrl}`, formData);
   }
 
-  /** ✅ 更新活動 */
-  updateEvent(eventId: number, eventData: FormData): Observable<any> {
+  /** ✅ 更新活動 (傳送 JSON) */
+  updateEvent(eventId: number, eventData: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${eventId}`, eventData);
   }
 

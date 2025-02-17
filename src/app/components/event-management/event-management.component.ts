@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { EventService, Event } from '../../services/event.service';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-event-management',
@@ -9,9 +8,16 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EventManagementComponent implements OnInit {
   events: Event[] = [];
-  apiUrl = 'http://localhost:7112/api/EventManagement';
+  selectedImageFile: File | null = null;
 
-  constructor(private eventService: EventService, private http: HttpClient) {}
+  newEvent: any = {
+    fEventName: '',
+    fEventDescription: '',
+    fEventStartDate: '',
+    fEventEndDate: ''
+  };
+
+  constructor(private eventService: EventService) {}
 
   ngOnInit() {
     this.loadEvents();
@@ -28,17 +34,70 @@ export class EventManagementComponent implements OnInit {
       }
     );
   }
-
-  /** ✅ 開啟新增活動表單 */
-  openCreateEventDialog() {
-    // 🚀 這裡你可以導向新增頁面，或開啟一個彈出視窗
-    alert('開啟新增活動表單');
+  openEditEventDialog(event: Event) {
+    // 這裡可以開啟彈窗或導向編輯頁面
+    console.log('編輯活動:', event);
+    alert(`編輯活動: ${event.fEventName}`);
   }
 
-  /** ✅ 開啟編輯活動表單 */
-  openEditEventDialog(event: Event) {
-    // 🚀 這裡可以導向編輯頁面，或開啟彈出視窗
-    alert(`編輯活動: ${event.fEventName}`);
+
+  /** ✅ 當使用者選擇圖片時觸發 */
+  onFileSelected(event: any) {
+    if (event.target.files.length > 0) {
+      this.selectedImageFile = event.target.files[0];
+    }
+  }
+
+  /** ✅ 新增活動 */
+  createNewEvent() {
+    if (!this.newEvent.fEventName || !this.newEvent.fEventStartDate || !this.newEvent.fEventEndDate) {
+      alert('請填寫完整的活動資訊！');
+      return;
+    }
+
+    this.eventService.createEvent(this.newEvent).subscribe(
+      (response) => {
+        console.log('活動新增成功:', response);
+        alert('活動已成功新增！');
+
+        // 如果有圖片，則上傳
+        if (this.selectedImageFile) {
+          this.eventService.uploadEventImage(response.eventId, this.selectedImageFile).subscribe(
+            (imageResponse) => {
+              console.log('圖片上傳成功:', imageResponse);
+            },
+            (error) => {
+              console.error('圖片上傳失敗:', error);
+            }
+          );
+        }
+
+        this.loadEvents(); // 重新載入活動
+      },
+      (error) => {
+        console.error('🚨 新增活動失敗:', error);
+        alert('新增活動失敗，請檢查 API 是否正常');
+      }
+    );
+  }
+
+  /** ✅ 修改活動 */
+  updateEvent(eventId: number) {
+    const updatedEvent = this.events.find(e => e.fEventId === eventId);
+    if (!updatedEvent) {
+      alert('找不到該活動');
+      return;
+    }
+
+    this.eventService.updateEvent(eventId, updatedEvent).subscribe(
+      () => {
+        alert('活動更新成功！');
+        this.loadEvents();
+      },
+      (error) => {
+        console.error('🚨 更新活動失敗:', error);
+      }
+    );
   }
 
   /** ❌ 刪除活動 */
@@ -56,6 +115,8 @@ export class EventManagementComponent implements OnInit {
     );
   }
 }
+
+
 
 
 
