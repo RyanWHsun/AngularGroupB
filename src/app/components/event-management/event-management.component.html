@@ -1,47 +1,32 @@
-<div *ngIf="isLoading" class="text-center">
-  <i class="fa fa-spinner fa-spin fa-3x"></i>
-</div>
+<div class="container">
+  <h2>活動管理</h2>
 
-<!-- ❗ 確保 displayedEvents 有資料才顯示表格 -->
-<div *ngIf="displayedEvents.length > 0; else noData">
-  <table>
+  <!-- 🚀 新增活動按鈕 -->
+  <button class="btn btn-primary mb-3" (click)="openCreateEventDialog()">新增活動</button>
+
+  <!-- 🔹 活動列表 -->
+  <table class="table">
     <thead>
       <tr>
-        <th>名稱</th>
-        <th>地點</th>
-        <th>開始時間</th>
-        <th>結束時間</th>
-        <th>行程天數</th>
-        <th>參加人數</th>
-        <th>報名費</th>
-        <th>圖片</th>
+        <th>活動名稱</th>
+        <th>開始日期</th>
+        <th>結束日期</th>
         <th>操作</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let event of displayedEvents">
+      <tr *ngFor="let event of events">
         <td>{{ event.fEventName }}</td>
-        <td>{{ event.fLocation }}</td>
-        <td>{{ event.fEventStartDate | date:'yyyy/MM/dd' }}</td>
-        <td>{{ event.fEventEndDate | date:'yyyy/MM/dd' }}</td>
-        <td>{{ event.fDuration }} 天</td>
-        <td>{{ event.fParticipant }} 人</td>
-        <td>NT$ {{ event.fPrice | number }}</td>
+        <td>{{ event.fEventStartDate | date: 'yyyy-MM-dd' }}</td>
+        <td>{{ event.fEventEndDate | date: 'yyyy-MM-dd' }}</td>
         <td>
-          <img [src]="event.fEventImageUrl" alt="活動圖片" width="100">
-        </td>
-        <td>
-          <button class="btn btn-primary" (click)="editEvent(event)">編輯</button>
+          <button class="btn btn-warning me-2" (click)="openEditEventDialog(event)">編輯</button>
           <button class="btn btn-danger" (click)="deleteEvent(event.fEventId)">刪除</button>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
-
-<ng-template #noData>
-  <p class="text-center text-muted">目前沒有可顯示的活動</p>
-</ng-template>
 
 
 

@@ -50,7 +50,7 @@ const routes: Routes = [
   },
   {
     path: 'events',
-    component: EventManagementComponent // ✅ 讓 /events 直接對應到管理頁面
+    component: EventManagementComponent // ✅ 讓 /events 對應到活動管理頁面
   },
   {
     path: 'event',
