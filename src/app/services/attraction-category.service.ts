@@ -6,12 +6,13 @@ import { IAttractionCategory } from '../interfaces/IAttractionCategory';
   providedIn: 'root'
 })
 export class AttractionCategoryService {
+  baseUrl="https://localhost:7112/api/TAttractionCategories";
   constructor(private client:HttpClient) { }
   getAttractionCategories(){
-    return this.client.get<IAttractionCategory[]>("https://localhost:7112/api/TAttractionCategories");
+    return this.client.get<IAttractionCategory[]>(`${this.baseUrl}`);
   }
 
   getAttractionCategoryById(id:number){
-    return this.client.get<IAttractionCategory>(`https://localhost:7112/api/TAttractionCategories/${id}`);
+    return this.client.get<IAttractionCategory>(`${this.baseUrl}/${id}`);
   }
 }

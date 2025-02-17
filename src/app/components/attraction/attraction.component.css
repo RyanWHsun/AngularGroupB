@@ -152,19 +152,106 @@
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+/* 評論標題與按鈕排版 */
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 /* 評論標題 (比景點名稱小，但比其他標題大) */
 .comment-title {
   font-size: 1.5rem;
   font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* 按鈕樣式 */
+.comment-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-sort {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-toggle {
+  background-color: #28a745;
+  color: white;
+}
+
+.comment-line {
+  width: 100%;
+  height: 2px;
+  background-color: #ccc; /* 灰色底線 */
+  margin-bottom: 15px;
+}
+
+/* 評論區樣式 */
+.comment-container {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* 用戶頭像 */
+.comment-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* 評論詳細內容 */
+.comment-details {
+  flex: 1;
+}
+
+/* 用戶名稱與時間 */
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+/* 用戶名稱 */
+.comment-username {
+  color: rgb(0, 137, 172);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* 創建日期 */
+.comment-date {
+  color: gray;
+  font-size: 10px;
 }
 
 /* 評論內容 */
-.comment-content {
+.comment-text {
+  color: black;
+  font-size: 12px;
+}
+
+/* 評論內容 */
+/* .comment-content {
   padding: 10px;
   background: #f8f9fa;
   border-radius: 5px;
   margin-top: 5px;
-}
+} */
 /* 修改 */
 
 .btn-detail, .btn-delete {

@@ -109,7 +109,14 @@
         />
         <div class="card-body">
           <h5 class="card-title">{{ attraction.fAttractionName }}</h5>
-          <div class="tags">{{ attraction.fDescription }}</div>
+          <!-- 景點 tags -->
+          <div class="tags">
+            <ng-container *ngFor="let tag of attractionTags">
+              <span *ngIf="attraction.fAttractionId === tag.fAttractionId">
+                #{{ tag.fTagName }}
+              </span>
+            </ng-container>
+          </div>
           <button
             (click)="clickShowDetail(attraction.fAttractionId!)"
             data-toggle="modal"
@@ -229,9 +236,46 @@
 
           <!-- 評論 -->
           <div class="comment-section">
-            <h3 class="comment-title">評論</h3>
-            <div *ngFor="let comment of attractionComment">
-              <div class="comment-content">{{ comment.fComment }}</div>
+            <div class="comment-header">
+              <h3 class="comment-title">評論</h3>
+              <div class="comment-buttons">
+                <button
+                  (click)="toggleSort(attraction.fAttractionId!)"
+                  class="btn btn-sort"
+                >
+                  {{ commentComponent.sortButtonText }}
+                </button>
+                <button
+                  (click)="toggleCollapse(attraction.fAttractionId!)"
+                  class="btn btn-toggle"
+                >
+                  {{ commentComponent.collapseButtonText }}
+                </button>
+              </div>
+            </div>
+            <div class="comment-line"></div>
+            <!-- 灰色底線 -->
+            <div
+              *ngFor="let comment of attractionComment"
+              class="comment-container"
+            >
+              <img
+                src="assets/images/head001.jpg"
+                class="comment-img"
+                alt="user image"
+              />
+              <!-- <img
+                [src]="comment.userImage || 'assets/images/default-user.png'"
+                class="comment-img"
+                alt="user image"
+              /> -->
+              <div class="comment-details">
+                <div class="comment-header">
+                  <span class="comment-username">{{ comment.fUserName }}</span>
+                  <span class="comment-date">{{ comment.fCreatedDate }}</span>
+                </div>
+                <div class="comment-text">{{ comment.fComment }}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -270,56 +314,3 @@
     </li>
   </ul>
 </nav>
-
-<!-- 要註解掉的部分 -->
-<div class="container mt-4">
-  <div class="row">
-    <!-- Card -->
-    <div class="col-md-3">
-      <div class="card">
-        <div class="views">1378518 <i class="fas fa-eye"></i></div>
-        <img src="shilin.jpg" class="card-img-top" alt="士林夜市" />
-        <div class="card-body">
-          <h5 class="card-title">士林夜市</h5>
-          <div class="tags">
-            <span>#打卡熱點</span>
-            <span>#非吃不可</span>
-            <span>#逛夜市</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Repeat Cards for Other Locations -->
-    <div class="col-md-3">
-      <div class="card">
-        <div class="views">1067830 <i class="fas fa-eye"></i></div>
-        <img src="yangmingshan.jpg" class="card-img-top" alt="陽明山國家公園" />
-        <div class="card-body">
-          <h5 class="card-title">陽明山國家公園</h5>
-          <div class="tags">
-            <span>#賞花</span>
-            <span>#生態體驗</span>
-            <span>#登山步道</span>
-            <span>#國家公園</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- More cards -->
-    <div class="col-md-3">
-      <div class="card">
-        <div class="views">957171 <i class="fas fa-eye"></i></div>
-        <img src="longshan.jpg" class="card-img-top" alt="臺北龍山寺" />
-        <div class="card-body">
-          <h5 class="card-title">臺北龍山寺</h5>
-          <div class="tags">
-            <span>#寺廟祈福</span>
-            <span>#打卡熱點</span>
-            <span>#古蹟巡禮</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Add more cards as needed -->
-  </div>
-</div>

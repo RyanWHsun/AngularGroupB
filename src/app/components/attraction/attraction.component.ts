@@ -1,10 +1,11 @@
 /// <reference types="google.maps" />
 import { AttractionCommentService } from './../../services/attraction-comment.service';
 import { AttractionImageService } from './../../services/attraction-image.service';
-import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ElementRef, OnInit } from '@angular/core';
 import { IAttraction } from 'src/app/interfaces/IAttraction';
 import { AttractionService } from 'src/app/services/attraction.service';
 import * as $ from 'jquery';
+import * as bootstrap from 'bootstrap';
 import { IAttractionCategory } from 'src/app/interfaces/IAttractionCategory';
 import { AttractionCategoryService } from 'src/app/services/attraction-category.service';
 import { IAttractionImage } from 'src/app/interfaces/IAttractionImage';
@@ -24,6 +25,8 @@ import { IAttractionComment } from 'src/app/interfaces/IAttractionComment';
 import { GoogleMapAPIService } from 'src/app/services/google-map-api.service';
 import { AttractionViewCookieService } from 'src/app/services/attraction-view-cookie.service';
 import { IAttractionViewCount } from 'src/app/interfaces/IAttractionViewCount';
+import { IAttractionTag } from 'src/app/interfaces/IAttractionTag';
+import { AttractionTagService } from 'src/app/services/attraction-tag.service';
 
 // 宣告全域變數 google
 // 在 Google Maps JavaScript API 中，google 這個物件是由 API 動態載入的，而不是直接在 TypeScript 環境中定義的。
@@ -72,6 +75,7 @@ export class AttractionComponent {
   imageSrc: string[] = [];
   attractionComment: IAttractionComment[] = [];
   viewRecords: IAttractionViewCount[] = []; // 景點觀看次數的紀錄
+  attractionTags: IAttractionTag[] = [];
 
   Page = {
     size: 0,
@@ -85,14 +89,66 @@ export class AttractionComponent {
     geocodeResult: null,
   };
 
+  commentComponent = {
+    isDescending: true,
+    isCollapsed: true,
+    sortButtonText: '從舊到新',
+    collapseButtonText: '顯示',
+  };
+
   constructor(
     private attractionService: AttractionService,
     private attractionCategoryService: AttractionCategoryService,
     private attractionImageService: AttractionImageService,
     private attractionCommentService: AttractionCommentService,
     private googleMapsService: GoogleMapAPIService,
-    private attractionViewCookieService: AttractionViewCookieService
+    private attractionViewCookieService: AttractionViewCookieService,
+    private attractionTagService: AttractionTagService
   ) {}
+
+  toggleSort(id: number) {
+    console.log('toggleSort');
+    this.commentComponent.isDescending = !this.commentComponent.isDescending;
+    this.commentComponent.sortButtonText = this.commentComponent.isDescending
+      ? '從舊到新'
+      : '從新到舊';
+    this.showCommentsByCondition$(
+      id,
+      5,
+      this.commentComponent.isDescending,
+      this.commentComponent.isCollapsed
+    ).subscribe(); // Observable 需要 subscribe() 才會執行
+  }
+
+  toggleCollapse(id: number) {
+    console.log('collapse');
+    this.commentComponent.isCollapsed = !this.commentComponent.isCollapsed;
+    this.commentComponent.collapseButtonText = this.commentComponent.isCollapsed
+      ? '顯示'
+      : '收合';
+    this.showCommentsByCondition$(
+      id,
+      5,
+      this.commentComponent.isDescending,
+      this.commentComponent.isCollapsed
+    ).subscribe(); // Observable 需要 subscribe() 才會執行
+  }
+
+  // 設定各景點的標籤，id 是景點 ID
+  showAttractionTag$(): Observable<void> {
+    this.attractionTags = []; // 清空
+
+    const request = this.partialAttractions.map((attraction) =>
+      this.attractionTagService.getAttractionTagsById(attraction.fAttractionId!)
+    );
+
+    return forkJoin(request).pipe(
+      // tags 原本是 IAttractionTag[][]（二維陣列）。
+      // .flat() 會將它攤平成 IAttractionTag[]（一維陣列），符合
+      tap((tags) => (this.attractionTags = tags.flat())),
+      map(() => void 0)
+    );
+  }
 
   // carousel
   setCarouselImages$(attractionId: number): Observable<void> {
@@ -103,7 +159,7 @@ export class AttractionComponent {
       this.attractionImageService
         .getAttractionImageById(attractionId)
         .subscribe((images) => {
-           // no image
+          // no image
           if (images.length === 0) {
             // 建立 carousel-item 元素
             const $carouselItem = $(`
@@ -111,19 +167,19 @@ export class AttractionComponent {
                 <img src="assets/images/noImage.jpg" class="d-block w-100" alt="景點圖片" style="height: 300px">
               </div>
             `);
-            $carouselInner.append($carouselItem);  // 加入到 carousel-inner
+            $carouselInner.append($carouselItem); // 加入到 carousel-inner
           } else {
-             // 遍歷圖片陣列並生成 carousel-item
-          // $.each 是 jQuery 提供的迴圈方法，用來遍歷 images 陣列。
-          // images 是一個陣列，其中每個元素 image 可能包含圖片的 URL。
-          // index 是陣列中當前元素的索引。
-          // image 是陣列中當前的圖片物件。
+            // 遍歷圖片陣列並生成 carousel-item
+            // $.each 是 jQuery 提供的迴圈方法，用來遍歷 images 陣列。
+            // images 是一個陣列，其中每個元素 image 可能包含圖片的 URL。
+            // index 是陣列中當前元素的索引。
+            // image 是陣列中當前的圖片物件。
             $.each(images, (index, image) => {
               const isActive = index === 0 ? 'active' : ''; // 第一張圖片設為 active
-               // 如果 fImage 是 Base64 格式的圖片資料，應確保它有正確的 MIME 類型前綴
-            // <img src="data:image/jpeg;base64,{Base64 字串}">
+              // 如果 fImage 是 Base64 格式的圖片資料，應確保它有正確的 MIME 類型前綴
+              // <img src="data:image/jpeg;base64,{Base64 字串}">
               let imageSrc = `data:image/jpeg;base64,${image.fImage}`;
-               // 建立 carousel-item 元素
+              // 建立 carousel-item 元素
               const $carouselItem = $(`
                 <div class="carousel-item ${isActive}" data-bs-interval="2000">
                   <img src="${imageSrc}" class="d-block w-100" alt="景點圖片" style="height: 300px">
@@ -136,47 +192,6 @@ export class AttractionComponent {
           observer.complete();
         });
     });
-
-
-
-    // //清空原有的 carousel-inner 內容
-    // const $carouselInner = $('#displayImageContainer');
-    // $carouselInner.empty();
-
-    // this.attractionImageService
-    //   .getAttractionImageById(attractionId)
-    //   .subscribe((images) => {
-    //     //console.log(images);
-    //     // no image
-    //     if (images.length === 0) {
-    //       // 建立 carousel-item 元素
-    //       const $carouselItem = $(
-    //         `<div class="carousel-item active" data-bs-interval="2000"><img src="assets/images/noImage.jpg" class="d-block w-100" alt="景點圖片" style="height: 300px"></div>`
-    //       );
-    //       // 加入到 carousel-inner
-    //       $carouselInner.append($carouselItem);
-    //       return;
-    //     } else {
-    //       // 遍歷圖片陣列並生成 carousel-item
-    //       // $.each 是 jQuery 提供的迴圈方法，用來遍歷 images 陣列。
-    //       // images 是一個陣列，其中每個元素 image 可能包含圖片的 URL。
-    //       // index 是陣列中當前元素的索引。
-    //       // image 是陣列中當前的圖片物件。
-    //       $.each(images, (index, image) => {
-    //         const isActive = index === 0 ? 'active' : ''; // 第一張圖片設為 active
-    //         // 如果 fImage 是 Base64 格式的圖片資料，應確保它有正確的 MIME 類型前綴
-    //         // <img src="data:image/jpeg;base64,{Base64 字串}">
-    //         let imageSrc = `data:image/jpeg;base64,${image.fImage}`;
-    //         // 建立 carousel-item 元素
-    //         const $carouselItem = $(
-    //           `<div class="carousel-item ${isActive}" data-bs-interval="2000"><img src="${imageSrc}" class="d-block w-100" alt="景點圖片" style="height: 300px"></div>`
-    //         );
-
-    //         // 加入到 carousel-inner
-    //         $carouselInner.append($carouselItem);
-    //       });
-    //     }
-    //   });
   }
 
   // 顯示景點觀看次數
@@ -232,40 +247,6 @@ export class AttractionComponent {
       );
     });
   }
-
-  // 載入 Google Maps API
-  // loadGoogleMaps$(): Observable<void> {
-  //   return new Observable((observer) => {
-  //     // 如果 `window.google` 和 `window.google.maps` 已經存在，代表 Google Maps API 已載入，直接執行 this.loadMap() 來初始化地圖
-  //     if (window.google && window.google.maps) {
-  //       console.log('Google Maps 已載入，直接初始化地圖');
-  //       this.loadMap();
-  //       observer.next(); // 發送成功訊號，告訴訂閱者可以繼續
-  //       observer.complete(); // 標記這個 Observable 已結束，確保它不會無限運行
-  //       return;
-  //     }
-
-  //     // 設定 `initMap` 回呼函式，當 Google Maps 載入後執行 `loadMap`
-  //     (window as any).initMap = () => {
-  //       this.loadMap();
-  //       observer.next();
-  //       observer.complete();
-  //     };
-
-  //     // 建立 `<script>` 並動態載入 Google Maps API
-  //     const script = document.createElement('script');
-  //     // callback=initMap 告訴 Google Maps API 載入完成後要執行 window.initMap()。
-  //     script.src = `https://maps.googleapis.com/maps/api/js?key=${this.googleMap.googleMapApiKey}&callback=initMap`;
-  //     script.async = true; // 讓 API 非同步載入，不會阻塞頁面
-  //     script.defer = true; // 讓 API 等到 HTML 解析完成後才執行，避免 document.getElementById('map') 這類操作找不到元素。
-  //     script.onerror = () => {
-  //       console.error('Google Maps API 載入失敗');
-  //       observer.error('Google Maps API 載入失敗');
-  //     };
-
-  //     document.head.appendChild(script); // 動態新增一個 <script> 標籤到 <head>，開始下載並執行 Google Maps API。
-  //   });
-  // }
 
   // 載入 Google Maps API
   loadGoogleMaps$(): Observable<void> {
@@ -341,25 +322,25 @@ export class AttractionComponent {
       });
   }
 
-  // searchAddress() {
-  //   this.googleMapsService
-  //     .getGeocodeAddress(this.googleMap.address)
-  //     .subscribe((result) => {
-  //       this.googleMap.geocodeResult = result;
-  //       console.log(result);
-  //     });
-  // }
-
-  //showImagesByAttractionId$():Observable<void> {}
-
   // 根據 attractionId 顯示評論
-  showCommentsByAttractionId$(id: number): Observable<void> {
-    return this.attractionCommentService.getAttractionCommentById(id).pipe(
-      tap((data) => {
-        this.attractionComment = Array.isArray(data) ? data : [data];
-      }),
-      map(() => void 0)
-    );
+  showCommentsByCondition$(
+    id: number,
+    count: number,
+    isDescending: boolean,
+    isCollapsed: boolean
+  ): Observable<void> {
+    console.log('showCommentsByCondition')
+    //console.log(`id: ${id} count: ${count} isDescending: ${isDescending} isCollapsed: ${isCollapsed}`)
+    return this.attractionCommentService
+      .getAttractionCommentByCondition(id, count, isDescending, isCollapsed)
+      .pipe(
+        tap((data) => {
+          this.attractionComment = data;
+          console.log(this.attractionComment)
+          //this.attractionComment = Array.isArray(data) ? data : [data];
+        }),
+        map(() => void 0)
+      );
   }
 
   // 根據 attractionId 顯示景點資料
@@ -379,7 +360,14 @@ export class AttractionComponent {
   clickShowDetail(id: number) {
     this.showAttractionById$(id)
       .pipe(
-        switchMap(() => this.showCommentsByAttractionId$(id)),
+        switchMap(() =>
+          this.showCommentsByCondition$(
+            id,
+            5,
+            this.commentComponent.isDescending,
+            this.commentComponent.isCollapsed
+          )
+        ),
         switchMap(() => this.loadGoogleMaps$()),
         switchMap(() => this.addViewCount$(id)),
         switchMap(() => this.showAttractionViewCount$()),
@@ -396,7 +384,8 @@ export class AttractionComponent {
     this.showPartialAttractions$(this.Page.selectedPageIndex)
       .pipe(
         switchMap(() => this.showPartialImages$()),
-        switchMap(() => this.showAttractionViewCount$())
+        switchMap(() => this.showAttractionViewCount$()),
+        switchMap(() => this.showAttractionTag$())
       )
       .subscribe();
     this.scrollToTop();
@@ -409,7 +398,8 @@ export class AttractionComponent {
     this.showPartialAttractions$(this.Page.selectedPageIndex)
       .pipe(
         switchMap(() => this.showPartialImages$()),
-        switchMap(() => this.showAttractionViewCount$())
+        switchMap(() => this.showAttractionViewCount$()),
+        switchMap(() => this.showAttractionTag$())
       )
       .subscribe();
     this.scrollToTop();
@@ -421,7 +411,8 @@ export class AttractionComponent {
     this.showPartialAttractions$(this.Page.selectedPageIndex)
       .pipe(
         switchMap(() => this.showPartialImages$()),
-        switchMap(() => this.showAttractionViewCount$())
+        switchMap(() => this.showAttractionViewCount$()),
+        switchMap(() => this.showAttractionTag$())
       )
       .subscribe();
     this.scrollToTop();
@@ -532,8 +523,27 @@ export class AttractionComponent {
         // 返回新的 Observable，讓它接著執行。
         switchMap(() => this.initPage$()), // 等待 initPartialAttractions 完成後再執行 initPage
         switchMap(() => this.showPartialImages$()), // 等待 initPage 完成後再執行 showPartialImages
-        switchMap(() => this.showAttractionViewCount$())
+        switchMap(() => this.showAttractionViewCount$()),
+        switchMap(() => this.showAttractionTag$())
       )
       .subscribe();
+  }
+
+  ngAfterViewInit() {
+    console.log('jQuery:', typeof $ !== 'undefined' ? '已載入' : '未載入');
+console.log('Bootstrap:', typeof $.fn.modal !== 'undefined' ? '已載入' : '未載入');
+
+    const modalElement = document.getElementById('attractionModal');
+
+    if (modalElement) {
+      console.log(modalElement)
+      $('#attractionModal').on('hidden.bs.modal', function (e) {
+        alert('Modal has been closed!');
+        console.log('Modal has been closed!')
+      })
+    }
+    else(
+      alert('Modal doesn\'t exist')
+    )
   }
 }
