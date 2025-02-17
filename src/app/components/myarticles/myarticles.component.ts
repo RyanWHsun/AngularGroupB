@@ -47,6 +47,7 @@ export class MyarticlesComponent {
     this.articleStatus = true;
     this.imagePreviews = [];
     this.currentIndex = 0;
+    loadCKEditorCloud(cloudConfig).then(this._setupEditor.bind(this));
   }
 
   loadImages(postId: number) {
