@@ -1,5 +1,7 @@
 import { Component, SimpleChanges } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { forkJoin } from 'rxjs';
+import { IPostComment } from 'src/app/interfaces/IPostComment';
 import { AuthService } from 'src/app/services/auth.service';
 import { SocialmediaService } from 'src/app/services/socialmedia.service';
 import { UserService } from 'src/app/services/user.service';
@@ -14,15 +16,17 @@ export class SocialmediaComponent {
   imageData: { [key: number]: string[] } = {};
   userData: { [key: number]: { image: string, nickName: string } } = {};
   contentData: { [key: number]: SafeHtml } = {};
+  commentDatas: { [postId: number]: IPostComment[] } = {};
   activePostIds: number[] = [];
   page: number = 1;
   pageSize: number = 3;
   loading: boolean = false;
   hasMore: boolean = true;
-  constructor(private socialmediaService: SocialmediaService, private userService: UserService, private sanitizer: DomSanitizer) { };
+  constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer) { };
   ngOnInit(): void {
     this.loadArticles();
   }
+
   loadImages(postId: number) {
     this.socialmediaService.getPublicImages(postId).subscribe(data => {
       this.imageData[postId] = data.map((imageBase64: string) => 'data:image/jpeg;base64,' + imageBase64);
@@ -32,12 +36,17 @@ export class SocialmediaComponent {
     if (!this.userData[userId]) {
       this.userData[userId] = { image: '', nickName: '' };
     }
-    this.userService.getUser(userId).subscribe(data => {
+    this.socialmediaService.getUserInfo(userId).subscribe(data => {
       this.userData[userId] = {
         image: `data:image/jpeg;base64,${data.fUserImage}`,
         nickName: data.fUserNickName
       }
     })
+  }
+  loadComments(postId: number) {
+    this.socialmediaService.getArticleComments(postId).subscribe((comments: IPostComment[]) => {
+      this.commentDatas[postId] = comments;
+    });
   }
   loadArticles() {
     if (!this.hasMore || this.loading) return;
@@ -52,6 +61,7 @@ export class SocialmediaComponent {
           this.loadUserInfo(post['fUserId']);
           this.contentData[post['fPostId']] = this.sanitizer.bypassSecurityTrustHtml(post['fContent']) as SafeHtml;
         });
+        // console.log(this.userData);
         this.page++;
       } else {
         this.hasMore = false;
@@ -65,11 +75,14 @@ export class SocialmediaComponent {
   toggleComments(postId: number) {
     const index = this.activePostIds.indexOf(postId);
     if (index === -1) {
+      this.loadComments(postId);
+      console.log(this.commentDatas);
       this.activePostIds.push(postId);
     } else {
       this.activePostIds.splice(index, 1);
     }
   }
+
   onScroll() {
     this.loadArticles();
   }

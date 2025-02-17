@@ -23,9 +23,16 @@ export class SocialmediaService {
   }
 
   getPublicArticles(page: number, pageSize: number): Observable<any> {
-    return this.httpClient.get(`https://localhost:7112/api/TPosts/GetPublicPosts?page=${page}&pageSize=${pageSize}`, { withCredentials: true })
+    return this.httpClient.get(`https://localhost:7112/api/TPosts/GetPublicPosts?page=${page}&pageSize=${pageSize}`)
   }
   getPublicImages(postId: number): Observable<any> {
     return this.httpClient.get(`https://localhost:7112/api/TPostImages/getPublicImages/${postId}`, { withCredentials: true })
+  }
+
+  getUserInfo(userId: number): Observable<any> {
+    return this.httpClient.get(`https://localhost:7112/api/TPosts/userInfo/${userId}`)
+  }
+  getArticleComments(postId: number): Observable<any> {
+    return this.httpClient.get(`https://localhost:7112/api/TPostComments/${postId}`)
   }
 }

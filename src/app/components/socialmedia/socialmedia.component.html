@@ -107,8 +107,11 @@
           <!-- Comment Section -->
           <div *ngIf="activePostIds.includes(data['fPostId'])">
             <p><strong>{{userData[data['fUserId']].nickName}} </strong>{{data['fTitle']}}</p>
-            <div [innerHTML]="contentData[data['fPostId']]"></div>
-            <p><strong>某某某 </strong>留言123</p>
+            <div [innerHTML]="contentData[data['fPostId']]">
+            </div>
+            <hr>
+            <p *ngFor="let comments of commentDatas[data['fPostId']]"><strong>{{comments.fUserNickName}}
+              </strong>{{comments.fContent}}</p>
           </div>
           <input type="text" class="form-control" placeholder="留言......">
         </div>
