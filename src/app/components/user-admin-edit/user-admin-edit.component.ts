@@ -1,39 +1,61 @@
-import { UserService } from './../../services/user.service';
+import { UserService } from 'src/app/services/user.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
-import { userEditMaterial } from 'src/app/interfaces/user';
+import { allUsersMaterial } from 'src/app/interfaces/user';
 
 @Component({
-  selector: 'app-user-edit',
-  templateUrl: './user-edit.component.html',
-  styleUrls: ['./user-edit.component.css']
+  selector: 'app-user-admin-edit',
+  templateUrl: './user-admin-edit.component.html',
+  styleUrls: ['./user-admin-edit.component.css']
 })
-export class UserEditComponent {
+export class UserAdminEditComponent {
 
-  user: userEditMaterial = {
+  passwordType = "password";
+
+  user: allUsersMaterial = {
+    fUserId: 0,
     fUserRankId: 0,
     fUserName: "",
-    fUserImage: "",//照片
     fUserNickName: "",
-    fUserSex: "",
+    fUserImage: "",
+    fUserSex: "不願透露",
+    fUserBirthday: "",
     fUserPhone: "",
-    fUserBirthday: "2000-01-01",
-    fUserAddress: ""
-  };
-  userId: number | null = null;  // 儲存從本地存儲中取得的 userId
+    fUserEmail: "",
+    fUserAddress: "",
+    fUserComeDate: "",
+    fUserPassword: "",
+  }
+  userId!: number;  // 儲存從本地存儲中取得的 userId
 
+  updatePassword: boolean = false;
 
   img = "assets/images/noImage.jpg"
 
-  constructor(private userService: UserService, private router: Router) { }
+
+  constructor(private router: Router, private userService: UserService, private activatedRoute: ActivatedRoute) { }
+
 
   ngOnInit(): void {
-    this.loadUser();
+    this.activatedRoute.paramMap.subscribe((p) => {
+      this.userId = +p.get('id')!;
+      console.log('Received userId:', this.userId);
+    })
+    this.loadUser(this.userId);
     window.scrollTo(0, 400);
   }
 
 
+  seePassword() {
+    if (this.passwordType == "password") {
+      this.passwordType = "text";
+    }
+    else if (this.passwordType == "text") {
+      this.passwordType = "password";
+    }
+
+  }
   //更換圖片
   changeImg(event: any): void {
     const file = event.target.files[0];
@@ -55,8 +77,8 @@ export class UserEditComponent {
   }
 
   // 綁上資料
-  loadUser() {
-    this.userService.getLoginUser().subscribe({
+  loadUser(userId: number) {
+    this.userService.getUser(userId).subscribe({
       next: (data) => {
         console.log(data);
 
@@ -64,7 +86,6 @@ export class UserEditComponent {
           this.user = data;  // 存入 user
           this.user.fUserImage = data.fUserImage ? `data:image/png;base64,${data.fUserImage}` : "";
           this.user.fUserBirthday = data.fUserBirthday ? data.fUserBirthday.split("T")[0] : "2000-01-01";
-
         }
       },
       error: (error) => {
@@ -73,6 +94,13 @@ export class UserEditComponent {
     })
   }
 
+
+  showPassword() {
+    this.updatePassword = !this.updatePassword;
+    if (!this.updatePassword) {
+      this.user.fUserPassword = "";
+    }
+  }
 
 
   //修改開始
@@ -85,11 +113,11 @@ export class UserEditComponent {
       console.log(this.user.fUserImage);
     }
 
-    this.userService.putLoginUser(this.user).subscribe({
+    this.userService.putUser(userId, this.user).subscribe({
       next: (response) => {
         console.log('成功:', response);
         alert('帳號修改成功！');
-        this.goToUserPage();
+        this.goToUser();
         window.scrollTo(0, 0);
       },
       error: (error) => {
@@ -102,24 +130,22 @@ export class UserEditComponent {
 
 
 
-  //前往用戶頁
-  goToUserPage() {
-    this.router.navigate(['/user/page']);
+
+  goToUser() {
+    this.router.navigate(['/user/editUsers']);
   }
 
-
-
-  submitUserEdit(form: NgForm) {
+  submit(form: NgForm) {
     if (form.invalid) {  // 檢查表單是否有效
       console.log('表單驗證不通過');
       alert('請確保所有欄位都正確填寫！');
       Object.values(form.control).forEach(p => { p.markAsTouched(); });
       return;  // 如果表單無效，阻止提交
     }
-    console.log('送出的資料:', this.user);
-    this.updateUser(this.userId!);
-  }
 
+    // console.log(this.user);
+    this.updateUser(this.user.fUserId);
+  }
 
 
 }

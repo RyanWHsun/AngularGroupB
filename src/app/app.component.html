@@ -92,14 +92,15 @@
           <!-- 社群end -->
 
           <!-- 帳戶start -->
+          <a *ngIf="!isLogin" routerLink="user" routerLinkActive="active" class="nav-link">帳戶登入</a>
           <div class="nav-item dropdown">
-            <a routerLink="user" routerLinkActive="active" class="nav-link dropdown-toggle"
-              data-toggle="dropdown">帳戶</a>
+            <a *ngIf="isLogin" [routerLink]="['/user/page']" routerLinkActive="active" class="nav-link dropdown-toggle"
+              data-toggle="dropdown">個人主頁</a>
             <div class="dropdown-menu border-0 rounded-0 m-0">
-              <a routerLink="/user/add" class="dropdown-item">新增帳戶</a>
-              <a routerLink="/user/page" class="dropdown-item">帳戶顯示</a>
-              <a routerLink="/user/edit" class="dropdown-item">帳戶修改</a>
-              <a routerLink="/user/login" class="dropdown-item">帳戶登入</a>
+              <a *ngIf="isLogin" (click)="logOut()" class="dropdown-item">登出</a>
+              <!-- <a *ngIf="isLogin" [routerLink]="['/user/page']" class="dropdown-item">帳戶顯示</a>
+              <a *ngIf="isLogin" routerLink="/user/edit" class="dropdown-item">帳戶修改</a>
+              <a *ngIf="isLogin" routerLink="/user/login" class="dropdown-item">帳戶登入</a> -->
             </div>
           </div>
           <!-- 帳戶end -->

@@ -22,6 +22,7 @@ import { CartComponent } from './components/cart/cart.component';
 import { PaymentComponent } from './components/payment/payment.component';
 import { AttractionTicketComponent } from './components/attraction-ticket/attraction-ticket.component';
 import { AttractionAdminComponent } from './components/attraction-admin/attraction-admin.component';
+import { UserAdminEditComponent } from './components/user-admin-edit/user-admin-edit.component';
 
 const routes: Routes = [
   {
@@ -125,8 +126,11 @@ const routes: Routes = [
       component: UserPageComponent
     },
     {
-      path: 'editPassword',
+      path: 'editUsers',
       component: UserComponent
+    }, {
+      path: 'UserAdminEdit/:id',
+      component: UserAdminEditComponent
     }]
   },
   {

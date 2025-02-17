@@ -17,9 +17,9 @@ export class UserPageComponent {
   userId: number | null = null;  // 儲存從本地存儲中取得的 userId
 
   userRank: userRankMaterial = {
-    fUserRankId: 0,
     fUserName: "",
     fUserNickName: "",
+    fUserRankId: 0
   };
 
 
@@ -35,13 +35,13 @@ export class UserPageComponent {
 
 
   ngOnInit(): void {
-    this.loadUser(0);
+    this.loadUser();
     window.scrollTo(0, 0);
   }
 
   //找登入者的資料
-  loadUser(userId: number) {
-    this.userService.getUser(userId).subscribe({
+  loadUser() {
+    this.userService.getLoginUser().subscribe({
       next: (data) => {
         console.log(data);
 
@@ -78,39 +78,48 @@ export class UserPageComponent {
 
   //註銷帳號
   setRank() {
-    this.setRankTo2(this.userId!);
+    if (confirm('確定要刪除嗎？')) {
+      alert("用戶已刪除");
+      this.setRankTo2();
+      // this.logout();
+    }
   }
 
-  setRankTo2(userId: number) {
+  setRankTo2() {
+    this.userRank.fUserName = this.user!.fUserName;
+    this.userRank.fUserNickName = this.user!.fUserNickName;
     this.userRank.fUserRankId = 2;
     console.log(this.userRank);
 
-    // this.userService.putuserRank(userId, this.userRank).subscribe({
-    //   next: () => {
-    //     console.log("修改成功", this.userRank);
-    //   },
-    //   error: (error) => {
-    //     console.log("修改失敗", error);
-    //   }
-    // })
-
+    this.userService.putuserRank(this.userRank).subscribe({
+      next: () => {
+        console.log("修改成功", this.userRank);
+      },
+      error: (error) => {
+        console.log("修改失敗", error);
+      }
+    })
   }
 
 
-
+  //登出按鈕
   logOut() {
     if (confirm('確定要登出嗎？')) {
-      this.authService.logout().subscribe({
-        next: () => {
-          alert("Token 已刪除，開始登出");
-          this.router.navigate(['/user/login']).then(() => { window.location.reload(); });
-        },
-        error: (error) => {
-          console.error("登出 API 失敗:", error);
-          alert("登出失敗，請稍後再試！");
-        }
-      });
+      alert("用戶已登出");
+      this.logout();
     };
+  }
+
+  logout() {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/user/login']).then(() => { window.location.reload(); });
+      },
+      error: (error) => {
+        console.error("登出 API 失敗:", error);
+        alert("登出失敗，請稍後再試！");
+      }
+    });
   }
 
 
