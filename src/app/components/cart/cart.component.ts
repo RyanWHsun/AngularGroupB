@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { OrderService } from 'src/app/services/order.service';
 declare var $: any; // 宣告 jQuery
 import Swal from 'sweetalert2';
+import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
 
 @Component({
   selector: 'app-cart',
@@ -32,7 +33,7 @@ export class CartComponent {
   selectedCount = 0;
   fPaymentMethod: string = ''; // 預設付款方式
 
-  constructor(private cartService: CartService, private authService: AuthService, private router: Router, private orderService: OrderService) { }
+  constructor(private cartService: CartService, private authService: AuthService, private router: Router, private orderService: OrderService, private swal: SweetAlert2Service) { }
   @ViewChild('popoverButton', { static: false }) popoverButton!: ElementRef;
 
 
@@ -93,17 +94,17 @@ export class CartComponent {
         if (error.status === 404) {
           console.log(error);
           console.warn('購物車為空，顯示提示訊息');
-          alert('購物車沒東西，快去加入吧!');
+          this.swal.showEasyWarning('購物車沒東西，快去加入吧!');
           this.router.navigate(['#']);
         } else if (error.status === 401) {
           console.log(error);
           console.warn('沒登入，顯示提示訊息');
-          alert('請先登入哦!');
+          this.swal.showEasyWarning('請先登入哦!');
           this.router.navigate(['user/login']);
         }
         else {
           console.error('載入購物車錯誤:', error);
-          alert('發生錯誤請洽客服');
+          this.swal.showEasyError('發生錯誤請洽客服');
         }
       }
     })
@@ -223,7 +224,7 @@ export class CartComponent {
         item.fQuantity++;
         this.calculateTotal();
       } else {
-        alert("數量已達庫存上限");
+        this.swal.showEasyError('數量已達庫存上限');
       }
     } else {
       item.fQuantity++;
@@ -251,7 +252,7 @@ export class CartComponent {
         this.loadCart();
       },
       error: (error) => {
-        alert(error.message)
+        this.swal.showEasyError(error.message);
         console.log(error);
       }
     });
@@ -260,7 +261,7 @@ export class CartComponent {
   removeSelectedItems() {
     const removeItemsIds = this.processCartItems();
     if (this.selectedCartItemIds.length === 0) {
-      alert("請先選擇要刪除的項目!")
+      this.swal.showEasyWarning('請先選擇要刪除的項目!');
       return;
     }
     this.cartService.removeCartItems(removeItemsIds).subscribe({
@@ -269,7 +270,7 @@ export class CartComponent {
         this.cartService.loadCartCount();
         this.loadCart();
       }, error: (error) => {
-        alert(error.message)
+        this.swal.showEasyError(error.message);
         console.log(error);
       }
     })
@@ -333,14 +334,21 @@ export class CartComponent {
 
     // 檢查是否有選擇商品
     if (selectedItems.length === 0) {
-      alert("請選擇至少一個商品進行結帳！");
+      this.swal.showEasyWarning('請選擇至少一個商品進行結帳');
       return;
     }
     // 檢查是否有選擇付款方式
     if (!this.fPaymentMethod) {
-      alert("請選擇付款方式！");
+      this.swal.showEasyWarning('請選擇付款方式');
       return;
     }
+
+    //如果選擇Wallet付款，檢查餘額
+    if (this.fPaymentMethod === 'Wallet' && this.totalPrice > (this.userInfo?.totalBalance || 0)) {
+      this.swal.showEasyError(`您的錢包餘額為 NT$${this.userInfo?.totalBalance}\n餘額不足!請修改支付方式`);
+      return;
+    }
+
     //console.log('會員資訊:', userInfo);
     //console.log('選取的商品:', selectedItems);
     //console.log("目前付款方式:", this.fPaymentMethod);
@@ -356,13 +364,20 @@ export class CartComponent {
     //呼叫後端API
     this.orderService.checkOut(checkoutRequest).subscribe({
       next: (response) => {
-        alert(response.message);
-        window.location.reload(); //刷新頁面
-        this.loadUserWallet();
+        Swal.fire({
+          title: response.message,
+          position: 'center',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 2000, // 1秒後自動關閉
+        }).then(() => {
+          window.location.reload();
+          this.loadUserWallet(); // 這裡確保彈窗關閉後才刷新頁面
+        });
       },
       error: (error) => {
         const errorMessage = error.error?.message || "訂單建立失敗，請稍後再試";
-        alert(errorMessage)
+        this.swal.showEasyError(errorMessage);
         console.log('訂單建立失敗', error);
         window.location.reload(); //刷新頁面
       }

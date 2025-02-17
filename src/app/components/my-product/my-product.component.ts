@@ -1,9 +1,11 @@
+import { SweetAlert2Service } from './../../services/sweet-alert2.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { myProductList, ProductDetail } from './../../interfaces/products';
 import { ProductsService } from './../../services/products.service';
 import { Component } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-my-product',
@@ -24,7 +26,7 @@ export class MyProductComponent {
   isAllSelected: boolean = false; // 預設未全選
 
 
-  constructor(private productsService: ProductsService, private authService: AuthService, private router: Router) { };
+  constructor(private productsService: ProductsService, private authService: AuthService, private router: Router, private swal: SweetAlert2Service) { };
 
   ngOnInit(): void {
     this.loadMyProduct();
@@ -42,12 +44,12 @@ export class MyProductComponent {
       },
       error: (error) => {
         console.log('沒抓到商品哦', error);
-        alert('請先登入會員!')
+        this.swal.showEasyWarning('請先登入會員!');
         this.router.navigate(['user/login']);
       }
     })
     setTimeout(() => {
-      const scrollY = window.innerHeight * 0.6; //視窗高度百分比
+      const scrollY = window.innerHeight * 0.2; //視窗高度百分比
       window.scrollTo({ top: scrollY, behavior: 'smooth' });
     }, 200);
   }
@@ -117,18 +119,30 @@ export class MyProductComponent {
   }
 
   deleteProduct(productId: number): void {
-    if (confirm('確定要刪除這個商品嗎?')) {
-      this.productsService.deleteProduct(productId).subscribe({
-        next: (response) => {
-          alert(response.message);
-          this.loadMyProduct(); // 重新載入商品列表
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log('刪除商品失敗:', error);
-          alert(error.error.message || '刪除失敗!');
-        }
-      });
-    }
+    Swal.fire({
+      title: '確定要刪除這個商品嗎?',
+      text: '刪除後無法復原。',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '確定',
+      cancelButtonText: '取消',
+      confirmButtonColor: '#28a746',
+      cancelButtonColor: '#d33'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productsService.deleteProduct(productId).subscribe({
+          next: (response) => {
+            this.swal.showEasySuccess(response.message);
+            this.loadMyProduct(); // 重新載入商品列表
+          },
+          error: (error: HttpErrorResponse) => {
+            this.swal.showEasyError(error.error.message)
+            console.log('刪除商品失敗:', error);
+          }
+        });
+      }
+    });
+
   }
 
   editProduct(productId: number): void {
@@ -146,17 +160,17 @@ export class MyProductComponent {
   batchChangeStatus(): void {
     const selectedIds = this.getSelectedProductIds();
     if (selectedIds.length === 0) {
-      alert('請至少選擇一筆商品!');
+      this.swal.showEasyWarning('請至少選擇一筆商品!');
       return;
     }
     this.productsService.batchUpdateStatus(selectedIds).subscribe({
       next: (response) => {
-        alert(response.message);
+        this.swal.showEasySuccess(response.message)
         this.loadMyProduct();
       },
       error: (error) => {
         console.log('批次更新失敗', error);
-        alert('批次更新失敗');
+        this.swal.showEasyError('批次更新失敗');
       }
     });
   }

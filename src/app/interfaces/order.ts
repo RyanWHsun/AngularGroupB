@@ -7,6 +7,7 @@ export interface buyerOrderAll {
   fOrderAmount: number;
   sellerName: string;
   fProductName: string[];
+  fExtraInfo: string;
 }
 
 export interface OrderStatusHistory {

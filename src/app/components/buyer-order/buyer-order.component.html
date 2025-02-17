@@ -70,9 +70,11 @@
               <strong>寄送地址：</strong><span class="text-primary">{{order.fShipAddress}}</span>
             </div>
             <div class="text-right">
-              <strong>訂單金額：</strong><span class="text-danger">NT$&nbsp;{{order.fOrderAmount | number}}</span>
+              <strong>訂單金額：</strong><span class="text-danger mx-3">NT$&nbsp;{{order.fOrderAmount | number}}</span>
               <button class="btn btn-success rounded ml-2" *ngIf="order.fOrderStatusId==1">修改地址</button>
-              <button class="btn btn-success rounded ml-2" *ngIf="order.fOrderStatusId==2">完成收件</button>
+              <button class="btn btn-success rounded ml-2" *ngIf="order.fOrderStatusId==2"
+                (click)="getExtraInfo(order.fOrderId)">寄件資訊</button>
+              <button class="btn btn-warning rounded ml-2" *ngIf="order.fOrderStatusId==2">完成收件</button>
               <button class="btn btn-outline-success rounded ml-2" (click)="toggleOrderDetail(order.fOrderId)">
                 {{ expandedOrderId === order.fOrderId ? '收合' : '展開' }}
               </button>

@@ -3,6 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { createProduct } from 'src/app/interfaces/products';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
 
 @Component({
   selector: 'app-create-product',
@@ -27,7 +28,8 @@ export class CreateProductComponent implements OnInit {
     private fb: FormBuilder,
     private productService: ProductsService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private swal: SweetAlert2Service
   ) { }
 
   ngOnInit(): void {
@@ -82,7 +84,7 @@ export class CreateProductComponent implements OnInit {
 
       },
       error: (error) => {
-        alert(error.error)
+        this.swal.showEasyError(error.error)
         console.error('獲取商品失敗', error);
       }
     })
@@ -107,7 +109,7 @@ export class CreateProductComponent implements OnInit {
     event.preventDefault();
     if (event.dataTransfer?.files) {
       if (event.dataTransfer.files.length + this.imagePreviews.length > this.maxImages) {
-        alert('最多只能上傳 6 張圖片');
+        this.swal.showEasyWarning('最多只能上傳 6 張圖片');
         return;
       }
       this.handleImageUpload(event.dataTransfer.files);
@@ -151,7 +153,7 @@ export class CreateProductComponent implements OnInit {
     const files: FileList = event.target.files; //取得使用者選擇的圖片
     //上傳+已存在的圖片不可超出最大上限
     if (files.length + this.imagePreviews.length > this.maxImages) {
-      alert(`最多只能上傳 ${this.maxImages} 張圖片`);
+      this.swal.showEasyWarning(`最多只能上傳 ${this.maxImages} 張圖片`);
       return;
     }
     this.handleImageUpload(files); //把上傳圖片傳到方法
@@ -182,7 +184,7 @@ export class CreateProductComponent implements OnInit {
   // 送出表單
   async submitForm(): Promise<void> {
     if (this.productForm.invalid) {
-      alert('請填寫完整的商品資訊');
+      this.swal.showEasyWarning('請填寫完整的商品資訊');
       return;
     }
     // 轉換圖片為 Base64
@@ -195,7 +197,7 @@ export class CreateProductComponent implements OnInit {
 
     base64Images = [...new Set([...existingImages, ...base64Images])]; // 確保不重複
     if (base64Images.length === 0 && this.imagePreviews.length === 0) {
-      alert('請至少上傳一張圖片');
+      this.swal.showEasyWarning('請至少上傳 1 張圖片');
       return;
     }
     this.productForm.patchValue({
@@ -210,21 +212,21 @@ export class CreateProductComponent implements OnInit {
       productData.fProductId = this.productId;
       this.productService.updateProduct(productData).subscribe({
         next: (response: any) => {
-          alert(response.message);
+          this.swal.showEasySuccess(response.message);
           this.router.navigate(['/products/myProduct']);
         }, error: (error) => {
-          alert(error.message);
+          this.swal.showEasyError(error.message)
           console.error('修改商品失敗', error);
         }
       });
     } else {
       this.productService.createProduct(productData).subscribe({
         next: (response: any) => {
-          alert(response.message);
+          this.swal.showEasySuccess(response.message);
           this.router.navigate(['/products/myProduct']);
         },
         error: (error) => {
-          alert(error.message);
+          this.swal.showEasyError(error.message)
           console.error('新增商品失敗:', error);
         },
       });

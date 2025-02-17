@@ -4,6 +4,7 @@ import { buyerOrderAll } from '../../interfaces/order';
 import { OrderService } from '../../services/order.service';
 import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-buyer-order',
@@ -125,15 +126,42 @@ export class BuyerOrderComponent {
       // 訂單成立時間 = 第一個狀態 (fOrderStatusId = 1) 的時間 - 1 小時
       const firstStatus = this.OrderDetail.statusHistory.find(s => s.fOrderStatusId === 1);
       if (firstStatus) {
-        const orderCreatedTime = new Date(firstStatus.fTimestamp);
-        orderCreatedTime.setHours(orderCreatedTime.getHours() - 1);
-        return orderCreatedTime.toISOString().replace('T', ' ').slice(0, 16);
+        // 直接使用後端的時間，並減去一小時的邏輯
+        const timestamp = firstStatus.fTimestamp;
+        const timestampMinusOneHour = new Date(new Date(timestamp).getTime() - 60 * 60 * 1000);
+
+        // 取得各個時間部分
+        const year = timestampMinusOneHour.getFullYear();
+        const month = (timestampMinusOneHour.getMonth() + 1).toString().padStart(2, '0'); // 月份是 0-based
+        const day = timestampMinusOneHour.getDate().toString().padStart(2, '0');
+        const hours = timestampMinusOneHour.getHours().toString().padStart(2, '0');
+        const minutes = timestampMinusOneHour.getMinutes().toString().padStart(2, '0');
+
+        // 返回所需格式的字串
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
       }
     }
     const status = this.OrderDetail.statusHistory.find(s => s.fOrderStatusId === statusId);
-    return status ? new Date(status.fTimestamp).toISOString().replace('T', ' ').slice(0, 16) : '';
+    return status ? status.fTimestamp.replace('T', ' ').slice(0, 16) : '';
   }
 
+  getExtraInfo(orderId: number): void {
+    const order = this.orders.find(i => i.fOrderId === orderId);
+    if (!order) {
+      this.swal.showEasyError('找不到訂單資訊，請洽客服');
+      return;
+    }
 
-
+    const extraInfo = order.fExtraInfo ? order.fExtraInfo : '賣家未提供寄件資訊';
+    Swal.fire({
+      title: "寄件資訊",
+      text: extraInfo,
+      icon: "info",
+      showCloseButton: false,
+      showCancelButton: false,
+      confirmButtonText: '關閉',
+      confirmButtonColor: '#28a746',
+      focusConfirm: false,
+    });
+  }
 }

@@ -3,6 +3,7 @@ import { ProductDetail } from 'src/app/interfaces/products';
 import { ProductsService } from 'src/app/services/products.service';
 import { addProductToCart } from 'src/app/interfaces/shoppingCart';
 import { CartService } from 'src/app/services/cart.service';
+import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
 declare var $: any;  // 確保 jQuery 可用
 
 @Component({
@@ -20,7 +21,7 @@ export class ProductDetailComponent {
   quantity: number = 1; //數量
   modalInstance: any;
 
-  constructor(private productService: ProductsService, private cartService: CartService) { }
+  constructor(private productService: ProductsService, private cartService: CartService, private swal: SweetAlert2Service) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['productId'] && this.productId) {
@@ -83,11 +84,11 @@ export class ProductDetailComponent {
     this.cartService.addProductToCart(item).subscribe({
       next: (response) => {
         //console.log(response);
-        alert(response.message);
+        this.swal.showEasySuccess(response.message);
         this.cartService.loadCartCount();
       }, error: (error) => {
         console.log('加入購物車錯誤:', error);
-        alert(error.error.message);
+        this.swal.showEasyError(error.error.message);
       }
     })
     this.resetQuantity();

@@ -20,6 +20,11 @@ export class SellerOrderComponent {
 
   ngOnInit(): void {
     this.loadSellerOrders();
+
+    setTimeout(() => {
+      const scrollY = window.innerHeight * 0.2; //視窗高度百分比
+      window.scrollTo({ top: scrollY, behavior: 'smooth' });
+    }, 200);
   }
 
   loadSellerOrders(): void {
