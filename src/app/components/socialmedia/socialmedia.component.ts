@@ -43,7 +43,10 @@ export class SocialmediaComponent {
   }
   loadComments(postId: number) {
     this.socialmediaService.getArticleComments(postId).subscribe((comments: IPostComment[]) => {
-      this.commentDatas[postId] = comments;
+      this.commentDatas[postId] = comments.map((comment: IPostComment) => {
+        comment.fUserImage = 'data:image/jpeg;base64,' + comment.fUserImage;
+        return comment
+      });;
     });
   }
   loadArticles() {

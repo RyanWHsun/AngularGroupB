@@ -101,7 +101,8 @@
 
           <!-- Likes and Caption -->
           <p class="mb-1"><strong>10個讚</strong></p>
-          <p *ngIf="!activePostIds.includes(data['fPostId'])"><strong>{{userData[data['fUserId']].nickName}}
+          <p *ngIf="!activePostIds.includes(data['fPostId'])"><img [src]="userData[data['fUserId']].image"
+              class="rounded-circle mr-2" style="width: 5%;"><strong>{{userData[data['fUserId']].nickName}}
             </strong>{{data['fTitle']}}</p>
 
           <!-- Comment Section -->
@@ -110,7 +111,8 @@
             <div [innerHTML]="contentData[data['fPostId']]">
             </div>
             <hr>
-            <p *ngFor="let comments of commentDatas[data['fPostId']]"><strong>{{comments.fUserNickName}}
+            <p *ngFor="let comments of commentDatas[data['fPostId']]"><img [src]="comments.fUserImage"
+                class="rounded-circle mr-2" style="width: 5%;"><strong>{{comments.fUserNickName}}
               </strong>{{comments.fContent}}</p>
           </div>
           <div class="comment-input-box">
