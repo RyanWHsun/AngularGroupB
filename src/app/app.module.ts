@@ -36,6 +36,8 @@ import { PaymentComponent } from './components/payment/payment.component';
 import { ProductPipe } from './pipes/product.pipe';
 import { AttractionTicketComponent } from './components/attraction-ticket/attraction-ticket.component';
 import { AttractionAdminComponent } from './components/attraction-admin/attraction-admin.component';
+import { EventEditDialogComponent } from './components/event-edit-dialog/event-edit-dialog.component';
+import { EventFormComponent } from './components/event-form/event-form.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +65,8 @@ import { AttractionAdminComponent } from './components/attraction-admin/attracti
     ProductPipe,
     AttractionTicketComponent,
     AttractionAdminComponent,
+    EventEditDialogComponent,
+    EventFormComponent,
   ],
   imports: [
     BrowserModule,

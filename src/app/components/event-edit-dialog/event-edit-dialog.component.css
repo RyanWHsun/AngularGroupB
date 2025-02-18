@@ -1,0 +1,22 @@
+:host ::ng-deep .mat-dialog-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 8px; /* 讓邊角圓潤 */
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 添加陰影 */
+  max-width: 500px; /* 設定最大寬度 */
+  width: 100%;
+}
+
+/* 讓對話框真正置中 */
+.custom-dialog-container {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  position: fixed !important;
+  inset: 0 !important;
+}
+

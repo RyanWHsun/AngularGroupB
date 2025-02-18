@@ -1,59 +1,36 @@
 <h2 class="text-center my-4">活動管理</h2>
 
-<!-- 新增活動表單 -->
-<div class="container card p-4 shadow-sm">
-  <h3 class="mb-3">新增活動</h3>
-
-  <div class="mb-3">
-    <label class="form-label">活動名稱：</label>
-    <input type="text" class="form-control" [(ngModel)]="newEvent.fEventName" placeholder="請輸入活動名稱">
-  </div>
-
-  <div class="mb-3">
-    <label class="form-label">活動描述：</label>
-    <textarea class="form-control" [(ngModel)]="newEvent.fEventDescription" placeholder="請輸入活動描述"></textarea>
-  </div>
-
-  <div class="mb-3">
-    <label class="form-label">開始日期：</label>
-    <input type="datetime-local" class="form-control" [(ngModel)]="newEvent.fEventStartDate">
-  </div>
-
-  <div class="mb-3">
-    <label class="form-label">結束日期：</label>
-    <input type="datetime-local" class="form-control" [(ngModel)]="newEvent.fEventEndDate">
-  </div>
-
-  <div class="mb-3">
-    <label class="form-label">上傳圖片：</label>
-    <input type="file" class="form-control" (change)="onFileSelected($event)">
-  </div>
-
-  <button class="btn btn-primary w-100" (click)="createNewEvent()">提交活動</button>
+<!-- 新增活動按鈕 -->
+<div class="container mb-4 text-end">
+  <button class="btn btn-success" (click)="goToCreateEvent()">新增活動</button>
 </div>
 
 <!-- 活動列表 -->
-<div class="container mt-4">
+<div class="container">
   <h3 class="mb-3">活動列表</h3>
 
-  <div *ngIf="events.length === 0" class="alert alert-info">目前沒有活動</div>
+  <div *ngIf="events.length === 0" class="alert alert-info text-center">目前沒有活動</div>
 
-  <ul class="list-group">
-    <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let event of events">
+  <div class="list-group">
+    <div class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let event of events">
       <div>
-        <strong>{{ event.fEventName }}</strong>
-        <div class="text-muted">
+        <!-- ✅ 顯示活動圖片 -->
+        <img *ngIf="event.fEventImageUrl" [src]="event.fEventImageUrl" alt="活動圖片" width="100">
+        <h5 class="mb-1">{{ event.fEventName }}</h5>
+        <p class="mb-1 text-muted">
           {{ event.fEventStartDate | date:'yyyy-MM-dd HH:mm' }} ~
           {{ event.fEventEndDate | date:'yyyy-MM-dd HH:mm' }}
-        </div>
+        </p>
       </div>
       <div>
-        <button class="btn btn-sm btn-warning me-2" (click)="openEditEventDialog(event)">編輯</button>
+        <button class="btn btn-sm btn-warning me-2" (click)="goToEditEvent(event.fEventId)">編輯</button>
         <button class="btn btn-sm btn-danger" (click)="deleteEvent(event.fEventId)">刪除</button>
       </div>
-    </li>
-  </ul>
+    </div>
+  </div>
 </div>
+
+
 
 
 
