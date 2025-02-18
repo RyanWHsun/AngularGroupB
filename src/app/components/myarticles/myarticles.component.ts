@@ -5,8 +5,7 @@ import { loadCKEditorCloud, CKEditorModule, type CKEditorCloudResult, type CKEdi
 import type { ClassicEditor, EditorConfig } from 'https://cdn.ckeditor.com/typings/ckeditor5.d.ts';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { concatMap, of } from 'rxjs';
-const LICENSE_KEY =
-  'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NDAwOTU5OTksImp0aSI6IjAyNDhiMTFhLTU0ZDQtNDIzZi04NTFmLWEyYTA2ODIzY2FiZCIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImEwOWU3ZDIwIn0.vxr1VsfKg7W4Q58SL66gRKE3eqcERkRaMXA4AZyywVzwS9vx0O6WLlIkuNrWFTBn1Q34TeRofuRdm-Z1mDRlqw';
+const LICENSE_KEY = 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NzA0MjIzOTksImp0aSI6ImExZTliZjBiLWVjMGQtNDk2NC1hODViLTVjNmIyMmU4OGNhOCIsImxpY2Vuc2VkSG9zdHMiOlsiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJ1c2FnZUVuZHBvaW50IjoiaHR0cHM6Ly9wcm94eS1ldmVudC5ja2VkaXRvci5jb20iLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIl0sImxpY2Vuc2VUeXBlIjoiZGV2ZWxvcG1lbnQiLCJmZWF0dXJlcyI6WyJEUlVQIl0sInZjIjoiMGUxZDNiNzEifQ.4G8fSCo115sDjTwTgDE4jCCoH6KEZTd3nmdDQsh0KjNYEFUyc5eG-WJ430tGqEHkw3m9lIkwE_2pOfkeWetb8g';
 const cloudConfig = {
   version: '44.1.0'
 } satisfies CKEditorCloudConfig;
@@ -36,7 +35,7 @@ export class MyarticlesComponent {
   imagePreviews: string[] = [];
   currentIndex = 0;
   page: number = 1;
-  pageSize: number = 9;
+  pageSize: number = 6;
   loading: boolean = false;
   hasMore: boolean = true;
   constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer) { };
@@ -71,6 +70,7 @@ export class MyarticlesComponent {
           this.loadImages(post['fPostId']);
         });
         this.page++;
+        // console.log(this.datas);
       } else {
         this.hasMore = false;
       }
@@ -99,9 +99,16 @@ export class MyarticlesComponent {
         return this.socialmediaService.postImages(imageData);
       })
     ).subscribe(response => {
+      this.resetArticles();
       this.loadArticles();
-      console.log('文章圖片發佈成功', response);
+      // console.log('文章圖片發佈成功', response);
     });
+  }
+  resetArticles() {
+    this.page = 1;
+    this.loading = false;
+    this.hasMore = true;
+    this.datas = [];
   }
   onFileSelected(event: Event): void {
     let files = (event.target as HTMLInputElement).files;
