@@ -17,3 +17,79 @@
 <!-- Booking End -->
 
 <!-- start your coding here-->
+<div class="container-fluid mt-5 pb-5">
+  <div class="container pt-5 pb-3">
+    <div class="text-center mb-3 pb-3">
+      <h1>會員管理</h1>
+    </div>
+
+    <!-- 篩選 -->
+    <div class="row justify-content-end">
+
+      <div class="col-3 mb-3 align-self-center">
+        <select type="text" class="form-control" id="userRank" name="userRank" [(ngModel)]="searchRank"
+          (change)="applyFilter()">
+          <option value="0">全部</option>
+          <option value="1">一般用戶</option>
+          <option value="2">幽靈用戶</option>
+          <option value="99">管理員</option>
+        </select>
+      </div>
+
+      <div class="col-5 mb-3 align-self-center input-group" (click)="applyFilter()">
+        <input type="text" class="form-control" placeholder="關鍵字查詢" [(ngModel)]="search">
+        <button class="btn btn-primary mx-3">查詢</button>
+      </div>
+
+    </div>
+
+
+    <!-- 表格 -->
+    <table class="table table-hover text-center table-responsive" style="border-radius:15px 15px 0 0;">
+      <thead>
+        <tr class=" text-center" style="border-radius:15px 15px 0 0;background-color: #8cae78;color: #ffffff;">
+          <th scope="col">會員ID</th>
+          <th scope="col">頭像</th>
+          <th scope="col" style="width:60px;">會員等級</th>
+          <th scope="col">姓名</th>
+          <th scope="col">暱稱</th>
+          <th scope="col" style="width:60px;">性別</th>
+          <th scope="col">電話</th>
+          <th scope="col">住址</th>
+          <th scope="col" style="width:200px;">註冊日</th>
+          <th scope="col" style="width:100px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let users of filteredUsers">
+          <th>{{users.fUserId}}</th>
+          <td>
+            <img *ngIf="users.fUserImage!=null" [src]="'data:image/png;base64,' + users.fUserImage"
+              style="width: 56px; height: 56px;"> <img *ngIf="users.fUserImage==null" src="assets/images/noImage.jpg"
+              style="width: 56px; height: 56px;">
+          </td>
+          <td>{{users.fUserRankId}}</td>
+          <td>{{users.fUserName}}</td>
+          <td>{{users.fUserNickName}}</td>
+          <td>{{users.fUserSex}}</td>
+          <td>{{users.fUserPhone}}</td>
+          <td>{{users.fUserAddress}}</td>
+          <td>{{users.fUserComeDate|date:'YYYY-MM-dd'}}<br>
+            {{users.fUserComeDate|date:'HH時mm分ss秒'}}
+          </td>
+          <th scope="col">
+            <a (click)="usersEdit(users.fUserId)">
+              <div class="p-2" style="border-radius:15px;background-color: #8cae78;">
+                <div>
+                  <p class="mb-0 text-white text-center">修改</p>
+                </div>
+              </div>
+            </a>
+          </th>
+        </tr>
+      </tbody>
+    </table>
+
+
+  </div>
+</div>

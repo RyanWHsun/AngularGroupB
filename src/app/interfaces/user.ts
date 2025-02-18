@@ -23,3 +23,26 @@ export interface userEditMaterial {
   fUserBirthday: string;
   fUserAddress: string;
 }
+
+//修改Rank
+export interface userRankMaterial {
+  fUserRankId: number;
+  fUserName: string;
+  fUserNickName: string;
+}
+
+// 所有的
+export interface allUsersMaterial {
+  fUserId: number;
+  fUserRankId: number;
+  fUserName: string;
+  fUserNickName: string;
+  fUserImage: string | null;
+  fUserSex: string;
+  fUserBirthday: string;
+  fUserPhone: string;
+  fUserEmail: string;
+  fUserAddress: string;
+  fUserComeDate: string;
+  fUserPassword?: string;
+}

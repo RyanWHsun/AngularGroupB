@@ -60,18 +60,29 @@
 
 
             <!-- 密碼輸入 -->
-            <div class="control-group mb-2">
+            <div class="control-group mb-4">
               <h5 class="text-uppercase">密碼</h5>
-              <input type="password" class="form-control p-4" id="userPassword" placeholder="請輸入密碼" required="required"
-                [(ngModel)]="user.fUserPassword" name="fUserPassword" #userPassword="ngModel" />
+              <div class="input-group">
+                <input type="{{passwordType}}" class="form-control p-4" id="userPassword" placeholder="請輸入密碼"
+                  required="required" [(ngModel)]="user.fUserPassword" name="fUserPassword" #userPassword="ngModel" />
+                <button class="btn btn-outline-primary pb-0" (click)="seePassword()">
+                  <i *ngIf="passwordType == 'text'" class="fa-regular fa-eye h4"></i>
+                  <i *ngIf="passwordType == 'password'" class="fa-regular fa-eye-slash h4"></i>
+                </button>
+              </div>
               <p class="help-block text-danger" *ngIf="userPassword.invalid && userPassword.touched">請輸入密碼</p>
             </div>
+
+
           </form>
 
           <!-- 送出按鈕 -->
           <div class="text-center">
-            <button class="btn btn-primary py-3 px-4" type="text" (click)="submit(f)"
+            <button class="btn btn-primary py-3 px-4  mx-3" type="text" (click)="submit(f)"
               id="sendMessageButton">創建帳號</button>
+
+            <button class="btn btn-secondary py-3 px-4" type="text" (click)="goToUserPage()">取消
+            </button>
           </div>
 
 

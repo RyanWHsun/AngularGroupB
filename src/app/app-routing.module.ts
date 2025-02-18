@@ -23,6 +23,7 @@ import { CartComponent } from './components/cart/cart.component';
 import { PaymentComponent } from './components/payment/payment.component';
 import { AttractionTicketComponent } from './components/attraction-ticket/attraction-ticket.component';
 import { AttractionAdminComponent } from './components/attraction-admin/attraction-admin.component';
+import { UserAdminEditComponent } from './components/user-admin-edit/user-admin-edit.component';
 import { SellerOrderComponent } from './components/seller-order/seller-order.component';
 import { SellerCenterComponent } from './components/seller-center/seller-center.component';
 import { BuyerOrderComponent } from './components/buyer-order/buyer-order.component';
@@ -154,12 +155,15 @@ const routes: Routes = [
       component: UserPageComponent
     },
     {
-      path: 'editPassword',
+      path: 'editUsers',
       component: UserComponent
     },
     {
       path: 'wallet',
       component: WalletComponent
+    }, {
+      path: 'UserAdminEdit/:id',
+      component: UserAdminEditComponent
     }]
   },
   {

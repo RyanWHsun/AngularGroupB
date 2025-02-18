@@ -41,12 +41,27 @@
             </div>
 
             <!-- 密碼輸入 -->
-            <div class="control-group mb-3">
+            <!-- 密碼輸入 -->
+            <div class="control-group mb-4">
+              <h5 class="text-uppercase">密碼</h5>
+              <div class="input-group">
+                <input type="{{passwordType}}" class="form-control p-4" id="userPassword" placeholder="請輸入密碼"
+                  required="required" [(ngModel)]="fUserPassword" name="fUserPassword" #userPassword="ngModel" />
+                <button class="btn btn-outline-primary pb-0" (click)="seePassword()">
+                  <i *ngIf="passwordType == 'text'" class="fa-regular fa-eye h4"></i>
+                  <i *ngIf="passwordType == 'password'" class="fa-regular fa-eye-slash h4"></i>
+                </button>
+              </div>
+              <p class="help-block text-danger" *ngIf="userPassword.invalid && userPassword.touched">請輸入密碼</p>
+            </div>
+
+
+            <!-- <div class="control-group mb-3">
               <h5 class="text-uppercase">密碼</h5>
               <input type="password" class="form-control p-4" id="password" placeholder="請輸入密碼" required="required"
                 [(ngModel)]="fUserPassword" name="fUserPassword" #Password="ngModel" />
               <p class="help-block text-danger" *ngIf="Password.invalid && Password.touched">請輸入密碼</p>
-            </div>
+            </div> -->
           </form>
 
 
@@ -67,7 +82,7 @@
 
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-              <a [routerLink]="['/user/editPassword']">忘記密碼</a>
+              <a (click)="editPassWord()" [routerLink]="['/user/editPassword']">忘記密碼</a>
             </h5>
 
 

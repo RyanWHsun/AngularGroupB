@@ -6,7 +6,7 @@
       <div class="d-inline-flex text-white">
         <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
         <i class="fa fa-angle-double-right pt-1 px-3"></i>
-        <p class="m-0 text-uppercase">帳戶</p>
+        <p class="m-0 text-uppercase">管理員</p>
         <i class="fa fa-angle-double-right pt-1 px-3"></i>
         <p class="m-0 text-uppercase">帳戶修改</p>
       </div>
@@ -63,11 +63,22 @@
               <p class="help-block text-danger" *ngIf="nickName.invalid && nickName.touched">請輸入用戶暱稱</p>
             </div>
 
+            <!-- 權限輸入 -->
+            <div class="control-group mb-3">
+              <h5 class="text-uppercase">權限</h5>
+              <select type="text" class="form-control" id="fUserRankId" placeholder="請輸入用戶權限" required="required"
+                [(ngModel)]="user.fUserRankId" name="fUserRankId">
+                <option value="1">一般會員</option>
+                <option value="2">幽靈會員</option>
+                <option value="99">管理員</option>
+              </select>
+            </div>
+
             <!-- 性別輸入 -->
             <div class="control-group mb-3">
               <h5 class="text-uppercase">性別</h5>
               <select type="text" class="form-control" id="userSex" placeholder="請輸入用戶性別" required="required"
-                data-validation-required-message="請輸入用戶性別" [(ngModel)]="user.fUserSex" name="fUserSex">
+                [(ngModel)]="user.fUserSex" name="fUserSex">
                 <option value="不願透露">不願透露</option>
                 <option value="男">男</option>
                 <option value="女">女</option>
@@ -95,16 +106,38 @@
               <input type="text" class="form-control p-4" id="userName" placeholder="請輸入用戶地址"
                 [(ngModel)]="user.fUserAddress" name="fUserAddress" />
             </div>
+
+            <!-- 密碼輸入 -->
+            <a class="nav-link" *ngIf="!updatePassword" (click)="showPassword()">我要更改密碼</a>
+            <a class="nav-link" *ngIf="updatePassword" (click)="showPassword()">取消密碼修改</a>
+
+            <div class="control-group mb-4">
+              <h5 class="text-uppercase">用戶密碼</h5>
+              <div class="input-group">
+                <input type="{{passwordType}}" class="form-control p-4" id="userPassword" placeholder="請輸入用戶密碼"
+                  required="required" [(ngModel)]="user.fUserPassword" name="fUserPassword" #userPassword="ngModel" />
+                <button class="btn btn-outline-primary pb-0" (click)="seePassword()">
+                  <i *ngIf="passwordType == 'text'" class="fa-regular fa-eye h4"></i>
+                  <i *ngIf="passwordType == 'password'" class="fa-regular fa-eye-slash h4"></i>
+                </button>
+              </div>
+              <p class="help-block text-danger" *ngIf="userPassword.invalid && userPassword.touched">請輸入用戶密碼</p>
+            </div>
+            <!-- <div *ngIf="updatePassword" class="control-group mb-3">
+              <h5 class="text-uppercase"> 用戶密碼</h5>
+              <input type="text" class="form-control p-4" id="fUserPassword" placeholder="請輸入用戶密碼，不更改即可不輸入"
+                maxlength="20" [(ngModel)]="user.fUserPassword" name="fUserPassword" #password="ngModel" />
+              <p class="help-block text-danger" *ngIf="password.invalid && password.touched">請輸入用戶密碼</p>
+            </div> -->
           </form>
 
 
           <!-- 送出按鈕 -->
           <div class="text-center">
-            <button class="btn btn-primary py-3 px-4 mx-3" type="text" id="sendMessageButton"
-              (click)="submitUserEdit(f)">確認修改
+            <button class="btn btn-primary py-3 px-4 mx-3" type="text" id="sendMessageButton" (click)="submit(f)">確認修改
             </button>
 
-            <button class="btn btn-secondary py-3 px-4" type="text" (click)="goToUserPage()">取消
+            <button class="btn btn-secondary py-3 px-4" type="text" (click)="goToUser()">取消
             </button>
           </div>
 

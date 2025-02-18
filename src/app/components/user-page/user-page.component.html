@@ -51,28 +51,28 @@
 
     <!-- 三常用 -->
     <!-- <div class=" container-fluid mb-3"> -->
-    <div class="container d-flex justify-content-evenly w-100">
-      <button type="button" class="mx-auto btn btn-outline-secondary" (click)="goToShoppingCart()">
+    <div class="container d-flex justify-content-evenly w-100 mt-3 mb-3">
+
+      <div class="mx-auto threeBtnDiv" (click)="goToShoppingCart()">
         <div class="bg-white p-3" style="border-radius: 15px; border:solid 3px; border-color: #BAD8A8;">
           <i class="fa-solid fa-cart-shopping" style="color: #56bda9;font-size:35px"></i>
         </div>
-        <p class="mb-0">購物車</p>
+        <h6 class="text-center mt-1 threeBtn">購物車</h6>
+      </div>
 
-      </button>
-
-      <button type="button" class="mx-auto btn btn-outline-secondary">
+      <div class="mx-auto threeBtnDiv">
         <div class="bg-white p-3" style="border-radius: 15px; border:solid 3px; border-color: #BAD8A8;">
           <i class="fa-solid fa-sack-dollar" style="color: #56bda9;font-size:35px"></i>
         </div>
-        <p class="mb-0">點數</p>
-      </button>
+        <h6 class="text-center mt-1 threeBtn">點數</h6>
+      </div>
 
-      <button type="button" class="mx-auto btn btn-outline-secondary" (click)="goToUserEdit()">
+      <div class="mx-auto threeBtnDiv" (click)="goToUserEdit()">
         <div class="bg-white p-3" style="border-radius: 15px; border:solid 3px; border-color: #BAD8A8;">
           <i class="fa-solid fa-pen-to-square" style="color: #56bda9;font-size:35px"></i>
         </div>
-        <p class="mb-0">修改資料</p>
-      </button>
+        <h6 class="text-center mt-1 threeBtn">修改資料</h6>
+      </div>
 
     </div>
     <!-- </div> -->
@@ -103,7 +103,7 @@
 
     <!-- 按鈕們 -->
     <div class="row">
-      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['']">
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['/tickets']">
         <div class="w-100 p-1 mb-3"
           style="border-radius:15px;border: solid 3px; border-color:#8cae78;; background-color: #ffffff;">
 
@@ -117,7 +117,7 @@
         </div>
       </a>
 
-      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['']">
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['/events']">
         <div class="w-100 p-1 mb-3"
           style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
 
@@ -131,7 +131,7 @@
         </div>
       </a>
 
-      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['/socialmedia']">
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['/socialmedia/articles']">
         <div class="w-100 p-1 mb-3"
           style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
 
@@ -152,14 +152,14 @@
           <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
             <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-store"></i></h4>
             <div>
-              <h4 class="mb-0 text-white">商品訂單</h4>
+              <h4 class="mb-0 text-white">我的訂單</h4>
             </div>
             <h4 class="mb-0 text-white px-3"><i class=" fa fa-angle-double-right"></i></h4>
           </div>
         </div>
       </a>
 
-      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['/products', 'cart']">
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['/products/cart']">
         <div class="w-100 p-1 mb-3"
           style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
 
@@ -193,7 +193,7 @@
 
     <hr>
     <div class="w-100"></div>
-    <a [routerLink]="['']" *ngIf="user?.fUserRankId==99">
+    <a [routerLink]="['/user/editUsers']" *ngIf="user?.fUserRankId==99">
       <div class="w-100 p-1 mb-3"
         style="border-radius:15px;border: solid 3px; border-color:#b0b0b0; background-color: #ffffff;">
         <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #b0b0b0;">
@@ -219,7 +219,7 @@
       </div>
     </a>
 
-    <a>
+    <a (click)="setRank()">
       <div class="w-100 p-1 mb-3"
         style="border-radius:15px;border: solid 3px; border-color:#b0b0b0; background-color: #ffffff;">
         <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #b0b0b0;">

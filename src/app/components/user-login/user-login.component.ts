@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { CartService } from 'src/app/services/cart.service';
+import * as nodemailer from 'nodemailer';
+
+
 
 @Component({
   selector: 'app-user-login',
@@ -14,12 +17,24 @@ export class UserLoginComponent {
   fUserEmail = "";
   fUserPassword = "";
 
+  passwordType = "password";
 
   constructor(private router: Router, private authService: AuthService, private cartService: CartService) { }
 
   ngOnInit(): void {
-    window.scrollTo(0, 0);
   }
+
+  seePassword() {
+    if (this.passwordType == "password") {
+      this.passwordType = "text";
+    }
+    else if (this.passwordType == "text") {
+      this.passwordType = "password";
+    }
+
+  }
+
+
 
   submit(form: NgForm) {
     if (form.invalid) {
@@ -34,16 +49,20 @@ export class UserLoginComponent {
         console.log("成功", response);
         alert("登入成功!");
         this.cartService.loadCartCount();  // 登入成功後，刷新購物車數量
-        this.router.navigate(['/user/page']);
+        this.router.navigate(['/user/page']).then(() => { window.location.reload(); });
       },
       error: (error) => {
         console.log(error);
         alert(error.error.message);
       }
-
     })
-
-
   }
 
+
+  editPassWord() { }
+
+
+
 }
+
+

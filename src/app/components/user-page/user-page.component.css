@@ -1,3 +1,15 @@
-a{
+a {
   text-decoration: none;
+}
+
+.threeBtn {
+  opacity: 0;
+  color: #56bda9;
+  transition: opacity 0.3s ease;
+
+}
+
+.threeBtnDiv:hover .threeBtn {
+  opacity: 1;
+  transition: opacity 0.3s ease;
 }

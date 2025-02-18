@@ -34,6 +34,7 @@ import { PaymentComponent } from './components/payment/payment.component';
 import { ProductPipe } from './pipes/product.pipe';
 import { AttractionTicketComponent } from './components/attraction-ticket/attraction-ticket.component';
 import { AttractionAdminComponent } from './components/attraction-admin/attraction-admin.component';
+import { UserAdminEditComponent } from './components/user-admin-edit/user-admin-edit.component';
 import { SellerOrderComponent } from './components/seller-order/seller-order.component';
 import { SellerCenterComponent } from './components/seller-center/seller-center.component';
 import { BuyerOrderComponent } from './components/buyer-order/buyer-order.component';
@@ -74,6 +75,7 @@ import { EventFormComponent } from './components/event-form/event-form.component
     WalletComponent,
     EventEditDialogComponent,
     EventFormComponent,
+    UserAdminEditComponent,
   ],
   imports: [
     BrowserModule,
