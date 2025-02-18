@@ -87,14 +87,14 @@
         </div>
         <!-- 圖片上傳 -->
         <div class="col-md-6 d-flex flex-column align-items-center bg-light shadow p-3">
-          <div class="upload-area mb-2 p-3 w-100 h-200 text-center" (dragover)="onDragOver($event)"
+          <div class="upload-area mb-2 p-2 w-100 h-200 text-center" (dragover)="onDragOver($event)"
             (drop)="onDrop($event)">
             <i class="fa-regular fa-image fa-2xl mt-5"></i>
             <p class="text-muted mt-2">拖曳圖片到這裡或點擊選擇圖片</p>
             <!-- 顯示錯誤訊息 -->
             <button type="button" class="btn btn-success" (click)="fileInput.click()"
               [disabled]="imagePreviews.length >= 6"><i class="fa-regular fa-circle-check"></i>&nbsp;選擇圖片</button>
-            <p class="text-info mt-2"><i class="fa-regular fa-lightbulb"></i>&nbsp;最多上傳 6 張圖片</p>
+            <p class="text-info mt-2"><i class="fa-regular fa-lightbulb"></i>&nbsp;提示：重新排列照片以更改封面</p>
             <input type="file" class="form-control-file d-none" #fileInput (change)="onImageSelected($event)"
               multiple />
           </div>
@@ -102,7 +102,10 @@
           <!-- 預覽圖片區域 -->
           <div class="container">
             <div class="row d-flex row-cols-3 flex-wrap justify-content-start">
-              <div *ngFor="let image of imagePreviews; let i = index" class="col-auto position-relative p-2">
+              <div *ngFor="let image of imagePreviews; let i = index"
+                class="col-auto preview-image position-relative p-2" draggable="true"
+                (dragstart)="onDragStart($event, i)" (dragover)="onDragOverImage($event)"
+                (drop)="onDropImage($event, i)">
                 <div class="position-absolute top-0 start-0" style="top: 4px; left: 8px;">
                   <!-- 封面標籤 -->
                   <span *ngIf="i === 0" class="badge badge-success ">封面</span>

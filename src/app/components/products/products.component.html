@@ -73,7 +73,7 @@
         <div class="mb-5">
           <h4 class="text-uppercase mb-2" style="letter-spacing: 5px;">最新商品</h4>
           <a *ngFor="let product of latestProducts"
-            class="d-flex align-items-center text-decoration-none bg-white mb-3 rounded shadow"
+            class="d-flex align-items-center text-decoration-none bg-white mb-3 rounded shadow product-item"
             href="javascript:void(0)" data-toggle="modal" data-target="#productDetailModal"
             (click)="openProductDetail(product.fProductId)">
             <img class="img-fluid rounded"
@@ -106,8 +106,8 @@
       <!-- productList -->
       <div class="col-lg-9">
         <div class="row pb-3">
-          <div *ngFor="let product of products" class="col-lg-4 col-md-6 mb-4">
-            <div class="package-item bg-light shadow rounded  mb-2"
+          <div *ngFor="let product of products; let i=index " class="col-lg-4 col-md-6 mb-4">
+            <div class="package-item bg-light shadow rounded  mb-2 card"
               style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
               <!-- 頭像與會員暱稱 -->
               <div class="d-flex align-items-center p-2 border-bottom">
@@ -141,9 +141,12 @@
                 </div>
               </div>
               <!-- 卡片底部資訊 -->
-              <div class="border-top px-4 py-2">
-                <div class="d-flex justify-content-between">
-                  <div></div>
+              <div class="border-top px-1 py-2">
+                <div class="d-flex justify-content-between mx-2">
+                  <div><button class="btn fw-bold favorite-btn" (click)="toggleFavorite(i)">
+                      <i [class]="favorites[i] ? 'fas fa-heart text-danger' : 'far fa-heart'"></i>&nbsp;收藏
+                    </button>
+                  </div>
                   <button class="btn btn-primary me-2 fw-bold" (click)="addToCart(product)"><i
                       class="fa-solid fa-cart-arrow-down"></i>&nbsp;&nbsp;加入購物車</button>
                 </div>

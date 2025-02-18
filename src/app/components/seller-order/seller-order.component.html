@@ -1,0 +1,162 @@
+<!-- Header Start -->
+<div class="container-fluid page-header">
+  <div class="container">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+      <h3 class="display-4 text-white text-uppercase">賣家中心</h3>
+      <div class="d-inline-flex text-white">
+        <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase">賣家中心</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Header End -->
+
+<!-- Booking Start -->
+<div class="container-fluid booking mt-5 pb-5">
+  <div class="container">
+    <div class="bg-light shadow" style="padding: 20px;">
+      <div class="row justify-content-center" style="min-height: 60px;">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="w-100 p-1 mb-3 topBtn" [routerLink]="['/products', 'sellerOrder']"
+                style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
+                <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-dolly"></i></h4>
+                  <div>
+                    <h4 class="mb-0 text-white">我的銷售</h4>
+                  </div>
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-angles-down"></i></h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="w-100 p-1 mb-3 topBtn" [routerLink]="['/products', 'sellerCenter']"
+                style="border-radius:15px;border: solid 3px; border-color:#b0b0b0;; background-color: #ffffff;">
+                <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #b0b0b0;">
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-chart-line"></i></h4>
+                  <div>
+                    <h4 class="mb-0 text-white">賣場分析</h4>
+                  </div>
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-angles-down"></i></h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="w-100 p-1 mb-3 topBtn" [routerLink]="['/products', 'myProduct']"
+                style="border-radius:15px;border: solid 3px; border-color:#ebbaba;; background-color: #ffffff;">
+                <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #ebbaba;">
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-box"></i></h4>
+                  <div>
+                    <h4 class="mb-0 text-white">我的商品</h4>
+                  </div>
+                  <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-angles-down"></i></h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Booking End -->
+
+
+<!-- start your coding here-->
+<!-- Title -->
+<div class="text-center">
+  <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Seller Center</h6>
+  <h1>我的銷售列表</h1>
+</div>
+
+<!-- Content -->
+<div class="container-fluid py-5 ">
+  <div class="container bg-light shadow p-3 ">
+    <!--Navbar for Filtering -->
+    <!-- Navbar for Filtering -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm rounded mb-3">
+      <ul class="nav nav-tabs border-0">
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{'active-tab': selectedStatus === null}" (click)="filterOrders(null)">全部訂單</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{'active-tab': selectedStatus === 1}" (click)="filterOrders(1)">待出貨</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{'active-tab': selectedStatus === 2}" (click)="filterOrders(2)">待收貨</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{'active-tab': selectedStatus === 3}" (click)="filterOrders(3)">訂單完成</a>
+        </li>
+      </ul>
+      <form class="form-inline ml-auto">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="輸入訂單編號" name="searchText" [(ngModel)]="searchText">
+          <div class="input-group-append">
+            <button class="btn btn-success" (click)="searchOrders()"><i class="fa fa-search"></i> 搜尋</button>
+            <button class="btn btn-primary" (click)="resetSearch()"><i class="fa fa-sync"></i> 重置</button>
+          </div>
+        </div>
+      </form>
+    </nav>
+
+    <!-- table -->
+    <table class="table table-striped text-center align-middle table-hover table-custom">
+      <thead>
+        <tr class=" table-success ">
+          <th>訂單編號</th>
+          <th>訂單金額</th>
+          <th>待出貨</th>
+          <th>待收貨</th>
+          <th>訂單完成</th>
+          <th>訂購人</th>
+          <th>寄件地址</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of filteredOrders">
+          <td>#{{order.fOrderId}}</td>
+          <td>NT$&nbsp;{{order.fOrderAmount}}</td>
+          <td>
+            <span class="badge rounded-pill badge-lg"
+              [ngClass]="{'badge-success': getBadgeText(order, 1) === '進行中', 'badge-secondary': getBadgeText(order, 1) === '待接續'}">
+              {{ getBadgeText(order, 1) }}
+            </span>
+          </td>
+          <td>
+            <span class="badge rounded-pill badge-lg"
+              [ngClass]="{'badge-success': getBadgeText(order, 2) === '進行中', 'badge-secondary': getBadgeText(order, 2) === '待接續'}">
+              {{ getBadgeText(order, 2) }}
+            </span>
+          </td>
+          <td>
+            <span class="badge rounded-pill badge-lg"
+              [ngClass]="{'badge-success': getBadgeText(order, 3) === '進行中', 'badge-secondary': getBadgeText(order, 3) === '待接續'}">
+              {{ getBadgeText(order, 3) }}
+            </span>
+          </td>
+          <td>{{order.buyerName}}</td>
+          <td>{{order.fShipAddress}}</td>
+          <!-- 操作按鈕 -->
+          <td>
+            <!-- <button class="btn btn-primary btn-sm mr-2">
+              <i class="fa-solid fa-circle-info"></i>&nbsp;訂單明細
+            </button> -->
+            <button *ngIf="order.fOrderStatusId === 1 || order.fOrderStatusId === 2"
+              class="btn btn-warning btn-sm shadow" (click)="shipOrder(order.fOrderId,order.fExtraInfo)">
+              <i class=" fa-solid fa-truck-fast"></i>&nbsp;寄件訊息
+            </button>
+            <button *ngIf="order.fOrderStatusId==3" class="btn btn-warning btn-sm shadow"
+              (click)="confirmOrder(order.fExtraInfo)">
+              <i class=" fa-solid fa-truck-fast"></i>&nbsp;寄件訊息
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

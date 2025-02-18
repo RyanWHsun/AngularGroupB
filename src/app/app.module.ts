@@ -34,6 +34,10 @@ import { PaymentComponent } from './components/payment/payment.component';
 import { ProductPipe } from './pipes/product.pipe';
 import { AttractionTicketComponent } from './components/attraction-ticket/attraction-ticket.component';
 import { AttractionAdminComponent } from './components/attraction-admin/attraction-admin.component';
+import { SellerOrderComponent } from './components/seller-order/seller-order.component';
+import { SellerCenterComponent } from './components/seller-center/seller-center.component';
+import { BuyerOrderComponent } from './components/buyer-order/buyer-order.component';
+import { WalletComponent } from './components/wallet/wallet.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { EventEditDialogComponent } from './components/event-edit-dialog/event-edit-dialog.component';
 import { EventFormComponent } from './components/event-form/event-form.component';
@@ -64,6 +68,10 @@ import { EventFormComponent } from './components/event-form/event-form.component
     ProductPipe,
     AttractionTicketComponent,
     AttractionAdminComponent,
+    SellerOrderComponent,
+    SellerCenterComponent,
+    BuyerOrderComponent,
+    WalletComponent,
     EventEditDialogComponent,
     EventFormComponent,
   ],

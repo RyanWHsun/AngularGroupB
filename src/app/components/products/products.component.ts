@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { latestProducts, Products } from 'src/app/interfaces/products';
 import { ProductsService } from 'src/app/services/products.service';
-
+import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
 
 @Component({
   selector: 'app-products',
@@ -26,8 +26,10 @@ export class ProductsComponent {
   selectedProductId: number | null = null;  // 當前選中的商品
   hotKeywords: string[] = ['行李箱', 'RIWAWA', '露營', '爆爆瑪特', '外套', '娃娃', 'Golumbia', '帳篷', '日本', '登山', '公仔', '台灣', '手錶', '麻將', 'Germès']
   latestProducts: latestProducts[] = []; //最新商品
+  favorites: boolean[] = new Array(this.products.length).fill(false);
 
-  constructor(private productService: ProductsService, private cartService: CartService, private router: Router) { }
+
+  constructor(private productService: ProductsService, private cartService: CartService, private router: Router, private swal: SweetAlert2Service) { }
 
   ngOnInit(): void {
     this.loadProducts(); // 初始化加載商品
@@ -146,17 +148,17 @@ export class ProductsComponent {
     this.cartService.addProductToCart(item).subscribe({
       next: (response) => {
         //console.log(response);
-        alert(response.message);
+        this.swal.showEasySuccess(response.message);
         this.cartService.loadCartCount();
       }, error: (error) => {
         if (error.status === 401) {
           console.log(error);
           console.warn('沒登入，顯示提示訊息');
-          alert('請先登入哦!');
+          this.swal.showEasyWarning('您尚未登入，請先登入哦!');
           this.router.navigate(['user/login']);
         } else {
           console.log('加入購物車錯誤:', error);
-          alert(error.error.message);
+          this.swal.showEasyError('加入購物車錯誤');
         }
       }
     })
@@ -172,6 +174,10 @@ export class ProductsComponent {
         console.error('最新商品載入錯誤:', error)
       }
     })
+  }
+
+  toggleFavorite(index: number) {
+    this.favorites[index] = !this.favorites[index];
   }
 }
 
