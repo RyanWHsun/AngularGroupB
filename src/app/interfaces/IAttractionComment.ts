@@ -5,6 +5,7 @@ export interface IAttractionComment{
   fUserId?:number|null;
   fUserName?:string|null;
   fUserNickName?:string|null;
+  fUserImage?:string|null;
   fRating?:number|null;
   fComment?:string|null;
   fCreatedDate?: string | null;

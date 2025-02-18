@@ -207,9 +207,8 @@
             <!-- 右側：景點資訊 -->
             <div class="modal-info-container">
               <div class="info-section">
-                <div>
-                  <h5 class="info-title">景點介紹</h5>
-                  <p>{{ attraction.fDescription }}</p>
+                <div class="weather">
+                  <img [src]="weatherIconSrc" alt="weather">
                 </div>
                 <div>
                   <h5 class="info-title">地址</h5>
@@ -220,6 +219,10 @@
                   <a [href]="attraction.fWebsiteUrl" target="_blank">{{
                     attraction.fWebsiteUrl
                   }}</a>
+                </div>
+                <div>
+                  <h5 class="info-title">景點介紹</h5>
+                  <p>{{ attraction.fDescription }}</p>
                 </div>
                 <div>
                   <h5 class="info-title">交通資訊</h5>
@@ -233,14 +236,7 @@
           <div class="map-container">
             <div #mapContainer class="map-content"></div>
           </div>
-          <!-- 撰寫評論 -->
-          <img
-                src="assets/images/head001.jpg"
-                class="comment-img"
-                alt="user image"
-              />
-          <textarea [(ngModel)]="commentComponent.inputContent"></textarea>
-          <button (click)="submitComment()">送出</button>
+
           <!-- 評論 -->
           <div class="comment-section">
             <div class="comment-header">
@@ -262,20 +258,40 @@
             </div>
             <div class="comment-line"></div>
             <!-- 灰色底線 -->
+            <!-- 撰寫評論 start -->
+            <div class="comment-box">
+              <img
+                [src]="loginCommenter.fUserImage"
+                class="comment-img"
+                alt="user image"
+              />
+              <div class="rating" #ratingContainer>
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+              </div>
+              <textarea
+                class="comment-input"
+                [(ngModel)]="commentComponent.inputContent"
+                placeholder="撰寫評論..."
+              ></textarea>
+              <button class="comment-submit" (click)="submitComment()">
+                送出
+              </button>
+            </div>
+            <!-- 撰寫評論 end -->
+            <!-- 顯示評論 start -->
             <div
               *ngFor="let comment of attractionComment"
               class="comment-container"
             >
               <img
-                src="assets/images/head001.jpg"
+                [src]="comment.fUserImage"
                 class="comment-img"
                 alt="user image"
               />
-              <!-- <img
-                [src]="comment.userImage || 'assets/images/default-user.png'"
-                class="comment-img"
-                alt="user image"
-              /> -->
               <div class="comment-details">
                 <div class="comment-header">
                   <span class="comment-username">{{ comment.fUserName }}</span>
@@ -284,6 +300,7 @@
                 <div class="comment-text">{{ comment.fComment }}</div>
               </div>
             </div>
+            <!-- 顯示評論 end -->
           </div>
         </div>
       </div>

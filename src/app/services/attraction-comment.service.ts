@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IAttractionComment } from '../interfaces/IAttractionComment';
-import { userMaterial } from '../interfaces/user';
+import { ICommenter } from '../interfaces/ICommenter';
 
 @Injectable({
   providedIn: 'root',
@@ -35,11 +35,18 @@ export class AttractionCommentService {
     });
   }
 
-  // editting
+  // https://localhost:7112/api/TAttractionComments/commenter
+  // 取得評論者的資訊
   getCommenterInfo(){
-    return this.client.get<userMaterial>(`${this.baseUrl}/commenter`,{
+    return this.client.get<ICommenter>(`${this.baseUrl}/commenter`,{
       withCredentials: true,
     })
+  }
+
+  // https://localhost:7112/api/TAttractionComments/commenter/2
+  // id 是 user id
+  getCommenterInfoById(id:number){
+    return this.client.get<ICommenter>(`${this.baseUrl}/commenter/${id}`);
   }
 
   // https://localhost:7112/api/TAttractionComments

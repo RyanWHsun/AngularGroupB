@@ -29,6 +29,7 @@
   border-color: #7ab730;
   font-size: 1rem; /* 設定字體大小 */
   cursor: pointer; /* 鼠標變成手型 */
+  margin-top: 10px;
 }
 
 .card-body button:hover {
@@ -49,10 +50,10 @@
 
 .tags {
   margin-top: 10px;
-  white-space: nowrap;  /* 防止換行 */
-  overflow: hidden;  /* 超出範圍隱藏 */
-  text-overflow: ellipsis;  /* 顯示省略號 */
-  max-width: 100%;  /* 確保不會超出容器範圍 */
+  white-space: nowrap; /* 防止換行 */
+  overflow: hidden; /* 超出範圍隱藏 */
+  text-overflow: ellipsis; /* 顯示省略號 */
+  max-width: 100%; /* 確保不會超出容器範圍 */
 }
 
 .tags span {
@@ -254,11 +255,14 @@
 } */
 /* 修改 */
 
-.btn-detail, .btn-delete {
+.btn-detail,
+.btn-delete {
   margin: 10px 5px;
 }
 
-#FCategoryId, #FRegion, #FStatus {
+#FCategoryId,
+#FRegion,
+#FStatus {
   width: 38%;
   height: 40px;
   border-radius: 10px;
@@ -278,4 +282,53 @@
   border-color: #7ab730; /* 當前頁面的邊框色 */
 }
 
+/* comment box */
+.comment-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
 
+.rating {
+  display: flex;
+  font-size: 25px;
+  color: #666;
+}
+
+.star {
+  cursor: pointer;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+.star:hover {
+  text-shadow: 0 0 10px gold; /* 滑鼠懸停時，星星邊緣發光 */
+}
+
+.selected {
+  color: gold; /* 點擊後變黃色 */
+}
+
+.comment-input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  resize: none;
+}
+
+.comment-submit {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.comment-submit:hover {
+  background-color: #0056b3;
+}

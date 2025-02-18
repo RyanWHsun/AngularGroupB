@@ -34,6 +34,8 @@ import { AttractionViewCookieService } from 'src/app/services/attraction-view-co
 import { IAttractionViewCount } from 'src/app/interfaces/IAttractionViewCount';
 import { IAttractionTag } from 'src/app/interfaces/IAttractionTag';
 import { AttractionTagService } from 'src/app/services/attraction-tag.service';
+import { ICommenter } from 'src/app/interfaces/ICommenter';
+import { OpenWeatherAPIService } from 'src/app/services/open-weather-api.service';
 
 // 宣告全域變數 google
 // 在 Google Maps JavaScript API 中，google 這個物件是由 API 動態載入的，而不是直接在 TypeScript 環境中定義的。
@@ -56,7 +58,7 @@ declare global {
   templateUrl: './attraction.component.html',
   styleUrls: ['./attraction.component.css'],
 })
-export class AttractionComponent {
+export class AttractionComponent implements AfterViewInit {
   // 在 TypeScript 內部存取 Angular 模板中的 DOM 元素或元件
   //
   // 在 HTML 模板中 找一個 #mapContainer 參考的元素。
@@ -74,6 +76,7 @@ export class AttractionComponent {
   //
   // ElementRef: ElementRef 是 Angular 提供的一個 封裝 DOM 元素的類別，讓 TypeScript 可以 直接存取 HTML 元素。
   @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef;
+  @ViewChild('ratingContainer') ratingContainer!: ElementRef;
 
   attraction: IAttraction = {};
   partialAttractions: IAttraction[] = [];
@@ -96,6 +99,10 @@ export class AttractionComponent {
     geocodeResult: null,
   };
 
+  longitude: number = 0; // 經度
+  latitude: number = 0; // 緯度
+  weatherIconSrc: string = '';
+
   commentComponent = {
     isDescending: true,
     isCollapsed: true,
@@ -104,6 +111,10 @@ export class AttractionComponent {
     inputContent: '',
   };
 
+  loginCommenter: ICommenter = {};
+  selectedRating = 0;
+  commentLimit = 5; // 一開始顯示 5 則評論
+
   constructor(
     private attractionService: AttractionService,
     private attractionCategoryService: AttractionCategoryService,
@@ -111,37 +122,86 @@ export class AttractionComponent {
     private attractionCommentService: AttractionCommentService,
     private googleMapsService: GoogleMapAPIService,
     private attractionViewCookieService: AttractionViewCookieService,
-    private attractionTagService: AttractionTagService
+    private attractionTagService: AttractionTagService,
+    private openWeatherService: OpenWeatherAPIService
   ) {}
 
-  getCommenter(){
-
+  setWeatherIcon$() {
+    this.weatherIconSrc = '';
+    return this.openWeatherService
+      .getCurrentWeatherIcon(this.latitude, this.longitude)
+      .pipe(
+        tap((iconSrc) => {
+          this.weatherIconSrc = iconSrc
+            ? iconSrc
+            : 'https://openweathermap.org/img/wn/10d@2x.png';
+          console.log('weather icon src: ', this.weatherIconSrc);
+        }),
+        map(() => void 0)
+      );
   }
 
+  // 設定評論者(也就是登入者)的初始資訊
+  setCommenter$() {
+    return this.attractionCommentService.getCommenterInfo().pipe(
+      tap((commenter) => {
+        // 轉換 Base64 為 data:image/jpeg;base64 或 data:image/png;base64 格式
+        commenter.fUserImage = commenter.fUserImage
+          ? `data:image/${
+              commenter.fUserImage.startsWith('/9j/') ? 'jpeg' : 'png'
+            };base64,${commenter.fUserImage}`
+          : 'assets/images/head002.jpg';
+
+        this.loginCommenter = commenter;
+      }),
+      map(() => void 0)
+    );
+  }
+
+  // 提交評論
   submitComment() {
+    if (
+      this.commentComponent.inputContent === '' ||
+      this.selectedRating === 0
+    ) {
+      alert('評論還未填寫');
+      return;
+    }
     const comment: IAttractionComment = {
       fCommentId: 0,
       fAttractionId: this.attraction.fAttractionId ?? null, // 確保是 number 或 null
       fAttractionName: this.attraction.fAttractionName ?? null, // 確保是 string 或 null
-      fUserId: 0, // 確保是 number 或 null
-      fUserName: '',
-      fUserNickName: '',
-      fRating: 5, // 確保是 number 或 null
-      fComment: this.commentComponent.inputContent??null,
+      fUserId: this.loginCommenter.fUserId ?? null, // 確保是 number 或 null
+      fUserName: this.loginCommenter.fUserName ?? null,
+      fUserNickName: this.loginCommenter.fUserNickName ?? null,
+      fUserImage: this.loginCommenter.fUserImage ?? null,
+      fRating: this.selectedRating, // 確保是 number 或 null
+      fComment: this.commentComponent.inputContent ?? null,
       fCreatedDate: new Date().toISOString(), // ✅ 改為 ISO 8601 格式
     };
 
     this.attractionCommentService
       .postAttractionComment(comment)
+      .pipe(
+        switchMap(() => {
+          console.log('Comment submitted successfully!');
+          this.commentComponent.inputContent = ''; // 清空輸入框
+          // 接著執行 showCommentsByCondition$
+          return this.showCommentsByCondition$(
+            this.attraction.fAttractionId!,
+            5,
+            this.commentComponent.isDescending,
+            this.commentComponent.isCollapsed
+          );
+        })
+      )
       .subscribe({
-        next: (comment) => {
-          console.log('submit comment', comment);
-          this.commentComponent.inputContent="";
-        },
-        error: (err) => console.error('Error submitting comment', err),
+        next: () => console.log('Updated comment list'),
+        error: (err) => console.error('Error:', err),
       });
   }
 
+  // 點擊從舊到新/從新到舊留言
   toggleSort(id: number) {
     console.log('toggleSort');
     this.commentComponent.isDescending = !this.commentComponent.isDescending;
@@ -156,6 +216,7 @@ export class AttractionComponent {
     ).subscribe(); // Observable 需要 subscribe() 才會執行
   }
 
+  // 點擊顯示/收合按鈕
   toggleCollapse(id: number) {
     console.log('collapse');
     this.commentComponent.isCollapsed = !this.commentComponent.isCollapsed;
@@ -273,8 +334,20 @@ export class AttractionComponent {
           results: google.maps.GeocoderResult[] | null,
           status: google.maps.GeocoderStatus
         ) => {
-          if (status === 'OK' && results && results[0]) {
+          if (
+            status === google.maps.GeocoderStatus.OK &&
+            results &&
+            results[0]
+          ) {
             const location = results[0].geometry.location;
+
+            const lat = location.lat();
+            const lng = location.lng();
+
+            // 只在這裡更新物件屬性，避免 race condition
+            this.longitude = location.lng();
+            this.latitude = location.lat();
+            console.log(this.longitude, this.latitude);
             resolve({ lat: location.lat(), lng: location.lng() });
           } else {
             reject(`地址轉換失敗: ${status}`);
@@ -366,14 +439,19 @@ export class AttractionComponent {
     isCollapsed: boolean
   ): Observable<void> {
     console.log('showCommentsByCondition');
-    //console.log(`id: ${id} count: ${count} isDescending: ${isDescending} isCollapsed: ${isCollapsed}`)
     return this.attractionCommentService
       .getAttractionCommentByCondition(id, count, isDescending, isCollapsed)
       .pipe(
         tap((data) => {
-          this.attractionComment = data;
+          this.attractionComment = data.map((comment) => ({
+            ...comment,
+            fUserImage: comment.fUserImage
+              ? `data:image/${
+                  comment.fUserImage.startsWith('/9j/') ? 'jpeg' : 'png'
+                };base64,${comment.fUserImage}`
+              : 'assets/images/head002.jpg',
+          }));
           console.log(this.attractionComment);
-          //this.attractionComment = Array.isArray(data) ? data : [data];
         }),
         map(() => void 0)
       );
@@ -407,7 +485,8 @@ export class AttractionComponent {
         switchMap(() => this.loadGoogleMaps$()),
         switchMap(() => this.addViewCount$(id)),
         switchMap(() => this.showAttractionViewCount$()),
-        switchMap(() => this.setCarouselImages$(id))
+        switchMap(() => this.setCarouselImages$(id)),
+        switchMap(() => this.setWeatherIcon$())
       )
       .subscribe();
     this.setCarouselImages$(id);
@@ -560,8 +639,39 @@ export class AttractionComponent {
         switchMap(() => this.initPage$()), // 等待 initPartialAttractions 完成後再執行 initPage
         switchMap(() => this.showPartialImages$()), // 等待 initPage 完成後再執行 showPartialImages
         switchMap(() => this.showAttractionViewCount$()),
-        switchMap(() => this.showAttractionTag$())
+        switchMap(() => this.showAttractionTag$()),
+        switchMap(() => this.setCommenter$())
       )
       .subscribe();
+  }
+
+  ngAfterViewInit() {
+    // 星級評分元件初始化
+    const stars: NodeListOf<HTMLElement> =
+      this.ratingContainer.nativeElement.querySelectorAll('.star');
+
+    stars.forEach((star) => {
+      star.addEventListener('mouseover', () =>
+        this.highlightStars(parseInt(star.getAttribute('data-value')!))
+      );
+      star.addEventListener('mouseout', () =>
+        this.highlightStars(this.selectedRating)
+      );
+      star.addEventListener('click', () => {
+        this.selectedRating = parseInt(star.getAttribute('data-value')!);
+        console.log(this.selectedRating);
+        this.highlightStars(this.selectedRating);
+      });
+    });
+  }
+
+  highlightStars(rating: number) {
+    const stars: NodeListOf<HTMLElement> =
+      this.ratingContainer.nativeElement.querySelectorAll('.star');
+
+    stars.forEach((star) => {
+      const value = parseInt(star.getAttribute('data-value')!);
+      star.classList.toggle('selected', value <= rating);
+    });
   }
 }
