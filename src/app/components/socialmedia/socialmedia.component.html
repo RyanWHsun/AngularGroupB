@@ -79,7 +79,8 @@
         <div class="post border rounded p-3">
           <!-- Header -->
           <div class="d-flex align-items-center mb-2">
-            <img [src]="userData[data['fUserId']].image" class="rounded-circle mr-2" style="width: 5%;">
+            <img [src]="userData[data['fUserId']].image" class="rounded-circle mr-2"
+              style="width: 30px;height: 30px; object-fit: cover">
             <strong>{{userData[data['fUserId']].nickName}}</strong>
           </div>
 
@@ -102,17 +103,21 @@
           <!-- Likes and Caption -->
           <p class="mb-1"><strong>10個讚</strong></p>
           <p *ngIf="!activePostIds.includes(data['fPostId'])"><img [src]="userData[data['fUserId']].image"
-              class="rounded-circle mr-2" style="width: 5%;"><strong>{{userData[data['fUserId']].nickName}}
+              class="rounded-circle mr-2"
+              style="width: 30px;height: 30px; object-fit: cover"><strong>{{userData[data['fUserId']].nickName}}
             </strong>{{data['fTitle']}}</p>
 
           <!-- Comment Section -->
           <div *ngIf="activePostIds.includes(data['fPostId'])" class="comment-container">
-            <p><strong>{{userData[data['fUserId']].nickName}} </strong>{{data['fTitle']}}</p>
+            <p><img [src]="userData[data['fUserId']].image" class="rounded-circle mr-2"
+                style="width: 30px;height: 30px; object-fit: cover"><strong>{{userData[data['fUserId']].nickName}}
+              </strong>{{data['fTitle']}}</p>
             <div [innerHTML]="contentData[data['fPostId']]">
             </div>
             <hr>
             <p *ngFor="let comments of commentDatas[data['fPostId']]"><img [src]="comments.fUserImage"
-                class="rounded-circle mr-2" style="width: 5%;"><strong>{{comments.fUserNickName}}
+                class="rounded-circle mr-2"
+                style="width: 30px;height: 30px; object-fit: cover"><strong>{{comments.fUserNickName}}
               </strong>{{comments.fContent}}</p>
           </div>
           <div class="comment-input-box">
