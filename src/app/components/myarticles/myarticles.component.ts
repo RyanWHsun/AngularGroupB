@@ -33,7 +33,8 @@ export class MyarticlesComponent {
     { value: true, label: '公開' },
     { value: false, label: '私人' }
   ];
-  imagePreview: string | ArrayBuffer | null = null;
+  imagePreviews: string[] = [];
+  currentIndex = 0;
   constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer) { };
   ngOnInit(): void {
     this.get();
@@ -44,6 +45,9 @@ export class MyarticlesComponent {
     this.articleTitle = '';
     this.editorData = '';
     this.articleStatus = true;
+    this.imagePreviews = [];
+    this.currentIndex = 0;
+    loadCKEditorCloud(cloudConfig).then(this._setupEditor.bind(this));
   }
 
   loadImages(postId: number) {
@@ -69,24 +73,43 @@ export class MyarticlesComponent {
     }).pipe(
       concatMap(response => {
         // console.log('文章發佈成功', response);
-        return this.socialmediaService.postImages([{
-          FPostId: response['fPostId'],
-          FImage: this.imagePreview
-        }]);
+        const postId = response['fPostId'];
+        const imageData = this.imagePreviews.map(img => ({
+          FPostId: postId,
+          FImage: img
+        }));
+        return this.socialmediaService.postImages(imageData);
       })
     ).subscribe(response => {
       // console.log('文章圖片發佈成功', response);
     });
   }
   onFileSelected(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreview = reader.result;
-        // console.log(this.imagePreview);
-      };
-      reader.readAsDataURL(file);
+    let files = (event.target as HTMLInputElement).files;
+    if (files) {
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.imagePreviews.push(reader.result as string);
+          this.currentIndex = this.imagePreviews.length - 1;
+        };
+        reader.readAsDataURL(file);
+      })
+    }
+  }
+  removeImage(index: number): void {
+    this.imagePreviews.splice(index, 1);
+    this.prevImage();
+  }
+  prevImage(): void {
+    if (this.imagePreviews.length > 0) {
+      this.currentIndex = (this.currentIndex - 1 + this.imagePreviews.length) % this.imagePreviews.length;
+    }
+  }
+
+  nextImage(): void {
+    if (this.imagePreviews.length > 0) {
+      this.currentIndex = (this.currentIndex + 1) % this.imagePreviews.length;
     }
   }
   //

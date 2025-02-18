@@ -72,14 +72,16 @@
       </div>
     </div>
     <!-- 文章 -->
-    <div class="col-8">
+    <div class="col-8" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="300"
+      (scrolled)="onScroll()">
       <div *ngFor="let data of datas" class="container-fluid mb-3" style="width: 90%;">
         <!-- Post Wrapper -->
         <div class="post border rounded p-3">
           <!-- Header -->
           <div class="d-flex align-items-center mb-2">
-            <img src="/assets/images/head002.jpg" class="rounded-circle mr-2" style="width: 5%;">
-            <strong>Ryan</strong>
+            <img [src]="userData[data['fUserId']].image" class="rounded-circle mr-2"
+              style="width: 30px;height: 30px; object-fit: cover">
+            <strong>{{userData[data['fUserId']].nickName}}</strong>
           </div>
 
           <!-- Image -->
@@ -94,33 +96,40 @@
           <!-- Actions -->
           <div class="d-flex justify-content-start mb-2">
             <button class="btn mr-2 shadow-none"><i class="fa-regular fa-heart" style="color: #000000;"></i></button>
-            <button class="btn mr-2 shadow-none" (click)="openComments(data['fPostId'])"><i
+            <button class="btn mr-2 shadow-none" (click)="toggleComments(data['fPostId'])"><i
                 class="fa-regular fa-comment" style="color: #000000;"></i></button>
           </div>
 
           <!-- Likes and Caption -->
-          <p class="mb-1"><strong>67個讚</strong></p>
-          <p><strong>Ryan </strong>好久沒出去玩惹~</p>
+          <p class="mb-1"><strong>10個讚</strong></p>
+          <p *ngIf="!activePostIds.includes(data['fPostId'])"><img [src]="userData[data['fUserId']].image"
+              class="rounded-circle mr-2"
+              style="width: 30px;height: 30px; object-fit: cover"><strong>{{userData[data['fUserId']].nickName}}
+            </strong>{{data['fTitle']}}</p>
 
           <!-- Comment Section -->
-          <input type="text" class="form-control" placeholder="留言......">
-        </div>
-        <div class="comments-container" *ngIf="activePostIds.includes(data['fPostId'])">
-          <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-              <strong>留言</strong>
-              <button class="btn-close"></button>
+          <div *ngIf="activePostIds.includes(data['fPostId'])" class="comment-container">
+            <p><img [src]="userData[data['fUserId']].image" class="rounded-circle mr-2"
+                style="width: 30px;height: 30px; object-fit: cover"><strong>{{userData[data['fUserId']].nickName}}
+              </strong>{{data['fTitle']}}</p>
+            <div [innerHTML]="contentData[data['fPostId']]">
             </div>
-            <div class="card-body">
-              <p>test</p>
-              <p>test2</p>
-              <p>test3</p>
-              <p>test4</p>
-              <p>test5</p>
-            </div>
+            <hr>
+            <p *ngFor="let comments of commentDatas[data['fPostId']]"><img [src]="comments.fUserImage"
+                class="rounded-circle mr-2"
+                style="width: 30px;height: 30px; object-fit: cover"><strong>{{comments.fUserNickName}}
+              </strong>{{comments.fContent}}</p>
+          </div>
+          <div class="comment-input-box">
+            <input type="text" class="commentInput w-100 ml-2" placeholder="留言......"
+              [(ngModel)]="commentTexts[data['fPostId']]">
+            <a role="button" class="mr-2" (click)="submitComment(data['fPostId'])"><i
+                class="fa-solid fa-paper-plane"></i></a>
           </div>
         </div>
+
       </div>
+      <div *ngIf="loading" class="loading-spinner"></div>
     </div>
     <div class="col-2">
       <div class="contacts-list fixed-sidebar">
@@ -134,8 +143,8 @@
           <span class="name">蔡馬寇</span>
         </div>
         <div class="contact-card">
-          <img src="/assets/images/head004.jpg" class="avatar">
-          <span class="name">林阿明</span>
+          <img src="/assets/images/head002.jpg" class="avatar">
+          <span class="name">王瑞安</span>
         </div>
         <div class="contact-card">
           <img src="/assets/images/head005.jpg" class="avatar">

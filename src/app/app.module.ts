@@ -34,6 +34,7 @@ import { PaymentComponent } from './components/payment/payment.component';
 import { ProductPipe } from './pipes/product.pipe';
 import { AttractionTicketComponent } from './components/attraction-ticket/attraction-ticket.component';
 import { AttractionAdminComponent } from './components/attraction-admin/attraction-admin.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { EventEditDialogComponent } from './components/event-edit-dialog/event-edit-dialog.component';
 import { EventFormComponent } from './components/event-form/event-form.component';
 
@@ -76,7 +77,8 @@ import { EventFormComponent } from './components/event-form/event-form.component
     AgGridModule,
     MatDialogModule,
     AgGridModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InfiniteScrollModule
   ],
   providers: [],
   bootstrap: [AppComponent]
