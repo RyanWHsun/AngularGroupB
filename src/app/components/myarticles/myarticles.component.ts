@@ -4,7 +4,7 @@ import { loadCKEditorCloud, CKEditorModule, type CKEditorCloudResult, type CKEdi
 
 import type { ClassicEditor, EditorConfig } from 'https://cdn.ckeditor.com/typings/ckeditor5.d.ts';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { concatMap } from 'rxjs';
+import { concatMap, of } from 'rxjs';
 const LICENSE_KEY =
   'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NDAwOTU5OTksImp0aSI6IjAyNDhiMTFhLTU0ZDQtNDIzZi04NTFmLWEyYTA2ODIzY2FiZCIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImEwOWU3ZDIwIn0.vxr1VsfKg7W4Q58SL66gRKE3eqcERkRaMXA4AZyywVzwS9vx0O6WLlIkuNrWFTBn1Q34TeRofuRdm-Z1mDRlqw';
 const cloudConfig = {
@@ -21,7 +21,7 @@ export class MyarticlesComponent {
   config: EditorConfig | null = null;
   articleTitle = '';
   editorData = '';
-  datas = [];
+  datas: any[] = [];
   finalData: SafeHtml = '';
   imageData: { [key: number]: string[] } = {};
   articleStatus: boolean = true;
@@ -35,9 +35,13 @@ export class MyarticlesComponent {
   ];
   imagePreviews: string[] = [];
   currentIndex = 0;
+  page: number = 1;
+  pageSize: number = 9;
+  loading: boolean = false;
+  hasMore: boolean = true;
   constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer) { };
   ngOnInit(): void {
-    this.get();
+    this.loadArticles();
     loadCKEditorCloud(cloudConfig).then(this._setupEditor.bind(this));
   }
 
@@ -55,13 +59,25 @@ export class MyarticlesComponent {
       this.imageData[postId] = data.map((imageBase64: string) => 'data:image/jpeg;base64,' + imageBase64);
     })
   }
-  get() {
-    this.socialmediaService.getMyArticles().subscribe(data => {
-      // console.log('api', data);
-      this.datas = data;
-      this.datas.forEach(post => {
-        this.loadImages(post['fPostId']);
-      });
+
+  loadArticles() {
+    if (!this.hasMore || this.loading) return;
+
+    this.loading = true;
+    this.socialmediaService.getMyArticles(this.page, this.pageSize).subscribe(response => {
+      if (response.length > 0) {
+        this.datas.push(...response);
+        this.datas.forEach(post => {
+          this.loadImages(post['fPostId']);
+        });
+        this.page++;
+      } else {
+        this.hasMore = false;
+      }
+      this.loading = false;
+    }, error => {
+      console.error("載入文章失敗", error);
+      this.loading = false;
     });
   }
   save() {
@@ -73,6 +89,8 @@ export class MyarticlesComponent {
     }).pipe(
       concatMap(response => {
         // console.log('文章發佈成功', response);
+        if (this.imagePreviews.length == 0)
+          return of(null);
         const postId = response['fPostId'];
         const imageData = this.imagePreviews.map(img => ({
           FPostId: postId,
@@ -81,7 +99,8 @@ export class MyarticlesComponent {
         return this.socialmediaService.postImages(imageData);
       })
     ).subscribe(response => {
-      // console.log('文章圖片發佈成功', response);
+      this.loadArticles();
+      console.log('文章圖片發佈成功', response);
     });
   }
   onFileSelected(event: Event): void {
@@ -111,6 +130,10 @@ export class MyarticlesComponent {
     if (this.imagePreviews.length > 0) {
       this.currentIndex = (this.currentIndex + 1) % this.imagePreviews.length;
     }
+  }
+
+  onScroll() {
+    this.loadArticles();
   }
   //
   private _setupEditor(cloud: CKEditorCloudResult<typeof cloudConfig>) {

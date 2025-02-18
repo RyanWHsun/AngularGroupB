@@ -1,9 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { IPostComment } from 'src/app/interfaces/IPostComment';
-import { IUser } from 'src/app/interfaces/IUser';
 import { SocialmediaService } from 'src/app/services/socialmedia.service';
-import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-socialmedia',
