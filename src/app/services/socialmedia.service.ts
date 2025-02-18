@@ -41,4 +41,7 @@ export class SocialmediaService {
   postArticleComment(commentData: any): Observable<any> {
     return this.httpClient.post('https://localhost:7112/api/TPostComments', commentData, { withCredentials: true })
   }
+  deleteComment(commentId: number): Observable<any> {
+    return this.httpClient.delete(`https://localhost:7112/api/TPostComments/${commentId}`, { withCredentials: true })
+  }
 }

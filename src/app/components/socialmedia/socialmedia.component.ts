@@ -105,8 +105,11 @@ export class SocialmediaComponent {
       } else {
         this.toggleComments(postId);
       }
-
     })
+  }
+
+  deleteComment(commentId: number, postId: number) {
+    this.socialmediaService.deleteComment(commentId).subscribe(response => { this.loadComments(postId) });
   }
 
   onScroll() {
