@@ -74,9 +74,7 @@ import { EventFormComponent } from './components/event-form/event-form.component
     FormsModule,
     AgGridModule,
     CKEditorModule,
-    AgGridModule,
     MatDialogModule,
-    AgGridModule,
     ReactiveFormsModule,
     InfiniteScrollModule
   ],
