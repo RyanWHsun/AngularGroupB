@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { IPostComment } from 'src/app/interfaces/IPostComment';
+import { IUser } from 'src/app/interfaces/IUser';
 import { SocialmediaService } from 'src/app/services/socialmedia.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-socialmedia',
@@ -20,9 +22,15 @@ export class SocialmediaComponent {
   pageSize: number = 3;
   loading: boolean = false;
   hasMore: boolean = true;
+  loginUserId = 0;
   constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer) { };
   ngOnInit(): void {
+    this.loadLoginInfo();
     this.loadArticles();
+  }
+  loadLoginInfo() {
+    this.socialmediaService.getLoginUserId().subscribe(data => { this.loginUserId = data });
+
   }
 
   loadImages(postId: number) {
@@ -78,14 +86,13 @@ export class SocialmediaComponent {
     const index = this.activePostIds.indexOf(postId);
     if (index === -1) {
       this.loadComments(postId);
-      console.log(this.commentDatas);
+      // console.log(this.commentDatas);
       this.activePostIds.push(postId);
     } else {
       this.activePostIds.splice(index, 1);
     }
   }
   submitComment(postId: number) {
-    console.log(postId, this.commentTexts[postId], typeof (this.commentTexts[postId]));
     this.socialmediaService.postArticleComment({
       FPostId: postId,
       FContent: this.commentTexts[postId]

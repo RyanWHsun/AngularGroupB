@@ -32,6 +32,9 @@ export class SocialmediaService {
   getUserInfo(userId: number): Observable<any> {
     return this.httpClient.get(`https://localhost:7112/api/TPosts/userInfo/${userId}`)
   }
+  getLoginUserId(): Observable<any> {
+    return this.httpClient.get('https://localhost:7112/api/TPosts/loginUserId', { withCredentials: true })
+  }
   getArticleComments(postId: number): Observable<any> {
     return this.httpClient.get(`https://localhost:7112/api/TPostComments/${postId}`)
   }

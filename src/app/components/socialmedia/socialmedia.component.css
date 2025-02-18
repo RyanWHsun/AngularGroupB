@@ -137,3 +137,28 @@ strong {
   max-height: 300px;
   overflow-y: auto;
 }
+
+.comment-context {
+  display: block;
+}
+
+.comment-delete {
+  display: none;
+  position: relative;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.comment-context:hover .comment-delete {
+  display: inline;
+  color: rgb(216, 215, 215);
+}
+
+.comment-context:hover .comment-delete:hover {
+  color: rgb(177, 175, 175, 0.5)
+}
+
+.comment-context:hover .comment-delete:active {
+  color: rgb(177, 175, 175, 0.7)
+}

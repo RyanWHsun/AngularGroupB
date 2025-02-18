@@ -1,6 +1,7 @@
 export interface IPostComment {
   fCommentId: number;
   fPostId: number;
+  fUserId: number;
   fUserName: string;
   fUserImage: string;
   fUserNickName: string;
