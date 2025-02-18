@@ -40,3 +40,6 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# 忽略環境設定檔，避免上傳敏感資訊
+src/environments/environment.ts

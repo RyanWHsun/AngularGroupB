@@ -5,7 +5,8 @@ import { loadCKEditorCloud, CKEditorModule, type CKEditorCloudResult, type CKEdi
 import type { ClassicEditor, EditorConfig } from 'https://cdn.ckeditor.com/typings/ckeditor5.d.ts';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { concatMap, of } from 'rxjs';
-const LICENSE_KEY = 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NzA0MjIzOTksImp0aSI6ImExZTliZjBiLWVjMGQtNDk2NC1hODViLTVjNmIyMmU4OGNhOCIsImxpY2Vuc2VkSG9zdHMiOlsiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJ1c2FnZUVuZHBvaW50IjoiaHR0cHM6Ly9wcm94eS1ldmVudC5ja2VkaXRvci5jb20iLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIl0sImxpY2Vuc2VUeXBlIjoiZGV2ZWxvcG1lbnQiLCJmZWF0dXJlcyI6WyJEUlVQIl0sInZjIjoiMGUxZDNiNzEifQ.4G8fSCo115sDjTwTgDE4jCCoH6KEZTd3nmdDQsh0KjNYEFUyc5eG-WJ430tGqEHkw3m9lIkwE_2pOfkeWetb8g';
+import { environment } from 'src/environments/environment';
+const LICENSE_KEY = environment.ckeditorLicenseKey;
 const cloudConfig = {
   version: '44.1.0'
 } satisfies CKEditorCloudConfig;
