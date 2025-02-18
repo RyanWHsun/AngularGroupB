@@ -114,61 +114,33 @@ export class AttractionComponent {
     private attractionTagService: AttractionTagService
   ) {}
 
+  getCommenter(){
+
+  }
+
   submitComment() {
     const comment: IAttractionComment = {
       fCommentId: 0,
       fAttractionId: this.attraction.fAttractionId ?? null, // 確保是 number 或 null
       fAttractionName: this.attraction.fAttractionName ?? null, // 確保是 string 或 null
-      fUserId: 3, // 確保是 number 或 null
-      fUserName: '林阿明',
-      fUserNickName: '阿明',
-      fRating: 4, // 確保是 number 或 null
-      fComment: 'AAA久久沒來，風景依然很讚!',
+      fUserId: 0, // 確保是 number 或 null
+      fUserName: '',
+      fUserNickName: '',
+      fRating: 5, // 確保是 number 或 null
+      fComment: this.commentComponent.inputContent??null,
       fCreatedDate: new Date().toISOString(), // ✅ 改為 ISO 8601 格式
     };
 
     this.attractionCommentService
       .postAttractionComment(comment)
       .subscribe({
-        next: (comment) => console.log('submit comment', comment),
+        next: (comment) => {
+          console.log('submit comment', comment);
+          this.commentComponent.inputContent="";
+        },
         error: (err) => console.error('Error submitting comment', err),
       });
   }
-
-
-  // submitComment() {
-  //   // console.log('submitComment', this.commentComponent.inputContent);
-  //   console.log('submit comment', this.attraction.fAttractionId, this.attraction.fAttractionName);
-  //   const comment: IAttractionComment = {
-  //     fCommentId: 65,
-  //     fAttractionId: 1,
-  //     fAttractionName: "太魯閣國家公園",
-  //     fUserId: 3,
-  //     fUserName: '林阿明',
-  //     fUserNickName: '阿明',
-  //     fRating: 3,
-  //     fComment: 'so so',
-  //     fCreatedDate: '',
-  //   };
-
-  //   // {
-  //   //   "fCommentId": 64,
-  //   //   "fAttractionId": 1,
-  //   //   "fAttractionName": "太魯閣國家公園",
-  //   //   "fUserId": 3,
-  //   //   "fUserName": "林阿明",
-  //   //   "fUserNickName": "阿明",
-  //   //   "fRating": 5,
-  //   //   "fComment": "good",
-  //   //   "fCreatedDate": "2025-02-18T03:19:53.665Z"
-  //   // }
-
-  //   this.attractionCommentService
-  //     .postAttractionComment(comment)
-  //     .subscribe((comment) => {
-  //       console.log('submit comment', comment);
-  //     });
-  // }
 
   toggleSort(id: number) {
     console.log('toggleSort');

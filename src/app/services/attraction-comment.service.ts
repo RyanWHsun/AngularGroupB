@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IAttractionComment } from '../interfaces/IAttractionComment';
+import { userMaterial } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root',
@@ -34,8 +35,18 @@ export class AttractionCommentService {
     });
   }
 
+  // editting
+  getCommenterInfo(){
+    return this.client.get<userMaterial>(`${this.baseUrl}/commenter`,{
+      withCredentials: true,
+    })
+  }
+
   // https://localhost:7112/api/TAttractionComments
   postAttractionComment(comment: IAttractionComment) {
-    return this.client.post<IAttractionComment>(`${this.baseUrl}`, comment);
+    return this.client.post<IAttractionComment>(`${this.baseUrl}`, comment, {
+      headers: { 'Content-Type': 'application/json' }, // ✅ 確保是 JSON 格式
+      withCredentials: true,
+    });
   }
 }
