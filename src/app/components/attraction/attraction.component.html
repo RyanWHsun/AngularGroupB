@@ -233,7 +233,14 @@
           <div class="map-container">
             <div #mapContainer class="map-content"></div>
           </div>
-
+          <!-- 撰寫評論 -->
+          <img
+                src="assets/images/head001.jpg"
+                class="comment-img"
+                alt="user image"
+              />
+          <textarea [(ngModel)]="commentComponent.inputContent"></textarea>
+          <button (click)="submitComment()">送出</button>
           <!-- 評論 -->
           <div class="comment-section">
             <div class="comment-header">

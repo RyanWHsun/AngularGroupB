@@ -29,6 +29,13 @@ export class AttractionCommentService {
       isCollapsed,
     };
     // https://localhost:7112/api/TAttractionComments/comments?id=1&count=2&isDescending=false&isCollapsed=true
-    return this.client.get<IAttractionComment[]>(`${this.baseUrl}/comments`, {params});
+    return this.client.get<IAttractionComment[]>(`${this.baseUrl}/comments`, {
+      params,
+    });
+  }
+
+  // https://localhost:7112/api/TAttractionComments
+  postAttractionComment(comment: IAttractionComment) {
+    return this.client.post<IAttractionComment>(`${this.baseUrl}`, comment);
   }
 }

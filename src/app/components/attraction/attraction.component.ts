@@ -1,7 +1,13 @@
 /// <reference types="google.maps" />
 import { AttractionCommentService } from './../../services/attraction-comment.service';
 import { AttractionImageService } from './../../services/attraction-image.service';
-import { Component, ViewChild, AfterViewInit, ElementRef, OnInit } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  AfterViewInit,
+  ElementRef,
+  OnInit,
+} from '@angular/core';
 import { IAttraction } from 'src/app/interfaces/IAttraction';
 import { AttractionService } from 'src/app/services/attraction.service';
 import * as $ from 'jquery';
@@ -14,6 +20,7 @@ import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 import {
   catchError,
   forkJoin,
+  from,
   map,
   Observable,
   of,
@@ -94,6 +101,7 @@ export class AttractionComponent {
     isCollapsed: true,
     sortButtonText: '從舊到新',
     collapseButtonText: '顯示',
+    inputContent: '',
   };
 
   constructor(
@@ -105,6 +113,62 @@ export class AttractionComponent {
     private attractionViewCookieService: AttractionViewCookieService,
     private attractionTagService: AttractionTagService
   ) {}
+
+  submitComment() {
+    const comment: IAttractionComment = {
+      fCommentId: 0,
+      fAttractionId: this.attraction.fAttractionId ?? null, // 確保是 number 或 null
+      fAttractionName: this.attraction.fAttractionName ?? null, // 確保是 string 或 null
+      fUserId: 3, // 確保是 number 或 null
+      fUserName: '林阿明',
+      fUserNickName: '阿明',
+      fRating: 4, // 確保是 number 或 null
+      fComment: 'AAA久久沒來，風景依然很讚!',
+      fCreatedDate: new Date().toISOString(), // ✅ 改為 ISO 8601 格式
+    };
+
+    this.attractionCommentService
+      .postAttractionComment(comment)
+      .subscribe({
+        next: (comment) => console.log('submit comment', comment),
+        error: (err) => console.error('Error submitting comment', err),
+      });
+  }
+
+
+  // submitComment() {
+  //   // console.log('submitComment', this.commentComponent.inputContent);
+  //   console.log('submit comment', this.attraction.fAttractionId, this.attraction.fAttractionName);
+  //   const comment: IAttractionComment = {
+  //     fCommentId: 65,
+  //     fAttractionId: 1,
+  //     fAttractionName: "太魯閣國家公園",
+  //     fUserId: 3,
+  //     fUserName: '林阿明',
+  //     fUserNickName: '阿明',
+  //     fRating: 3,
+  //     fComment: 'so so',
+  //     fCreatedDate: '',
+  //   };
+
+  //   // {
+  //   //   "fCommentId": 64,
+  //   //   "fAttractionId": 1,
+  //   //   "fAttractionName": "太魯閣國家公園",
+  //   //   "fUserId": 3,
+  //   //   "fUserName": "林阿明",
+  //   //   "fUserNickName": "阿明",
+  //   //   "fRating": 5,
+  //   //   "fComment": "good",
+  //   //   "fCreatedDate": "2025-02-18T03:19:53.665Z"
+  //   // }
+
+  //   this.attractionCommentService
+  //     .postAttractionComment(comment)
+  //     .subscribe((comment) => {
+  //       console.log('submit comment', comment);
+  //     });
+  // }
 
   toggleSort(id: number) {
     console.log('toggleSort');
@@ -329,14 +393,14 @@ export class AttractionComponent {
     isDescending: boolean,
     isCollapsed: boolean
   ): Observable<void> {
-    console.log('showCommentsByCondition')
+    console.log('showCommentsByCondition');
     //console.log(`id: ${id} count: ${count} isDescending: ${isDescending} isCollapsed: ${isCollapsed}`)
     return this.attractionCommentService
       .getAttractionCommentByCondition(id, count, isDescending, isCollapsed)
       .pipe(
         tap((data) => {
           this.attractionComment = data;
-          console.log(this.attractionComment)
+          console.log(this.attractionComment);
           //this.attractionComment = Array.isArray(data) ? data : [data];
         }),
         map(() => void 0)
@@ -527,23 +591,5 @@ export class AttractionComponent {
         switchMap(() => this.showAttractionTag$())
       )
       .subscribe();
-  }
-
-  ngAfterViewInit() {
-    console.log('jQuery:', typeof $ !== 'undefined' ? '已載入' : '未載入');
-console.log('Bootstrap:', typeof $.fn.modal !== 'undefined' ? '已載入' : '未載入');
-
-    const modalElement = document.getElementById('attractionModal');
-
-    if (modalElement) {
-      console.log(modalElement)
-      $('#attractionModal').on('hidden.bs.modal', function (e) {
-        alert('Modal has been closed!');
-        console.log('Modal has been closed!')
-      })
-    }
-    else(
-      alert('Modal doesn\'t exist')
-    )
   }
 }

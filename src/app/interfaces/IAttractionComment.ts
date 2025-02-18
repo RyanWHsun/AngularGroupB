@@ -2,10 +2,10 @@ export interface IAttractionComment{
   fCommentId?:number|null;
   fAttractionId?:number|null;
   fAttractionName?:string|null;
-  fUserId?:string|null;
-  fUserName?:number|null;
-  fUserNickName?:number|null;
-  fRating?:string|null;
+  fUserId?:number|null;
+  fUserName?:string|null;
+  fUserNickName?:string|null;
+  fRating?:number|null;
   fComment?:string|null;
   fCreatedDate?: string | null;
 }
