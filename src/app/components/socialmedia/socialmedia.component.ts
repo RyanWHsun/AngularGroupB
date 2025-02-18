@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { IPostComment } from 'src/app/interfaces/IPostComment';
 import { IUser } from 'src/app/interfaces/IUser';
@@ -11,6 +11,7 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./socialmedia.component.css']
 })
 export class SocialmediaComponent {
+  @ViewChild('commentContainer') commentContainer!: ElementRef;
   datas: any[] = [];
   imageData: { [key: number]: string[] } = {};
   userData: { [key: number]: { image: string, nickName: string } } = {};
@@ -100,9 +101,11 @@ export class SocialmediaComponent {
       this.commentTexts[postId] = '';
       if (this.activePostIds.includes(postId)) {
         this.loadComments(postId);
+        setTimeout(() => { this.commentContainer.nativeElement.scrollTo({ top: 0, behavior: 'smooth' }) }, 100);
       } else {
         this.toggleComments(postId);
       }
+
     })
   }
 

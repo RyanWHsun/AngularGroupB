@@ -103,12 +103,12 @@
           <!-- Likes and Caption -->
           <p class="mb-1"><strong>10個讚</strong></p>
           <p *ngIf="!activePostIds.includes(data['fPostId'])"><img [src]="userData[data['fUserId']].image"
-              class="rounded-circle mr-2"
-              style="width: 30px;height: 30px; object-fit: cover"><strong>{{userData[data['fUserId']].nickName}}
-            </strong>{{data['fTitle']}}</p>
+              class="rounded-circle mr-2" style="width: 30px;height: 30px; object-fit: cover">
+            <strong class="mr-1">{{userData[data['fUserId']].nickName}}</strong>{{data['fTitle']}}
+          </p>
 
           <!-- Comment Section -->
-          <div *ngIf="activePostIds.includes(data['fPostId'])" class="comment-container">
+          <div #commentContainer *ngIf="activePostIds.includes(data['fPostId'])" class="comment-container">
             <p><img [src]="userData[data['fUserId']].image" class="rounded-circle mr-2"
                 style="width: 30px;height: 30px; object-fit: cover"><strong>{{userData[data['fUserId']].nickName}}
               </strong>{{data['fTitle']}}</p>
@@ -118,7 +118,7 @@
             <p *ngFor="let comments of commentDatas[data['fPostId']]" class="comment-context">
               <img [src]="comments.fUserImage" class="rounded-circle mr-2"
                 style="width: 30px;height: 30px; object-fit: cover">
-              <strong>{{comments.fUserNickName}} </strong>
+              <strong class="mr-1">{{comments.fUserNickName}}</strong>
               {{comments.fContent}}
               <a *ngIf="loginUserId==comments.fUserId" role="button" class="comment-delete"><i
                   class="fa-solid fa-trash-can"></i></a>
