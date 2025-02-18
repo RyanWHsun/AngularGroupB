@@ -45,51 +45,54 @@
 
 
     <!-- 表格 -->
-    <table class="table table-hover text-center table-responsive" style="border-radius:15px 15px 0 0;">
-      <thead>
-        <tr class=" text-center" style="border-radius:15px 15px 0 0;background-color: #8cae78;color: #ffffff;">
-          <th scope="col">會員ID</th>
-          <th scope="col">頭像</th>
-          <th scope="col" style="width:60px;">會員等級</th>
-          <th scope="col">姓名</th>
-          <th scope="col">暱稱</th>
-          <th scope="col" style="width:60px;">性別</th>
-          <th scope="col">電話</th>
-          <th scope="col">住址</th>
-          <th scope="col" style="width:200px;">註冊日</th>
-          <th scope="col" style="width:100px;"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let users of filteredUsers">
-          <th>{{users.fUserId}}</th>
-          <td>
-            <img *ngIf="users.fUserImage!=null" [src]="'data:image/png;base64,' + users.fUserImage"
-              style="width: 56px; height: 56px;"> <img *ngIf="users.fUserImage==null" src="assets/images/noImage.jpg"
-              style="width: 56px; height: 56px;">
-          </td>
-          <td>{{users.fUserRankId}}</td>
-          <td>{{users.fUserName}}</td>
-          <td>{{users.fUserNickName}}</td>
-          <td>{{users.fUserSex}}</td>
-          <td>{{users.fUserPhone}}</td>
-          <td>{{users.fUserAddress}}</td>
-          <td>{{users.fUserComeDate|date:'YYYY-MM-dd'}}<br>
-            {{users.fUserComeDate|date:'HH時mm分ss秒'}}
-          </td>
-          <th scope="col">
-            <a (click)="usersEdit(users.fUserId)">
-              <div class="p-2" style="border-radius:15px;background-color: #8cae78;">
-                <div>
-                  <p class="mb-0 text-white text-center">修改</p>
-                </div>
-              </div>
-            </a>
-          </th>
-        </tr>
-      </tbody>
-    </table>
+    <div class="overflow-x-auto">
 
+      <table class="table table-hover text-center table-responsive " style="border-radius:15px 15px 0 0;">
+        <thead style="border-radius:15px 15px 0 0;">
+          <tr class=" text-center" style="border-radius:15px 15px 0 0;background-color: #8cae78;color: #ffffff;">
+            <th scope="col" style="width:75px;">會員ID</th>
+            <th scope="col" style="width:75px;">頭像</th>
+            <th scope="col" style="width:75px;">權限</th>
+            <th scope="col" style="width:100px;">姓名</th>
+            <th scope="col" style="width:100px;">暱稱</th>
+            <th scope="col" style="width:60px;">性別</th>
+            <th scope="col" style="width:200px;">電話</th>
+            <th scope="col" style="width:200px;">住址</th>
+            <th scope="col" style="width:200px;">註冊日</th>
+            <th scope="col" style="width:100px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let users of filteredUsers">
+            <th>{{users.fUserId}}</th>
+            <td>
+              <img *ngIf="users.fUserImage!=null" [src]="'data:image/png;base64,' + users.fUserImage"
+                style="width: 56px; height: 56px;"> <img *ngIf="users.fUserImage==null" src="assets/images/noImage.jpg"
+                style="width: 56px; height: 56px;">
+            </td>
+            <td>{{users.fUserRankId}}</td>
+            <td>{{users.fUserName}}</td>
+            <td>{{users.fUserNickName}}</td>
+            <td>{{users.fUserSex}}</td>
+            <td>{{users.fUserPhone}}</td>
+            <td>{{users.fUserAddress}}</td>
+            <td>{{users.fUserComeDate|date:'YYYY-MM-dd'}}<br>
+              {{users.fUserComeDate|date:'HH時mm分ss秒'}}
+            </td>
+            <th scope="col">
+              <a (click)="usersEdit(users.fUserId)">
+                <div class="p-2" style="border-radius:15px;background-color: #8cae78;">
+                  <div>
+                    <p class="mb-0 text-white text-center">修改</p>
+                  </div>
+                </div>
+              </a>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
 
   </div>
 </div>
