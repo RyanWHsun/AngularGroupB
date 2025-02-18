@@ -1,11 +1,43 @@
-<div class="container mt-5">
-  <h2>{{ event?.fEventName }}</h2>
-  <img
-    [src]="event?.fEventImageUrl && event.fEventImageUrl.trim() !== '' ? event.fEventImageUrl : 'assets/images/noImage.jpg'"
-    alt="活動圖片" class="img-fluid" />
-  <p><strong>活動地點:</strong> {{ event?.fLocation?.trim() ? event.fLocation : '未提供' }}</p>
-  <p><strong>開始時間:</strong> {{ event?.fEventStartDate ? (event.fEventStartDate | date:'yyyy-MM-dd') : '未提供' }}</p>
-  <p><strong>結束時間:</strong> {{ event?.fEventEndDate ? (event.fEventEndDate | date:'yyyy-MM-dd') : '未提供' }}</p>
-  <p><strong>報名人數:</strong> {{ event?.fParticipant }} 人</p>
-  <p><strong>活動描述:</strong> {{ event?.fEventDescription }}</p>
+<div class="container mt-5 event-detail-container" *ngIf="event">
+  <h2 class="event-title">{{ event.fEventName }}</h2>
+
+  <div class="event-content">
+    <!-- ✅ 圖片區塊 -->
+    <div class="event-image">
+      <img
+        [src]="event.fEventImageUrl && event.fEventImageUrl.trim() !== '' ? event.fEventImageUrl : 'assets/images/noImage.jpg'"
+        alt="活動圖片"
+        class="img-fluid" />
+    </div>
+
+    <!-- ✅ 文字內容區塊 -->
+    <div class="event-info">
+      <p><strong>活動地點:</strong> {{ event.fLocation?.trim() ? event.fLocation : "未提供" }}</p>
+      <p><strong>開始時間:</strong> {{ event.fEventStartDate ? (event.fEventStartDate | date: "yyyy-MM-dd") : "未提供" }}</p>
+      <p><strong>結束時間:</strong> {{ event.fEventEndDate ? (event.fEventEndDate | date: "yyyy-MM-dd") : "未提供" }}</p>
+      <p><strong>活動費用:</strong> {{ event.fEventPrice ? ('NT$ ' + (event.fEventPrice | number: '1.0-0')) : '免費' }}</p>
+      <p><strong>活動描述:</strong> {{ event.fEventDescription }}</p>
+    </div>
+
+    <!-- ✅ 報名按鈕 -->
+    <div class="event-registration">
+      <button class="btn btn-primary"
+        *ngIf="!isAuthenticated"
+        (click)="redirectToLogin()">
+        請先登入
+      </button>
+
+      <button class="btn btn-success"
+        *ngIf="isAuthenticated"
+        (click)="registerForEvent()">
+        🎟 我要報名
+      </button>
+    </div>
+  </div>
 </div>
+
+
+
+
+
+

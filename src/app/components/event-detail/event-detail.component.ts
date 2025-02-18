@@ -1,33 +1,97 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
-  selector: 'app-event-detail',  // ✅ 確保 selector 符合 Angular 命名規則
-  templateUrl: './event-detail.component.html',  // ✅ 確保檔案名稱一致
-  styleUrls: ['./event-detail.component.css']
+  selector: "app-event-detail",
+  templateUrl: "./event-detail.component.html",
+  styleUrls: ["./event-detail.component.css"]
 })
-export class EventDetailComponent implements OnInit {  // ✅ 重新命名類別，避免與 Dialog 混淆
+export class EventDetailComponent implements OnInit {
+  eventId!: number;
   event: any;
-  apiUrl = 'https://localhost:7112/api';
+  isAuthenticated = false; // ✅ 是否已登入
+  apiUrl = "https://localhost:7112/api/TShoppingCarts/addProductToCart"; // ✅ 加入購物車 API
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  ngOnInit() {
-    const eventId = this.route.snapshot.paramMap.get('id');
-    if (eventId) {
-      this.loadEventDetails(eventId);
-    }
+  ngOnInit(): void {
+    this.eventId = Number(this.route.snapshot.paramMap.get("id"));
+
+    // ✅ 確保登入狀態正確
+    this.checkAuthentication();
+    window.addEventListener("storage", () => this.checkAuthentication());
+
+    // ✅ 載入活動詳細資訊
+    this.loadEventDetail();
   }
 
-  loadEventDetails(eventId: string) {
-    this.http.get<any>(`${this.apiUrl}/Event/${eventId}`).subscribe(
+  /** ✅ 確認使用者是否登入 */
+  checkAuthentication() {
+    this.isAuthenticated = !!localStorage.getItem("userId");
+    this.cdr.detectChanges(); // ✅ 確保 UI 變更
+  }
+
+  /** ✅ 載入活動詳細資訊 */
+  loadEventDetail() {
+    this.http.get<any>(`https://localhost:7112/api/Event/${this.eventId}`).subscribe(
       (data) => {
         this.event = data;
+
+        // ✅ 確保圖片顯示
+        if (this.event.imageBase64?.startsWith("data:image")) {
+          this.event.fEventImageUrl = this.event.imageBase64;
+        } else {
+          this.event.fEventImageUrl = this.event.imageBase64 || "assets/images/noImage.jpg";
+        }
       },
       (error) => {
-        console.error("🚨 無法獲取活動詳情:", error);
+        console.error("載入活動失敗:", error);
       }
     );
   }
+
+  /** ✅ 點擊「我要報名」，將活動加入購物車 */
+  registerForEvent() {
+    if (!this.isAuthenticated) {
+      alert("請先登入才能報名活動！");
+      this.router.navigate(["/login"]);
+      return;
+    }
+
+    const cartData = {
+      fItemType: "eventFee", // ✅ 活動類型
+      fItemId: this.eventId,  // ✅ 活動 ID
+      fQuantity: 1,          // ✅ 預設數量 1
+      fPrice: this.event.fEventPrice || 0 // ✅ 如果免費，則設為 0
+    };
+
+    this.http.post(this.apiUrl, cartData, { withCredentials: true }).subscribe(
+      () => {
+        alert("🎉 活動已加入購物車！");
+        this.router.navigate(["/cart"]); // ✅ 直接導向購物車頁面
+      },
+      (error) => {
+        alert("⚠ 加入購物車失敗：" + error.message);
+      }
+    );
+  }
+
+  /** ✅ 導向登入頁面 */
+  redirectToLogin() {
+    this.router.navigate(["/login"]);
+  }
 }
+
+
+
+
+
+
+
+

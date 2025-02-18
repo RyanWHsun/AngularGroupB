@@ -20,16 +20,27 @@ export class EventDetailDialogComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const eventId = this.route.snapshot.paramMap.get('id');
-    if (eventId) {
+    const eventId = this.route.snapshot.paramMap.get('id'); // 取得 URL 參數
+
+    if (eventId && !isNaN(Number(eventId))) {  // ✅ 確保 eventId 是數字
       this.loadEventDetails(eventId);
+    } else {
+      console.error("❌ 錯誤: eventId 無效", eventId);
     }
   }
+
 
   loadEventDetails(eventId: string) {
     this.http.get<any>(`${this.apiUrl}/Event/${eventId}`).subscribe(
       (data) => {
         this.event = data;
+
+        // ✅ 確保圖片有值
+        if (data.imageBase64) {
+          this.event.fEventImageUrl = data.imageBase64;
+        } else {
+          this.event.fEventImageUrl = 'assets/images/noImage.jpg'; // 預設圖片
+        }
       },
       (error) => {
         console.error("🚨 無法獲取活動詳情:", error);

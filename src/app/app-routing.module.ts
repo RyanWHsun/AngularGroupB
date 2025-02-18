@@ -6,6 +6,7 @@ import { AttractionComponent } from './components/attraction/attraction.componen
 import { EventComponent } from './components/event/event.component';
 import { EventDetailComponent } from './components/event-detail/event-detail.component'; // ✅ 修正為頁面
 import { EventManagementComponent } from './components/event-management/event-management.component';
+import { EventFormComponent } from './components/event-form/event-form.component';
 import { ProductsComponent } from './components/products/products.component';
 import { SocialmediaComponent } from './components/socialmedia/socialmedia.component';
 import { UserComponent } from './components/user/user.component';
@@ -22,6 +23,7 @@ import { CartComponent } from './components/cart/cart.component';
 import { PaymentComponent } from './components/payment/payment.component';
 import { AttractionTicketComponent } from './components/attraction-ticket/attraction-ticket.component';
 import { AttractionAdminComponent } from './components/attraction-admin/attraction-admin.component';
+
 
 const routes: Routes = [
   {
@@ -50,18 +52,32 @@ const routes: Routes = [
   {
     path: 'events',
     component: EventManagementComponent
-  }, // ✅ 讓 /events 直接對應到管理頁面
+  },
+
+  // ✅ 活動管理 - 新增/編輯活動（獨立頁面）
+  {
+    path: 'event-form',
+    component: EventFormComponent
+  },
+  {
+    path: 'event-form/:id',
+    component: EventFormComponent
+  },
+
+  // ✅ 活動清單 & 詳情頁面
   {
     path: 'event',
     component: LayoutComponent,
-    children: [{
-      path: '',
-      component: EventComponent
-    },
-    {
-      path: 'detail/:id',
-      component: EventDetailComponent
-    }]
+    children: [
+      {
+        path: '',
+        component: EventComponent
+      },
+      {
+        path: 'detail/:id',
+        component: EventDetailComponent
+      }
+    ]
   },
   {
     path: 'products',
