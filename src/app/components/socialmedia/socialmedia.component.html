@@ -94,10 +94,10 @@
           </div>
 
           <!-- Actions -->
-          <div class="d-flex justify-content-start mb-2">
-            <button class="btn mr-2 shadow-none"><i class="fa-regular fa-heart" style="color: #000000;"></i></button>
-            <button class="btn mr-2 shadow-none" (click)="toggleComments(data['fPostId'])"><i
-                class="fa-regular fa-comment" style="color: #000000;"></i></button>
+          <div id="actions" class="d-flex justify-content-start mb-2">
+            <a role="button" class="my-1 mx-2"><i class="fa-regular fa-heart"></i></a>
+            <a role="button" class="my-1 mx-2" (click)="toggleComments(data['fPostId'])"><i
+                class="fa-regular fa-comment"></i></a>
           </div>
 
           <!-- Likes and Caption -->
