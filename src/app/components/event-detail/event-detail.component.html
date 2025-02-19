@@ -12,26 +12,17 @@
 
     <!-- ✅ 文字內容區塊 -->
     <div class="event-info">
-      <p><strong>活動地點:</strong> {{ event.fLocation?.trim() ? event.fLocation : "未提供" }}</p>
-      <p><strong>開始時間:</strong> {{ event.fEventStartDate ? (event.fEventStartDate | date: "yyyy-MM-dd") : "未提供" }}</p>
-      <p><strong>結束時間:</strong> {{ event.fEventEndDate ? (event.fEventEndDate | date: "yyyy-MM-dd") : "未提供" }}</p>
+      <p><strong>活動地點:</strong> {{ event.fLocation || "未提供" }}</p>
+      <p><strong>開始時間:</strong> {{ event.fEventStartDate | date: "yyyy-MM-dd" }}</p>
+      <p><strong>結束時間:</strong> {{ event.fEventEndDate | date: "yyyy-MM-dd" }}</p>
       <p><strong>活動費用:</strong> {{ event.fEventPrice ? ('NT$ ' + (event.fEventPrice | number: '1.0-0')) : '免費' }}</p>
       <p><strong>活動描述:</strong> {{ event.fEventDescription }}</p>
     </div>
 
     <!-- ✅ 報名按鈕 -->
     <div class="event-registration">
-      <button class="btn btn-primary"
-        *ngIf="!isAuthenticated"
-        (click)="redirectToLogin()">
-        請先登入
-      </button>
-
-      <button class="btn btn-success"
-        *ngIf="isAuthenticated"
-        (click)="registerForEvent()">
-        🎟 我要報名
-      </button>
+      <button class="btn btn-primary" *ngIf="!isAuthenticated" (click)="redirectToLogin()">請先登入</button>
+      <button class="btn btn-success" *ngIf="isAuthenticated" (click)="registerForEvent()">🎟 我要報名</button>
     </div>
   </div>
 </div>

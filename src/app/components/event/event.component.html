@@ -6,17 +6,22 @@
     </div>
 
     <div class="carousel-container position-relative">
+      <!-- ◀️ 左按鈕 -->
       <button class="carousel-btn left" (click)="prevEvent()">&#10094;</button>
 
       <div class="carousel-content row">
-        <div class="col-lg-4 col-md-6 mb-4" *ngFor="let event of displayedEvents">
-          <div class="package-item bg-white mb-2">
+        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4" *ngFor="let event of displayedEvents">
+          <div class="package-item bg-white shadow-sm rounded-lg mb-2">
 
-            <!-- ✅ 點擊圖片上傳 -->
-            <img class="img-fluid event-image"
+            <!-- ✅ 圖片 (點擊可上傳) -->
+            <img class="img-fluid event-image rounded-top"
                  [src]="event.fEventImageUrl || 'assets/images/noImage.jpg'"
                  alt="活動圖片"
-                 (click)="triggerFileInput(event.fEventId)">
+                 (click)="triggerFileInput(event.fEventId)"
+                 title="點擊上傳新圖片"
+                 style="cursor: pointer; transition: transform 0.2s ease-in-out;"
+                 (mouseover)="event.isHovered = true"
+                 (mouseout)="event.isHovered = false">
 
             <!-- ✅ 隱藏的 input file，綁定 eventId -->
             <input type="file"
@@ -26,9 +31,9 @@
 
             <div class="p-4">
               <div class="d-flex justify-content-between mb-3">
-                <small><i class="fa fa-map-marker-alt text-primary mr-2"></i>{{ event.fLocation }}</small>
-                <small><i class="fa fa-calendar-alt text-primary mr-2"></i>{{ event.fDuration }} 天</small>
-                <small><i class="fa fa-user text-primary mr-2"></i>{{ event.fParticipant }} 人</small>
+                <small><i class="fa fa-map-marker-alt text-primary mr-2"></i>{{ event.fLocation || '未知地點' }}</small>
+                <small *ngIf="event.fDuration"><i class="fa fa-calendar-alt text-primary mr-2"></i>{{ event.fDuration }} 天</small>
+                <small *ngIf="event.fParticipant"><i class="fa fa-user text-primary mr-2"></i>{{ event.fParticipant }} 人</small>
               </div>
 
               <h5 class="text-dark">{{ event.fEventName }}</h5>
@@ -49,10 +54,8 @@
         </div>
       </div>
 
+      <!-- ▶️ 右按鈕 -->
       <button class="carousel-btn right" (click)="nextEvent()">&#10095;</button>
     </div>
   </div>
 </div>
-
-
-

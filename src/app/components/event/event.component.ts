@@ -50,9 +50,9 @@ export class EventComponent implements OnInit {
 
         this.events.forEach(event => {
           event.fLocation = event.fLocation ?? '未知地點';
-          event.fParticipant = event.fParticipant ?? 0;
-          event.fDuration = event.fDuration ?? 1;
-          event.fPrice = event.registrationFee ?? 0;
+          event.fParticipant = event.fParticipant ?? 0; // ✅ 改用 API 回傳的 FParticipant
+          event.fDuration = event.fDuration ?? 1; // ✅ 改用 API 回傳的 FDuration
+          event.fPrice = event.fPrice ?? 0; // ✅ 改用 API 回傳的 FPrice
           event.fEventImageUrl = event.imageBase64 ?? 'assets/images/noImage.jpg';
         });
 
@@ -66,6 +66,7 @@ export class EventComponent implements OnInit {
       }
     );
   }
+
 
   /** 🏷️ 取得所有篩選選項 */
   extractUniqueFilters() {
