@@ -22,6 +22,7 @@ export class SocialmediaComponent {
   loading: boolean = false;
   hasMore: boolean = true;
   loginUserId = 0;
+  isLike = false;
   constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer) { };
   ngOnInit(): void {
     this.loadLoginInfo();
@@ -108,6 +109,10 @@ export class SocialmediaComponent {
 
   deleteComment(commentId: number, postId: number) {
     this.socialmediaService.deleteComment(commentId).subscribe(response => { this.loadComments(postId) });
+  }
+
+  toggleLike() {
+    this.isLike = !this.isLike;
   }
 
   onScroll() {
