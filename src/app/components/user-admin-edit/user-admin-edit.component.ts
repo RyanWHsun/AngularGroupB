@@ -31,6 +31,8 @@ export class UserAdminEditComponent {
 
   updatePassword: boolean = false;
 
+  chackPassword: string = '';
+
   img = "assets/images/noImage.jpg"
 
 
@@ -136,11 +138,15 @@ export class UserAdminEditComponent {
   }
 
   submit(form: NgForm) {
+
     if (form.invalid) {  // 檢查表單是否有效
       console.log('表單驗證不通過');
       alert('請確保所有欄位都正確填寫！');
       Object.values(form.control).forEach(p => { p.markAsTouched(); });
       return;  // 如果表單無效，阻止提交
+    } else if (this.user.fUserPassword != this.chackPassword) {
+      alert("密碼與再次輸入不相同");
+      return;
     }
 
     // console.log(this.user);

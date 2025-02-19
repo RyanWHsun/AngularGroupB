@@ -54,7 +54,7 @@
             <div class="control-group mb-2">
               <h5 class="text-uppercase">帳號</h5>
               <input type="email" class="form-control p-4" id="userEmail" placeholder="請輸入電子郵件" required="required"
-                [(ngModel)]="user.fUserEmail" name="fUserEmail" #userEmail="ngModel" />
+                [(ngModel)]="user.fUserEmail" name="fUserEmail" #userEmail="ngModel" email />
               <p class="help-block text-danger" *ngIf="userEmail.invalid && userEmail.touched">請輸入電子郵件</p>
             </div>
 
@@ -65,7 +65,7 @@
               <div class="input-group">
                 <input type="{{passwordType}}" class="form-control p-4" id="userPassword" placeholder="請輸入密碼"
                   required="required" [(ngModel)]="user.fUserPassword" name="fUserPassword" #userPassword="ngModel" />
-                <button class="btn btn-outline-primary pb-0" (click)="seePassword()">
+                <button class="btn btn-outline-primary pb-0" style="width: 55px;" (click)="seePassword()">
                   <i *ngIf="passwordType == 'text'" class="fa-regular fa-eye h4"></i>
                   <i *ngIf="passwordType == 'password'" class="fa-regular fa-eye-slash h4"></i>
                 </button>

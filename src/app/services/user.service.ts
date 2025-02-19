@@ -13,8 +13,8 @@ export class UserService {
 
 
   //取得所有資料
-  getUsers(): Observable<allUsersMaterial> {
-    return this.userclient.get<allUsersMaterial>(`${this.baseAddress}api/TUsers`, { withCredentials: true })
+  getUsers(page: number, pageSize: number, userRank: number, search: string): Observable<allUsersMaterial> {
+    return this.userclient.get<allUsersMaterial>(`${this.baseAddress}api/TUsers?page=${page}&pageSize=${pageSize}&userRank=${userRank}&search=${search}`, { withCredentials: true })
   }
 
 

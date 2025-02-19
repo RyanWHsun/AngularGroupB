@@ -108,27 +108,38 @@
             </div>
 
             <!-- 密碼輸入 -->
-            <a class="nav-link" *ngIf="!updatePassword" (click)="showPassword()">我要更改密碼</a>
-            <a class="nav-link" *ngIf="updatePassword" (click)="showPassword()">取消密碼修改</a>
+            <hr class="hr-edge-weak mt-5">
+            <a class=" nav-link mb-3 h5" style=" cursor:pointer;text-align: center;" *ngIf="!updatePassword"
+              (click)="showPassword()">我要更改密碼</a>
+            <!-- <a class="nav-link" style="cursor:pointer;" *ngIf="updatePassword" (click)="showPassword()">取消密碼修改</a> -->
 
-            <div class="control-group mb-4">
+            <div *ngIf="updatePassword" class="control-group mb-4">
               <h5 class="text-uppercase">用戶密碼</h5>
               <div class="input-group">
                 <input type="{{passwordType}}" class="form-control p-4" id="userPassword" placeholder="請輸入用戶密碼"
                   required="required" [(ngModel)]="user.fUserPassword" name="fUserPassword" #userPassword="ngModel" />
-                <button class="btn btn-outline-primary pb-0" (click)="seePassword()">
+                <button class="btn btn-outline-primary pb-0" style="width: 55px;" (click)="seePassword()">
                   <i *ngIf="passwordType == 'text'" class="fa-regular fa-eye h4"></i>
                   <i *ngIf="passwordType == 'password'" class="fa-regular fa-eye-slash h4"></i>
                 </button>
               </div>
               <p class="help-block text-danger" *ngIf="userPassword.invalid && userPassword.touched">請輸入用戶密碼</p>
             </div>
-            <!-- <div *ngIf="updatePassword" class="control-group mb-3">
-              <h5 class="text-uppercase"> 用戶密碼</h5>
-              <input type="text" class="form-control p-4" id="fUserPassword" placeholder="請輸入用戶密碼，不更改即可不輸入"
-                maxlength="20" [(ngModel)]="user.fUserPassword" name="fUserPassword" #password="ngModel" />
-              <p class="help-block text-danger" *ngIf="password.invalid && password.touched">請輸入用戶密碼</p>
-            </div> -->
+
+            <div *ngIf="updatePassword" class="control-group mb-4">
+              <h5 class="text-uppercase">用戶密碼確認</h5>
+              <div class="input-group">
+                <input type="{{passwordType}}" class="form-control p-4" id="userPassword" placeholder="請再次輸入用戶密碼"
+                  required="required" [(ngModel)]="chackPassword" name="chackPassword" #userPassword="ngModel" />
+                <button class="btn btn-outline-primary pb-0" style="width: 55px;" (click)="seePassword()">
+                  <i *ngIf="passwordType == 'text'" class="fa-regular fa-eye h4"></i>
+                  <i *ngIf="passwordType == 'password'" class="fa-regular fa-eye-slash h4"></i>
+                </button>
+              </div>
+              <p class="help-block text-danger" *ngIf="userPassword.invalid && userPassword.touched">請再次輸入用戶密碼</p>
+            </div>
+
+
           </form>
 
 
