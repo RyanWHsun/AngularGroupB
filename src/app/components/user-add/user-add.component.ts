@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { UserService } from './../../services/user.service';
 import { Component, OnInit } from '@angular/core';
+import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
 
 @Component({
   selector: 'app-user-add',
@@ -22,8 +23,9 @@ export class UserAddComponent {
     fUserPassword: null,
   };
   passwordType = "password";
+  chackPassword: string = '';
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private router: Router, private Swal: SweetAlert2Service) { }
 
   ngOnInit(): void {
     window.scrollTo(0, 400);
@@ -38,36 +40,50 @@ export class UserAddComponent {
     else if (this.passwordType == "text") {
       this.passwordType = "password";
     }
-
   }
+
+
 
 
   // 送出表單資料
   submit(form: NgForm) {
 
-
-    if (form.invalid) {  // 檢查表單是否有效
-      console.log('表單驗證不通過');
-      alert('請確保所有欄位都正確填寫！');
+    // 檢查表單是否有效
+    if (form.invalid) {
+      // console.log('表單驗證不通過');
+      // alert('請確保所有欄位都正確填寫！');
+      this.Swal.showEasyWarning('請確保所有欄位都正確填寫！');
       Object.values(form.controls).forEach(control => {
-        control.markAsTouched(); // ✅ 標記所有欄位為 `touched`
+        control.markAsTouched();
       });
-      return;  // 如果表單無效，阻止提交
+      return;
     }
 
-    // console.log('送出的資料:', this.user);
+    // 密碼與再次輸入
+    if (this.user.fUserPassword != this.chackPassword) {
+      this.Swal.showEasyWarning("密碼與再次輸入不相同");
+      return;
+    }
 
+    // 帳號創建
     this.userService.adduser(this.user).subscribe({
       next: (response) => {
-        console.log('成功:', response);
-        alert('帳號創建成功！');
-        this.router.navigate(['/user/user']);
+        // console.log('成功:', response);
+        // alert('帳號創建成功！');
+        this.Swal.showEasySuccess('帳號創建成功！');
+        this.router.navigate(['/user']);
         window.scrollTo(0, 0);
       },
       error: (error) => {
         console.log('錯誤:', error);
-        alert(error.error.message);
-        alert('帳號創建失敗，請稍後再試！');
+        // alert(error.error.message);
+        if (error) {
+          this.Swal.showYesNo(`${error.error.message}帳號創建失敗，請稍後再試！`);
+        } else {
+          // alert('帳號創建失敗，請稍後再試！');
+          this.Swal.showEasyError('帳號創建失敗，請稍後再試！');
+        }
+
       }
     })
   }

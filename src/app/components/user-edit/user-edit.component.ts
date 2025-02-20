@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { userEditMaterial } from 'src/app/interfaces/user';
+import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
 
 @Component({
   selector: 'app-user-edit',
@@ -26,7 +27,7 @@ export class UserEditComponent {
 
   img = "assets/images/noImage.jpg"
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private router: Router, private Swal: SweetAlert2Service) { }
 
   ngOnInit(): void {
     this.loadUser();
@@ -50,7 +51,8 @@ export class UserEditComponent {
       };
     } else {
       // 如果选择的文件不是图片，弹出警告提示
-      alert('請選擇有效的圖片文件');
+      // alert('請選擇有效的圖片文件');
+      this.Swal.showEasyWarning('請選擇有效的圖片文件');
     }
   }
 
@@ -87,14 +89,16 @@ export class UserEditComponent {
 
     this.userService.putLoginUser(this.user).subscribe({
       next: (response) => {
-        console.log('成功:', response);
-        alert('帳號修改成功！');
+        // console.log('成功:', response);
+        // alert('帳號修改成功！');
+        this.Swal.showEasySuccess('帳號修改成功！');
         this.goToUserPage();
         window.scrollTo(0, 0);
       },
       error: (error) => {
         console.log('錯誤:', error);
-        alert('帳號修改失敗，請稍後再試！');
+        // alert('帳號修改失敗，請稍後再試！');
+        this.Swal.showEasyError('帳號修改失敗，請稍後再試！');
       }
     })
   }
@@ -111,12 +115,13 @@ export class UserEditComponent {
 
   submitUserEdit(form: NgForm) {
     if (form.invalid) {  // 檢查表單是否有效
-      console.log('表單驗證不通過');
-      alert('請確保所有欄位都正確填寫！');
+      // console.log('表單驗證不通過');
+      // alert('請確保所有欄位都正確填寫！');
+      this.Swal.showEasyWarning('請確保所有欄位都正確填寫！');
       Object.values(form.control).forEach(p => { p.markAsTouched(); });
       return;  // 如果表單無效，阻止提交
     }
-    console.log('送出的資料:', this.user);
+    // console.log('送出的資料:', this.user);
     this.updateUser(this.userId!);
   }
 

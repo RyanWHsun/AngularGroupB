@@ -18,5 +18,9 @@
   /* 從父元素的左邊開始定位 */
   transform: translateX(-50%);
   /* 用 transform 來實現水平居中 */
+}
 
+.hr-edge-weak:hover {
+  color: #8cae78;
+  cursor: pointer;
 }

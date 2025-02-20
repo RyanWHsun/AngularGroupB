@@ -108,10 +108,11 @@
             </div>
 
             <!-- 密碼輸入 -->
-            <hr class="hr-edge-weak mt-5">
-            <a class=" nav-link mb-3 h5" style=" cursor:pointer;text-align: center;" *ngIf="!updatePassword"
-              (click)="showPassword()">我要更改密碼</a>
-            <!-- <a class="nav-link" style="cursor:pointer;" *ngIf="updatePassword" (click)="showPassword()">取消密碼修改</a> -->
+            <hr class="hr-edge-weak mt-5 mb-5 h5" *ngIf="!updatePassword" (click)="showPassword()">
+
+            <!-- <a class=" nav-link mb-3 h5" style=" cursor:pointer;text-align: center;" *ngIf="!updatePassword"
+              (click)="showPassword()">我要更改密碼</a> -->
+
 
             <div *ngIf="updatePassword" class="control-group mb-4">
               <h5 class="text-uppercase">用戶密碼</h5>

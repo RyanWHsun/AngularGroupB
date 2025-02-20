@@ -55,12 +55,6 @@
             </div>
 
 
-            <!-- <div class="control-group mb-3">
-              <h5 class="text-uppercase">密碼</h5>
-              <input type="password" class="form-control p-4" id="password" placeholder="請輸入密碼" required="required"
-                [(ngModel)]="fUserPassword" name="fUserPassword" #Password="ngModel" />
-              <p class="help-block text-danger" *ngIf="Password.invalid && Password.touched">請輸入密碼</p>
-            </div> -->
           </form>
 
 
@@ -81,7 +75,9 @@
 
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-              <a (click)="editPassWord()" [routerLink]="['/user/editPassword']">忘記密碼</a>
+              <!-- <a (click)="editPassWord()" [routerLink]="['/user/editPassword']">忘記密碼</a> -->
+
+              <a (click)="editPassWord()">忘記密碼</a>
             </h5>
 
 

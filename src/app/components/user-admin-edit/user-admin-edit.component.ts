@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { allUsersMaterial } from 'src/app/interfaces/user';
+import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
 
 @Component({
   selector: 'app-user-admin-edit',
@@ -36,7 +37,7 @@ export class UserAdminEditComponent {
   img = "assets/images/noImage.jpg"
 
 
-  constructor(private router: Router, private userService: UserService, private activatedRoute: ActivatedRoute) { }
+  constructor(private router: Router, private userService: UserService, private activatedRoute: ActivatedRoute, private swal: SweetAlert2Service) { }
 
 
   ngOnInit(): void {
@@ -74,7 +75,8 @@ export class UserAdminEditComponent {
       };
     } else {
       // 如果选择的文件不是图片，弹出警告提示
-      alert('請選擇有效的圖片文件');
+      // alert('請選擇有效的圖片文件');
+      this.swal.showEasyWarning('請選擇有效的圖片文件');
     }
   }
 
@@ -117,14 +119,16 @@ export class UserAdminEditComponent {
 
     this.userService.putUser(userId, this.user).subscribe({
       next: (response) => {
-        console.log('成功:', response);
-        alert('帳號修改成功！');
+        // console.log('成功:', response);
+        // alert('帳號修改成功！');
+        this.swal.showEasySuccess('帳號修改成功！');
         this.goToUser();
         window.scrollTo(0, 0);
       },
       error: (error) => {
-        console.log('錯誤:', error);
-        alert('帳號修改失敗，請稍後再試！');
+        // console.log('錯誤:', error);
+        // alert('帳號修改失敗，請稍後再試！');
+        this.swal.showEasyWarning('帳號修改失敗，請稍後再試！');
       }
     })
   }
@@ -137,18 +141,23 @@ export class UserAdminEditComponent {
     this.router.navigate(['/user/editUsers']);
   }
 
+
+
   submit(form: NgForm) {
 
     if (form.invalid) {  // 檢查表單是否有效
-      console.log('表單驗證不通過');
-      alert('請確保所有欄位都正確填寫！');
+      // console.log('表單驗證不通過');\
+      // alert('請確保所有欄位都正確填寫！');
+      this.swal.showEasyWarning('請確保所有欄位都正確填寫！');
       Object.values(form.control).forEach(p => { p.markAsTouched(); });
       return;  // 如果表單無效，阻止提交
-    } else if (this.user.fUserPassword != this.chackPassword) {
-      alert("密碼與再次輸入不相同");
-      return;
+    } else if (this.updatePassword) {
+      if (this.user.fUserPassword != this.chackPassword) {
+        // alert("密碼與再次輸入不相同");
+        this.swal.showEasyWarning("密碼與再次輸入不相同");
+        return;
+      }
     }
-
     // console.log(this.user);
     this.updateUser(this.user.fUserId);
   }

@@ -3,6 +3,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Component } from '@angular/core';
 import { CartService } from './services/cart.service';
 import { error } from 'jquery';
+import { SweetAlert2Service } from './services/sweet-alert2.service';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,7 @@ export class AppComponent {
   isLogin: boolean = false;
   router: any;
 
-  constructor(private cartService: CartService, private authService: AuthService, private routter: Router) { }
+  constructor(private cartService: CartService, private authService: AuthService, private routter: Router, private Swal: SweetAlert2Service) { }
 
   scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -55,18 +56,33 @@ export class AppComponent {
   }
 
   logOut() {
-    if (confirm('確定要登出嗎？')) {
-      this.authService.logout().subscribe({
-        next: () => {
-          alert("用戶已登出");
-          this.routter.navigate(['/user/login']).then(() => { window.location.reload(); });
-        },
-        error: (error) => {
-          console.error("登出 API 失敗:", error);
-          alert("登出失敗，請稍後再試！");
-        }
-      });
-    };
+    this.Swal.showYesNo('確定要登出嗎？').then((a) => {
+      if (a.isConfirmed) {
+        this.authService.logout().subscribe({
+          next: () => {
+            this.Swal.showEasySuccess("用戶已登出");
+            setTimeout(() => {
+              this.routter.navigate(['/user/login']).then(() => { window.location.reload(); });
+            }, 2000);
+
+          },
+          error: (error) => {
+            // console.error("登出 API 失敗:", error);
+            // alert("登出失敗，請稍後再試！");
+            this.Swal.showEasyError("登出失敗，請稍後再試！");
+
+          }
+        });
+
+
+        setTimeout(() => {
+
+        }, 2000);
+      }
+    });
+
+
+
   }
 
 
