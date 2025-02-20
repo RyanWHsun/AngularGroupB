@@ -93,6 +93,8 @@ export class SocialmediaComponent {
     }
   }
   submitComment(postId: number) {
+    if (this.loginUserId == 0)
+      return;
     this.socialmediaService.postArticleComment({
       FPostId: postId,
       FContent: this.commentTexts[postId]
