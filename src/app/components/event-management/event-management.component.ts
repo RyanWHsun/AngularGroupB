@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { EventService, Event } from '../../services/event.service';
 
 @Component({
@@ -9,11 +10,32 @@ import { EventService, Event } from '../../services/event.service';
 })
 export class EventManagementComponent implements OnInit {
   events: Event[] = [];
+  private userApiUrl = 'https://localhost:7112/api/TUsers/loginUser'; // ✅ 取得當前登入用戶的 API
 
-  constructor(private eventService: EventService, private router: Router) {}
+  constructor(private eventService: EventService, private router: Router, private http: HttpClient) {}
 
   ngOnInit() {
-    this.loadEvents();
+    this.checkAdminAccess(); // ✅ 先檢查是否為管理員
+  }
+
+  /** ✅ 檢查是否為管理員 */
+  checkAdminAccess() {
+    this.http.get<any>(this.userApiUrl, { withCredentials: true }).subscribe(
+      (user) => {
+        console.log("📌 取得登入用戶資訊:", user);
+        if (!user || user.fUserRankId !== 99) {
+          alert("❌ 你沒有權限存取此頁面！");
+          this.router.navigate(['/']); // ✅ 轉回首頁
+        } else {
+          this.loadEvents(); // ✅ 如果是管理員，才載入活動列表
+        }
+      },
+      (error) => {
+        console.error("🚨 取得用戶資訊失敗:", error);
+        alert("❌ 你沒有權限存取此頁面！");
+        this.router.navigate(['/']); // ✅ 轉回首頁
+      }
+    );
   }
 
   /** 📌 取得所有活動 */
@@ -47,6 +69,7 @@ export class EventManagementComponent implements OnInit {
     );
   }
 }
+
 
 
 

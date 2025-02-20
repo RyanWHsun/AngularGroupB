@@ -1,3 +1,17 @@
+<!-- Header Start -->
+<div class="container-fluid page-header">
+  <div class="container">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+      <h3 class="display-4 text-white text-uppercase">活動詳情</h3>
+      <div class="d-inline-flex text-white">
+        <p class="m-0 text-uppercase"><a class="text-white" routerLink="/">活動推薦</a></p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase">活動詳情</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Header End -->
 <div class="container mt-5 event-detail-container" *ngIf="event">
   <h2 class="event-title">{{ event.fEventName }}</h2>
 
@@ -15,7 +29,18 @@
       <p><strong>活動地點:</strong> {{ event.fLocation || "未提供" }}</p>
       <p><strong>開始時間:</strong> {{ event.fEventStartDate | date: "yyyy-MM-dd" }}</p>
       <p><strong>結束時間:</strong> {{ event.fEventEndDate | date: "yyyy-MM-dd" }}</p>
-      <p><strong>活動費用:</strong> {{ event.fEventPrice ? ('NT$ ' + (event.fEventPrice | number: '1.0-0')) : '免費' }}</p>
+
+      <!-- ✅ 修正活動費用顯示 -->
+      <p><strong>活動費用:</strong>
+        <span *ngIf="event.fPrice !== null && event.fPrice !== undefined && event.fPrice > 0">
+          NT$ {{ event.fPrice | number: '1.2-2' }}
+        </span>
+        <span *ngIf="event.fPrice === 0 || event.fPrice === null || event.fPrice === undefined">
+          免費
+        </span>
+      </p>
+
+
       <p><strong>活動描述:</strong> {{ event.fEventDescription }}</p>
     </div>
 
@@ -26,6 +51,7 @@
     </div>
   </div>
 </div>
+
 
 
 

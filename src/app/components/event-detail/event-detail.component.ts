@@ -58,8 +58,17 @@ export class EventDetailComponent implements OnInit {
   loadEventDetail() {
     this.http.get<any>(`${this.apiUrl}/${this.eventId}`).subscribe(
       (data) => {
-        this.event = data;
-        this.event.fEventImageUrl = this.event.imageBase64 || "assets/images/noImage.jpg";
+        console.log("📌 API 回傳資料:", data);
+        this.event = {
+          fEventId: data.fEventId,
+          fEventName: data.fEventName,
+          fLocation: data.fLocation,
+          fEventStartDate: data.fEventStartDate,
+          fEventEndDate: data.fEventEndDate,
+          fPrice: data.fPrice !== undefined && data.fPrice !== null ? data.fPrice : 0, // ✅ 確保綁定正確的費用
+          fEventDescription: data.fEventDescription,
+          fEventImageUrl: data.imageBase64 || "assets/images/noImage.jpg"
+        };
       },
       (error) => {
         console.error("載入活動失敗:", error);
@@ -86,7 +95,6 @@ export class EventDetailComponent implements OnInit {
         }
       );
   }
-
 
   /** ✅ 導向登入頁面 */
   redirectToLogin() {
