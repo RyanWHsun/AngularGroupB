@@ -95,14 +95,14 @@
 
           <!-- Actions -->
           <div id="actions" class="d-flex justify-content-start mb-2">
-            <a role="button" class="my-1 mx-2" (click)="toggleLike()"><i
-                [ngClass]="{ 'fa-regular': !isLike, 'fa-solid': isLike }" class="fa-heart heart-icon fa-lg"
-                [style.color]="isLike ? '#FF5151' : ''">
+            <a role="button" class="my-1 mx-2" (click)="toggleLike(data['fPostId'])"><i
+                [ngClass]="{ 'fa-regular': !Likes[data['fPostId']], 'fa-solid': Likes[data['fPostId']] }"
+                class="fa-heart heart-icon fa-lg" [style.color]="Likes[data['fPostId']] ? '#FF5151' : ''">
               </i></a>
             <a role="button" class="my-1 mx-2" (click)="toggleComments(data['fPostId'])"><i
                 class="fa-regular fa-comment fa-lg"></i></a>
           </div>
-          <p class="mb-1"><strong>10個讚</strong></p>
+          <p class="mb-1"><strong>{{LikeCounts[data['fPostId']]}}個讚</strong></p>
 
           <!-- Likes and Caption -->
           <p *ngIf="!activePostIds.includes(data['fPostId'])"><img [src]="userData[data['fUserId']].image"

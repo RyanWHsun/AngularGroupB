@@ -44,4 +44,16 @@ export class SocialmediaService {
   deleteComment(commentId: number): Observable<any> {
     return this.httpClient.delete(`https://localhost:7112/api/TPostComments/${commentId}`, { withCredentials: true })
   }
+  getArticleLike(postId: number): Observable<any> {
+    return this.httpClient.get(`https://localhost:7112/api/TPostLikes/${postId}`, { withCredentials: true })
+  }
+  postArticleLike(likeData: any): Observable<any> {
+    return this.httpClient.post('https://localhost:7112/api/TPostLikes', likeData, { withCredentials: true })
+  }
+  deleteArticleLike(likeId: number): Observable<any> {
+    return this.httpClient.delete(`https://localhost:7112/api/TPostLikes/${likeId}`, { withCredentials: true })
+  }
+  getArticleLikeCount(postId: number): Observable<any> {
+    return this.httpClient.get(`https://localhost:7112/api/TPostLikes/GetTPostLikeCount/${postId}`)
+  }
 }
