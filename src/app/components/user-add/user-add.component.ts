@@ -12,7 +12,7 @@ import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
 })
 export class UserAddComponent {
 
-  emailHelpText = "請輸入電子郵件";
+  // emailHelpText = "請輸入電子郵件";
   // 存放輸入的表單資料
   user = {
     fUserName: null,

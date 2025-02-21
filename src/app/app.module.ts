@@ -42,6 +42,7 @@ import { WalletComponent } from './components/wallet/wallet.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { EventEditDialogComponent } from './components/event-edit-dialog/event-edit-dialog.component';
 import { EventFormComponent } from './components/event-form/event-form.component';
+import { UserPasswordComponent } from './components/user-password/user-password.component';
 
 @NgModule({
   declarations: [
@@ -76,6 +77,7 @@ import { EventFormComponent } from './components/event-form/event-form.component
     EventEditDialogComponent,
     EventFormComponent,
     UserAdminEditComponent,
+    UserPasswordComponent,
   ],
   imports: [
     BrowserModule,

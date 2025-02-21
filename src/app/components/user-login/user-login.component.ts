@@ -72,9 +72,7 @@ export class UserLoginComponent {
   }
 
 
-  editPassWord() {
 
-  }
 
 
 

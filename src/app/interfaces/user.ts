@@ -31,6 +31,13 @@ export interface userRankMaterial {
   fUserNickName: string;
 }
 
+//修改密碼
+export interface userPasswordMaterial {
+  email: string;
+  password: string;
+}
+
+
 // 所有的
 export interface allUsersMaterial {
   fUserId: number;
