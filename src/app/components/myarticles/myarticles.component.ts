@@ -33,6 +33,11 @@ export class MyarticlesComponent {
     { value: true, label: '公開' },
     { value: false, label: '私人' }
   ];
+  articleTypes: number = 0;
+  types = [
+    { value: 0, label: '類別' },
+    { value: 1, label: '國內旅遊' }
+  ]
   imagePreviews: string[] = [];
   currentIndex = 0;
   page: number = 1;
