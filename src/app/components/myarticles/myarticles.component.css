@@ -31,7 +31,8 @@
   opacity: 0;
   /* 預設不顯示 */
   transition: opacity 0.3s ease-in-out;
-  border-radius: 5px
+  border-radius: 5px;
+  text-decoration: none;
 }
 
 .image-container:hover .overlay {

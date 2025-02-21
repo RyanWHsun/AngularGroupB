@@ -39,6 +39,8 @@ export class MyarticlesComponent {
   pageSize: number = 6;
   loading: boolean = false;
   hasMore: boolean = true;
+  LikeCounts: { [postId: number]: number } = {};
+  CommentCounts: { [postId: number]: number } = {};
   constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer) { };
   ngOnInit(): void {
     this.loadArticles();
@@ -53,7 +55,12 @@ export class MyarticlesComponent {
     this.currentIndex = 0;
     loadCKEditorCloud(cloudConfig).then(this._setupEditor.bind(this));
   }
-
+  loadLikeCount(postId: number) {
+    this.socialmediaService.getArticleLikeCount(postId).subscribe(data => this.LikeCounts[postId] = data);
+  }
+  loadCommentCount(postId: number) {
+    this.socialmediaService.getArticleCommentCount(postId).subscribe(data => this.CommentCounts[postId] = data);
+  }
   loadImages(postId: number) {
     this.socialmediaService.getMyImages(postId).subscribe(data => {
       this.imageData[postId] = data.map((imageBase64: string) => 'data:image/jpeg;base64,' + imageBase64);
@@ -69,6 +76,8 @@ export class MyarticlesComponent {
         this.datas.push(...response);
         this.datas.forEach(post => {
           this.loadImages(post['fPostId']);
+          this.loadLikeCount(post['fPostId']);
+          this.loadCommentCount(post['fPostId']);
         });
         this.page++;
         // console.log(this.datas);
