@@ -24,13 +24,25 @@ export class SocialmediaComponent {
   loginUserId = 0;
   Likes: { [postId: number]: number } = {};
   LikeCounts: { [postId: number]: number } = {};
+  types: { value: number, label: string }[] = [{ value: 0, label: '類別' }];
+  filterTypesValue = 0;
   constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer) { };
   ngOnInit(): void {
     this.loadLoginInfo();
     this.loadArticles();
+    this.loadTypes();
   }
   loadLoginInfo() {
     this.socialmediaService.getLoginUserId().subscribe(data => this.loginUserId = data);
+  }
+  loadTypes() {
+    this.socialmediaService.getTypes().subscribe(datas => this.types = [
+      { value: 0, label: '類別' },
+      ...datas.map((item: any) => ({
+        value: item.fCategoryId,
+        label: item.fName
+      }))]
+    )
   }
   loadLikeCount(postId: number) {
     this.socialmediaService.getArticleLikeCount(postId).subscribe(data => this.LikeCounts[postId] = data);

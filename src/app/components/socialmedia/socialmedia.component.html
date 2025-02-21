@@ -35,10 +35,10 @@
           </button>
         </div>
         <div class="col-md-3 d-flex">
-          <select class="custom-select w-100">
-            <option value="">類別</option>
-            <option value="tech">健行</option>
-            <option value="lifestyle">美食</option>
+          <select [(ngModel)]="filterTypesValue" class="custom-select w-100">
+            <option *ngFor="let type of types" [value]="type.value">
+              {{ type.label }}
+            </option>
           </select>
         </div>
         <div class="col-md-3" style="height: 47px;">

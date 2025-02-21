@@ -22,7 +22,7 @@ export class MyarticlesComponent {
   articleTitle = '';
   editorData = '';
   datas: any[] = [];
-  finalData: SafeHtml = '';
+  // finalData: SafeHtml = '';
   imageData: { [key: number]: string[] } = {};
   articleStatus: boolean = true;
   lastPostId = -1;
@@ -33,11 +33,9 @@ export class MyarticlesComponent {
     { value: true, label: '公開' },
     { value: false, label: '私人' }
   ];
-  articleTypes: number = 0;
-  types = [
-    { value: 0, label: '類別' },
-    { value: 1, label: '國內旅遊' }
-  ]
+  types: { value: number, label: string }[] = [{ value: 0, label: '類別' }];
+  articleTypesValue = 0;
+  filterTypesValue = 0;
   imagePreviews: string[] = [];
   currentIndex = 0;
   page: number = 1;
@@ -49,6 +47,7 @@ export class MyarticlesComponent {
   constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer) { };
   ngOnInit(): void {
     this.loadArticles();
+    this.loadTypes();
     loadCKEditorCloud(cloudConfig).then(this._setupEditor.bind(this));
   }
 
@@ -58,7 +57,17 @@ export class MyarticlesComponent {
     this.articleStatus = true;
     this.imagePreviews = [];
     this.currentIndex = 0;
+    this.articleTypesValue = 0;
     loadCKEditorCloud(cloudConfig).then(this._setupEditor.bind(this));
+  }
+  loadTypes() {
+    this.socialmediaService.getTypes().subscribe(datas => this.types = [
+      { value: 0, label: '類別' },
+      ...datas.map((item: any) => ({
+        value: item.fCategoryId,
+        label: item.fName
+      }))]
+    )
   }
   loadLikeCount(postId: number) {
     this.socialmediaService.getArticleLikeCount(postId).subscribe(data => this.LikeCounts[postId] = data);
@@ -96,14 +105,15 @@ export class MyarticlesComponent {
     });
   }
   save() {
-    this.finalData = this.sanitizer.bypassSecurityTrustHtml(this.editorData);
+    // this.finalData = this.sanitizer.bypassSecurityTrustHtml(this.editorData);
     this.socialmediaService.postArticle({
       FTitle: this.articleTitle,
       FContent: this.editorData,
-      FIsPublic: this.articleStatus
+      FIsPublic: this.articleStatus,
+      ...(this.articleTypesValue != 0 && { FCategoryId: this.articleTypesValue })
     }).pipe(
       concatMap(response => {
-        // console.log('文章發佈成功', response);
+        console.log('文章發佈成功', response);
         if (this.imagePreviews.length == 0)
           return of(null);
         const postId = response['fPostId'];

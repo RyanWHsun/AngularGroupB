@@ -59,4 +59,7 @@ export class SocialmediaService {
   getArticleCommentCount(postId: number): Observable<any> {
     return this.httpClient.get(`https://localhost:7112/api/TPostComments/GetTPostCommentCount/${postId}`)
   }
+  getTypes(): Observable<any> {
+    return this.httpClient.get(`https://localhost:7112/api/TPostCategories`)
+  }
 }
