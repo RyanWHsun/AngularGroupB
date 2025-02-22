@@ -178,6 +178,13 @@ export class MyarticlesComponent {
         // console.log('文章圖片發佈成功', response);
       });
   }
+  delete() {
+    const postId = this.currentData.fPostId;
+    this.socialmediaService.deleteArticle(postId).subscribe(response => {
+      this.resetArticles();
+      this.loadArticles();
+    })
+  }
   save() {
     // this.finalData = this.sanitizer.bypassSecurityTrustHtml(this.editorData);
     this.socialmediaService.postArticle({

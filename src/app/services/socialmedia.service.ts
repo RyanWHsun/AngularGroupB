@@ -18,6 +18,10 @@ export class SocialmediaService {
   putArticle(articleData: any): Observable<any> {
     return this.httpClient.put('https://localhost:7112/api/TPosts', articleData, { withCredentials: true })
   }
+  deleteArticle(postId: number): Observable<any> {
+    return this.httpClient.delete(`https://localhost:7112/api/TPosts/${postId}`, { withCredentials: true })
+  }
+
   getMyImages(postId: number): Observable<any> {
     return this.httpClient.get(`https://localhost:7112/api/TPostImages/${postId}`, { withCredentials: true })
   }
