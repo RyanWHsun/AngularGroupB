@@ -135,7 +135,6 @@ export class MyarticlesComponent {
     });
   }
 
-  //
   fetchCurrentData(data: any) {
     this.reset();
     this.loadComments(data.fPostId);
@@ -153,7 +152,32 @@ export class MyarticlesComponent {
     else
       this.articleTypesValue = 0;
   }
-  //
+  edit() {
+    this.socialmediaService.putArticle({
+      FPostId: this.currentData.fPostId,
+      FTitle: this.articleTitle,
+      FContent: this.editorData,
+      FIsPublic: this.articleStatus,
+      ...(this.articleTypesValue != 0 && { FCategoryId: this.articleTypesValue })
+    })
+      // .pipe(
+      //   concatMap(response => {
+      //     console.log('文章發佈成功', response);
+      //     if (this.imagePreviews.length == 0)
+      //       return of(null);
+      //     const postId = response['fPostId'];
+      //     const imageData = this.imagePreviews.map(img => ({
+      //       FPostId: postId,
+      //       FImage: img
+      //     }));
+      //     return this.socialmediaService.postImages(imageData);
+      //   }))
+      .subscribe(response => {
+        this.resetArticles();
+        this.loadArticles();
+        // console.log('文章圖片發佈成功', response);
+      });
+  }
   save() {
     // this.finalData = this.sanitizer.bypassSecurityTrustHtml(this.editorData);
     this.socialmediaService.postArticle({
