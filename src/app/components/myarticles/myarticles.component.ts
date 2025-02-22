@@ -159,24 +159,26 @@ export class MyarticlesComponent {
       FContent: this.editorData,
       FIsPublic: this.articleStatus,
       ...(this.articleTypesValue != 0 && { FCategoryId: this.articleTypesValue })
-    })
-      // .pipe(
-      //   concatMap(response => {
-      //     console.log('文章發佈成功', response);
-      //     if (this.imagePreviews.length == 0)
-      //       return of(null);
-      //     const postId = response['fPostId'];
-      //     const imageData = this.imagePreviews.map(img => ({
-      //       FPostId: postId,
-      //       FImage: img
-      //     }));
-      //     return this.socialmediaService.postImages(imageData);
-      //   }))
-      .subscribe(response => {
-        this.resetArticles();
-        this.loadArticles();
-        // console.log('文章圖片發佈成功', response);
-      });
+    }).pipe(
+      concatMap(response => {
+        const postId = this.currentData.fPostId;
+        return this.socialmediaService.deleteAllImages(postId);
+      })
+    ).pipe(
+      concatMap(response => {
+        if (this.imagePreviews.length == 0)
+          return of(null);
+        const postId = this.currentData.fPostId;
+        const imageData = this.imagePreviews.map(img => ({
+          FPostId: postId,
+          FImage: img
+        }));
+        return this.socialmediaService.postImages(imageData);
+      })
+    ).subscribe(response => {
+      this.resetArticles();
+      this.loadArticles();
+    });
   }
   delete() {
     const postId = this.currentData.fPostId;
@@ -194,7 +196,7 @@ export class MyarticlesComponent {
       ...(this.articleTypesValue != 0 && { FCategoryId: this.articleTypesValue })
     }).pipe(
       concatMap(response => {
-        console.log('文章發佈成功', response);
+        // console.log('文章發佈成功', response);
         if (this.imagePreviews.length == 0)
           return of(null);
         const postId = response['fPostId'];

@@ -28,6 +28,9 @@ export class SocialmediaService {
   postImages(imgData: any): Observable<any> {
     return this.httpClient.post('https://localhost:7112/api/TPostImages', imgData, { withCredentials: true })
   }
+  deleteAllImages(postId: number): Observable<any> {
+    return this.httpClient.delete(`https://localhost:7112/api/TPostImages/${postId}`, { withCredentials: true })
+  }
 
   getPublicArticles(page: number, pageSize: number): Observable<any> {
     return this.httpClient.get(`https://localhost:7112/api/TPosts/GetPublicPosts?page=${page}&pageSize=${pageSize}`)
