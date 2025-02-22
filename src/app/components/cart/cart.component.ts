@@ -32,6 +32,10 @@ export class CartComponent {
   totalPrice = 0;
   selectedCount = 0;
   fPaymentMethod: string = ''; // 預設付款方式
+  storeName: string = '';
+  storeID: string = '';
+  storeInfo: string = '';
+  windowClosed: boolean = false;
 
   constructor(private cartService: CartService, private authService: AuthService, private router: Router, private orderService: OrderService, private swal: SweetAlert2Service) { }
   @ViewChild('popoverButton', { static: false }) popoverButton!: ElementRef;
@@ -241,7 +245,37 @@ export class CartComponent {
 
   updatePaymentMethod(method: string) {
     this.fPaymentMethod = method;
-    //console.log("目前付款方式:", this.fPaymentMethod);
+  }
+
+  openStoreMap() {
+    this.cartService.openStoreMap().subscribe({
+      next: (response) => {
+        if (response.mapUrl) {
+          window.open(response.mapUrl, '_blank');
+          this.getSelectedStore();
+        } else {
+          console.error('無法獲取門市選擇 URL');
+        }
+      },
+      error: (error) => {
+        console.error('API錯誤', error)
+      }
+    });
+  }
+
+
+  // 取得選擇的門市資訊
+  getSelectedStore() {
+    this.cartService.getSelectedStore().subscribe({
+      next: (data) => {
+        this.storeName = data.storeName;
+        this.storeID = data.storeID;
+        this.storeInfo = `${this.storeID}+${this.storeName}`
+        this.userInfo.fUserAddress = this.storeInfo;
+      }, error: (error) => {
+        console.error('無法獲取選擇的門市資訊:', error)
+      }
+    })
   }
 
   removeItem(fCartItemId: number) {
@@ -346,6 +380,11 @@ export class CartComponent {
     //如果選擇Wallet付款，檢查餘額
     if (this.fPaymentMethod === 'Wallet' && this.totalPrice > (this.userInfo?.totalBalance || 0)) {
       this.swal.showEasyError(`您的錢包餘額為 NT$${this.userInfo?.totalBalance}\n餘額不足!請修改支付方式`);
+      return;
+    }
+
+    if (this.fPaymentMethod === 'Store' && this.storeInfo === '') {
+      this.swal.showEasyWarning('請先選擇超商');
       return;
     }
 

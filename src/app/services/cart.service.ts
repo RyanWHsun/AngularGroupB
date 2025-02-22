@@ -62,5 +62,15 @@ export class CartService {
     return this.http.get<userInfo>(url, { withCredentials: true })
   }
 
+  openStoreMap(): Observable<{ mapUrl: string }> {
+    const url = `${this.baseAddress}api/ECPayLogistics/openStoreMap`
+    return this.http.post<{ mapUrl: string }>(url, {});
+  }
+
+  // 取得選擇的門市資訊
+  getSelectedStore(): Observable<{ storeName: string, storeID: string }> {
+    const url = `${this.baseAddress}api/ECPayLogistics/StoreSelection`;
+    return this.http.post<{ storeName: string, storeID: string }>(url, {});
+  }
 }
 

@@ -215,6 +215,8 @@ export class BuyerOrderComponent {
           next: (response) => {
             this.swal.showEasySuccess(response.message);
             this.loadOrders();
+            this.toggleOrderDetail(orderId);
+            this.filterOrders(null);
           },
           error: (error) => {
             this.swal.showEasyError(error.error.message);
