@@ -6,6 +6,7 @@ import type { ClassicEditor, EditorConfig } from 'https://cdn.ckeditor.com/typin
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { concatMap, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { IPostComment } from 'src/app/interfaces/IPostComment';
 const LICENSE_KEY = environment.ckeditorLicenseKey;
 const cloudConfig = {
   version: '44.1.0'
@@ -22,7 +23,7 @@ export class MyarticlesComponent {
   articleTitle = '';
   editorData = '';
   datas: any[] = [];
-  // finalData: SafeHtml = '';
+  finalData: SafeHtml = '';
   imageData: { [key: number]: string[] } = {};
   articleStatus: boolean = true;
   lastPostId = -1;
@@ -33,6 +34,7 @@ export class MyarticlesComponent {
     { value: true, label: '公開' },
     { value: false, label: '私人' }
   ];
+  currentData: any = {};
   types: { value: number, label: string }[] = [{ value: 0, label: '類別' }];
   articleTypesValue = 0;
   filterTypesValue = 0;
@@ -44,10 +46,15 @@ export class MyarticlesComponent {
   hasMore: boolean = true;
   LikeCounts: { [postId: number]: number } = {};
   CommentCounts: { [postId: number]: number } = {};
+  loginUserId = 0;
+  userData: { [userId: number]: { image: string, nickName: string } } = {};
+  commentDatas: { [postId: number]: IPostComment[] } = {};
+  commentTexts = '';
   constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer) { };
   ngOnInit(): void {
     this.loadArticles();
     this.loadTypes();
+    this.loadLoginInfo();
     loadCKEditorCloud(cloudConfig).then(this._setupEditor.bind(this));
   }
 
@@ -58,7 +65,30 @@ export class MyarticlesComponent {
     this.imagePreviews = [];
     this.currentIndex = 0;
     this.articleTypesValue = 0;
-    loadCKEditorCloud(cloudConfig).then(this._setupEditor.bind(this));
+  }
+  loadLoginInfo() {
+    this.socialmediaService.getLoginUserId().subscribe(data => this.loginUserId = data);
+  }
+  loadUserInfo(userId: number) {
+    if (!this.userData[userId]) {
+      this.userData[userId] = { image: '', nickName: '' };
+    }
+    this.socialmediaService.getUserInfo(userId).subscribe(data => {
+      this.userData[userId] = {
+        image: `data:image/jpeg;base64,${data.fUserImage}`,
+        nickName: data.fUserNickName
+      }
+    })
+  }
+  loadComments(postId: number) {
+    this.socialmediaService.getArticleComments(postId).subscribe((comments: IPostComment[]) => {
+      if (!comments)
+        return;
+      this.commentDatas[postId] = comments.map((comment: IPostComment) => {
+        comment.fUserImage = 'data:image/jpeg;base64,' + comment.fUserImage;
+        return comment;
+      });;
+    });
   }
   loadTypes() {
     this.socialmediaService.getTypes().subscribe(datas => this.types = [
@@ -104,6 +134,26 @@ export class MyarticlesComponent {
       this.loading = false;
     });
   }
+
+  //
+  fetchCurrentData(data: any) {
+    this.reset();
+    this.loadComments(data.fPostId);
+    this.loadUserInfo(data.fUserId);
+    this.currentData = data;
+    this.articleTitle = data.fTitle;
+    this.editorData = data.fContent;
+    this.finalData = this.sanitizer.bypassSecurityTrustHtml(this.editorData);
+    this.articleStatus = data.fIsPublic;
+    if (this.imageData[data.fPostId])
+      this.imagePreviews = this.imageData[data.fPostId];
+    this.currentIndex = 0;
+    if (data.fCategoryId)
+      this.articleTypesValue = data.fCategoryId;
+    else
+      this.articleTypesValue = 0;
+  }
+  //
   save() {
     // this.finalData = this.sanitizer.bypassSecurityTrustHtml(this.editorData);
     this.socialmediaService.postArticle({
@@ -164,6 +214,21 @@ export class MyarticlesComponent {
     }
   }
 
+  submitComment(postId: number) {
+    if (this.loginUserId == 0)
+      return;
+    this.socialmediaService.postArticleComment({
+      FPostId: postId,
+      FContent: this.commentTexts
+    }).subscribe(() => {
+      this.commentTexts = '';
+      this.loadComments(postId);
+    })
+  }
+
+  deleteComment(commentId: number, postId: number) {
+    this.socialmediaService.deleteComment(commentId).subscribe(response => { this.loadComments(postId) });
+  }
   onScroll() {
     this.loadArticles();
   }

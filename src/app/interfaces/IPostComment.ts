@@ -10,3 +10,5 @@ export interface IPostComment {
   fUpdatedAt: string;
   fParentCommentId: number;
 }
+
+
