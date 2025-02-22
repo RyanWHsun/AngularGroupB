@@ -80,20 +80,33 @@ export class SellerOrderComponent {
   }
 
   getBadgeText(order: sellerOrderAll, statusId: number): string {
-    if (order.fOrderStatusId === 3) {
-      // 訂單完成，回傳最新的 fTimestamp
-      const latestStatus = order.statusHistory.find(h => h.fOrderStatusId === 3);
-      return latestStatus ? new Date(latestStatus.fTimestamp).toLocaleDateString() : 'Pending';
+    // 先找出當前狀態
+    const currentStatus = order.statusHistory.find(h => h.fOrderStatusId === statusId);
+
+    if (!currentStatus) {
+      return 'Pending';
     }
 
+    // 如果訂單已完成（fOrderStatusId === 3），則只顯示完成時間
+    if (order.fOrderStatusId === 3) {
+      return new Date(currentStatus.fTimestamp).toLocaleDateString();
+    }
+
+    // 如果當前狀態正在進行
     if (order.fOrderStatusId === statusId) {
       return '進行中';
-    } else if (order.fOrderStatusId > statusId) {
-      const status = order.statusHistory.find(h => h.fOrderStatusId === statusId);
-      return status ? new Date(status.fTimestamp).toLocaleDateString() : 'Pending';
     }
+
+    // 如果訂單已經超過此狀態，則顯示該狀態的變更時間
+    if (order.fOrderStatusId > statusId) {
+      return new Date(currentStatus.fTimestamp).toLocaleDateString();
+    }
+
     return 'Pending';
   }
+
+
+
 
 
   shipOrder(orderId: number, fExtraInfo: string) {

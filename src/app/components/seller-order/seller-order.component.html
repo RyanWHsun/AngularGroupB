@@ -123,19 +123,19 @@
           <td>NT$&nbsp;{{order.fOrderAmount}}</td>
           <td>
             <span class="badge rounded-pill badge-lg"
-              [ngClass]="{'badge-success': getBadgeText(order, 1) === '進行中', 'badge-secondary': getBadgeText(order, 1) === '待接續'}">
+              [ngClass]="{'badge-success': getBadgeText(order, 1) === '進行中', 'badge-secondary': getBadgeText(order, 1) === 'Pending'}">
               {{ getBadgeText(order, 1) }}
             </span>
           </td>
           <td>
             <span class="badge rounded-pill badge-lg"
-              [ngClass]="{'badge-success': getBadgeText(order, 2) === '進行中', 'badge-secondary': getBadgeText(order, 2) === '待接續'}">
+              [ngClass]="{'badge-success': getBadgeText(order, 2) === '進行中', 'badge-secondary': getBadgeText(order, 2) === 'Pending'}">
               {{ getBadgeText(order, 2) }}
             </span>
           </td>
           <td>
             <span class="badge rounded-pill badge-lg"
-              [ngClass]="{'badge-success': getBadgeText(order, 3) === '進行中', 'badge-secondary': getBadgeText(order, 3) === '待接續'}">
+              [ngClass]="{'badge-success': getBadgeText(order, 3) === '進行中', 'badge-secondary': getBadgeText(order, 3) === 'Pending'}">
               {{ getBadgeText(order, 3) }}
             </span>
           </td>
