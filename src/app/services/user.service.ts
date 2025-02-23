@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { allUsersMaterial, userEditMaterial, userMaterial, userPasswordMaterial, userRankMaterial } from '../interfaces/user';
+import { allUsersMaterial, sendEmail, userEditMaterial, userMaterial, userPasswordMaterial, userRankMaterial } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +43,17 @@ export class UserService {
   putuserRank(user: userRankMaterial): Observable<userRankMaterial> {
     return this.userclient.put<userRankMaterial>(`${this.baseAddress}api/TUsers/loginUserRank`, user, { withCredentials: true })
   }
+
+  // 發送Email
+  sendEmail(email: sendEmail): Observable<sendEmail> {
+    return this.userclient.post<sendEmail>(`${this.baseAddress}api/TUsers/sendEmail`, email)
+  }
+
+  //驗證驗證碼
+  verificationCheck(email: sendEmail): Observable<sendEmail> {
+    return this.userclient.post<sendEmail>(`${this.baseAddress}api/TUsers/verifyEmail`, email)
+  }
+
 
   // 修改Password
   putUserPassword(user: userPasswordMaterial): Observable<any> {

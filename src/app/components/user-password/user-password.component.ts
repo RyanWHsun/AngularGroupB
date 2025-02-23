@@ -1,4 +1,4 @@
-import { userPasswordMaterial } from './../../interfaces/user';
+import { sendEmail, userPasswordMaterial } from './../../interfaces/user';
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -19,8 +19,15 @@ export class UserPasswordComponent {
       password: "",
     };
 
+  theEmail: sendEmail = {
+    Email: "",
+    Subject: "旅勸步町-密碼修改驗證",
+  };
+
   passwordType = "password";
   chackPassword: string = '';
+  sendEmail: number = 1;
+  VerificationCode = "";
 
 
   constructor(private userService: UserService, private router: Router, private Swal: SweetAlert2Service) { }
@@ -36,30 +43,67 @@ export class UserPasswordComponent {
     }
   }
 
-
-
-  // 送出表單資料
-  submit(form: NgForm) {
-
+  //檢查表單填寫
+  IsAllUninvalid(form: NgForm) {
     // 檢查表單是否有效
     if (form.invalid) {
-      // console.log('表單驗證不通過');
-      // alert('請確保所有欄位都正確填寫！');
       this.Swal.showEasyWarning('請確保所有欄位都正確填寫！');
       Object.values(form.controls).forEach(control => {
         control.markAsTouched();
       });
       return;
     }
+  }
 
+
+  // 送出email表單資料
+  submitEmail(form: NgForm) {
+    this.IsAllUninvalid(form);
+    this.theEmail.Email = this.user.email;
+    console.log(this.user.email);
+    //送出去囉
+    this.userService.sendEmail(this.theEmail).subscribe({
+      next: () => {
+        this.Swal.showEasySuccess('驗證信發送成功！');
+        this.sendEmail = 2;
+      }, error: (e) => {
+        // console.log(e);
+        this.Swal.showEasyError('發送驗證信失敗！');
+      }
+    })
+  }
+
+  //輸入驗證信
+  keyupVerification() {
+    if (this.VerificationCode.length == 6) {
+      this.theEmail.Email = this.user.email;
+      this.theEmail.verification = this.VerificationCode;
+      this.userService.verificationCheck(this.theEmail).subscribe({
+        next: () => {
+          this.Swal.showEasySuccess('驗證成功！');
+          this.sendEmail = 3;
+        }, error: (err) => {
+          console.log(err.message);
+          console.log(this.theEmail);
+          this.Swal.showEasyError('驗證失敗！');
+        }
+      })
+    }
+  }
+
+
+
+
+
+  // 送出密碼表單資料
+  submit(form: NgForm) {
+    this.IsAllUninvalid(form);
     // 密碼與再次輸入
     if (this.user.password != this.chackPassword) {
       this.Swal.showEasyWarning("密碼與再次輸入不相同");
       return;
     }
-
     // console.log(this.user);
-
     // 密碼修改
     this.userService.putUserPassword(this.user).subscribe({
       next: (data) => {
@@ -73,9 +117,6 @@ export class UserPasswordComponent {
         this.Swal.showEasyError("修改失敗!");
       }
     })
-
-
-
   }
 
 
