@@ -7,6 +7,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { concatMap, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IPostComment } from 'src/app/interfaces/IPostComment';
+import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
+import Swal from 'sweetalert2';
 const LICENSE_KEY = environment.ckeditorLicenseKey;
 const cloudConfig = {
   version: '44.1.0'
@@ -50,7 +52,7 @@ export class MyarticlesComponent {
   userData: { [userId: number]: { image: string, nickName: string } } = {};
   commentDatas: { [postId: number]: IPostComment[] } = {};
   commentTexts = '';
-  constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer) { };
+  constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer, private sweetAlert: SweetAlert2Service) { };
   ngOnInit(): void {
     this.loadArticles();
     this.loadTypes();
@@ -176,16 +178,33 @@ export class MyarticlesComponent {
         return this.socialmediaService.postImages(imageData);
       })
     ).subscribe(response => {
+      this.sweetAlert.showEasySuccess("文章修改成功");
       this.resetArticles();
       this.loadArticles();
     });
   }
+
   delete() {
-    const postId = this.currentData.fPostId;
-    this.socialmediaService.deleteArticle(postId).subscribe(response => {
-      this.resetArticles();
-      this.loadArticles();
-    })
+    Swal.fire({
+      title: '你確定要刪除嗎？',
+      text: '刪除後將無法復原！',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '是的，刪除！',
+      cancelButtonText: '取消'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const postId = this.currentData.fPostId;
+        this.socialmediaService.deleteArticle(postId).subscribe(response => {
+          this.sweetAlert.showEasySuccess("文章刪除成功");
+          this.resetArticles();
+          this.loadArticles();
+        })
+      }
+    });
+
   }
   save() {
     // this.finalData = this.sanitizer.bypassSecurityTrustHtml(this.editorData);
@@ -210,6 +229,7 @@ export class MyarticlesComponent {
       this.resetArticles();
       this.loadArticles();
       // console.log('文章圖片發佈成功', response);
+      this.sweetAlert.showEasySuccess("新增文章成功");
     });
   }
   resetArticles() {
