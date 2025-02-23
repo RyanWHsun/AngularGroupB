@@ -52,6 +52,12 @@ export class MyarticlesComponent {
   userData: { [userId: number]: { image: string, nickName: string } } = {};
   commentDatas: { [postId: number]: IPostComment[] } = {};
   commentTexts = '';
+  filter = {
+    TypesValue: 0,
+    afterDate: '',
+    keyword: ''
+  }
+  previousFilter = { ...this.filter };
   constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer, private sweetAlert: SweetAlert2Service) { };
   ngOnInit(): void {
     this.loadArticles();
@@ -59,7 +65,19 @@ export class MyarticlesComponent {
     this.loadLoginInfo();
     loadCKEditorCloud(cloudConfig).then(this._setupEditor.bind(this));
   }
+  ngDoCheck(): void {
 
+    if (
+      this.previousFilter.afterDate !== this.filter.afterDate ||
+      this.previousFilter.TypesValue !== this.filter.TypesValue ||
+      this.previousFilter.keyword !== this.filter.keyword
+    ) {
+      console.log(this.filter);
+      this.resetArticles();
+      this.loadArticles();
+      this.previousFilter = { ...this.filter };
+    }
+  }
   reset() {
     this.articleTitle = '';
     this.editorData = '';
@@ -117,7 +135,7 @@ export class MyarticlesComponent {
     if (!this.hasMore || this.loading) return;
 
     this.loading = true;
-    this.socialmediaService.getMyArticles(this.page, this.pageSize).subscribe(response => {
+    this.socialmediaService.getMyArticles(this.page, this.pageSize, this.filter.TypesValue, this.filter.afterDate, this.filter.keyword).subscribe(response => {
       if (response.length > 0) {
         this.datas.push(...response);
         this.datas.forEach(post => {

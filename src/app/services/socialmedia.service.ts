@@ -9,8 +9,8 @@ export class SocialmediaService {
   constructor(private httpClient: HttpClient) { }
 
 
-  getMyArticles(page: number, pageSize: number): Observable<any> {
-    return this.httpClient.get(`https://localhost:7112/api/TPosts?page=${page}&pageSize=${pageSize}`, { withCredentials: true })
+  getMyArticles(page: number, pageSize: number, TypesValue: number, afterDate: string, keyword: string): Observable<any> {
+    return this.httpClient.get(`https://localhost:7112/api/TPosts?page=${page}&pageSize=${pageSize}&categoryId=${TypesValue}&afterDate=${afterDate}&keyword=${keyword}`, { withCredentials: true })
   }
   postArticle(articleData: any): Observable<any> {
     return this.httpClient.post('https://localhost:7112/api/TPosts', articleData, { withCredentials: true })

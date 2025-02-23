@@ -27,17 +27,17 @@
           </button>
         </div>
         <div class="col-md-3">
-          <select [(ngModel)]="filterTypesValue" class="custom-select w-100">
+          <select [(ngModel)]="filter.TypesValue" class="custom-select w-100">
             <option *ngFor="let type of types" [ngValue]="type.value">
               {{ type.label }}
             </option>
           </select>
         </div>
         <div class="col-md-3 w-100" style="height: 47px;">
-          <input type="date" class="custom-date w-100">
+          <input type="date" [(ngModel)]="filter.afterDate" class="custom-date w-100">
         </div>
         <div class="col-md-3" style="height: 47px;">
-          <input type="text" class="custom-input w-100" placeholder="關鍵字搜尋">
+          <input type="text" [(ngModel)]="filter.keyword" class="custom-input w-100" placeholder="關鍵字搜尋">
         </div>
       </div>
     </div>
