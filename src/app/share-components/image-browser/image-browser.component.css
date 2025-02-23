@@ -1,0 +1,10 @@
+.image-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.image-container img {
+  width: 100%;
+  display: block;
+}

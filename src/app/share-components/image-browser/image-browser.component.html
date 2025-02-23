@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-12">
+    <div *ngIf="imagePreviews.length > 0" class="image-container">
+      <img [src]="imagePreviews[currentIndex]" class="w-100" style="object-fit: cover;height: 465px">
+    </div>
+    <div *ngIf="imagePreviews.length === 0">
+      <img src="assets/images/noImage.jpg" class="w-100" style="object-fit: cover;height: 465px">
+    </div>
+    <a class="carousel-control-prev" (click)="prevImage()">
+      <span class="carousel-control-prev-icon"></span>
+    </a>
+    <a class="carousel-control-next" (click)="nextImage()">
+      <span class="carousel-control-next-icon"></span>
+    </a>
+  </div>
+</div>

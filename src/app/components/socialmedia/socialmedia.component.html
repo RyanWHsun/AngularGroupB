@@ -85,13 +85,15 @@
           </div>
 
           <!-- Image -->
-          <div *ngIf="imageData[data['fPostId']] && imageData[data['fPostId']].length > 0" class="mb-2">
+          <!-- <div *ngIf="imageData[data['fPostId']] && imageData[data['fPostId']].length > 0" class="mb-2">
             <img [src]="imageData[data['fPostId']][0]" class="w-100" style='height: 444.75px;object-fit: cover' />
           </div>
 
           <div *ngIf="!imageData[data['fPostId']] || imageData[data['fPostId']].length == 0" class="mb-2">
             <img src="/assets/images/noImage.jpg" class="w-100" style='height: 444.75px;object-fit: cover' />
-          </div>
+          </div> -->
+          <app-image-browser *ngIf="imageData[data['fPostId']]"
+            [imagePreviews]="imageData[data['fPostId']]"></app-image-browser>
 
           <!-- Actions -->
           <div id="actions" class="d-flex justify-content-start mb-2">
