@@ -4,6 +4,7 @@ import { sellerOrderAll, OrderDetail, OrderStatusHistory } from './../../interfa
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import * as signalR from '@microsoft/signalr';
 
 @Component({
   selector: 'app-seller-order',
@@ -15,6 +16,7 @@ export class SellerOrderComponent {
   filteredOrders: sellerOrderAll[] = [];
   selectedStatus: number | null = null;
   searchText: string = ''; // 搜尋文字
+  private hubConnection!: signalR.HubConnection;
 
   constructor(private orderService: OrderService, private swal: SweetAlert2Service, private router: Router) { }
 
@@ -25,6 +27,7 @@ export class SellerOrderComponent {
       const scrollY = window.innerHeight * 0.2; //視窗高度百分比
       window.scrollTo({ top: scrollY, behavior: 'smooth' });
     }, 200);
+    this.startSignalRConnection();
   }
 
   loadSellerOrders(): void {
@@ -172,6 +175,23 @@ export class SellerOrderComponent {
       text: fExtraInfo,
       confirmButtonColor: 'black',
     });
+  }
+
+  private startSignalRConnection() {
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl('https://localhost:7112/orderHub')
+      .build();
+
+    this.hubConnection.start().then(() => {
+      console.log('連接成功!');
+    }).catch(err => console.log('連接失敗', err));
+
+    //監聽事件
+    this.hubConnection.on('OrderUpdated', (orderId) => {
+      console.log(`訂單 ${orderId} 已更新，重新載入訂單列表`);
+      this.swal.showEasySuccess(`訂單 ${orderId} 司機已取件`);
+      this.loadSellerOrders();
+    })
   }
 }
 
