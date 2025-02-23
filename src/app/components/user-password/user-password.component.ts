@@ -2,7 +2,7 @@ import { sendEmail, userPasswordMaterial } from './../../interfaces/user';
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { data } from 'jquery';
+import { data, error } from 'jquery';
 import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -68,7 +68,8 @@ export class UserPasswordComponent {
         this.sendEmail = 2;
       }, error: (e) => {
         // console.log(e);
-        this.Swal.showEasyError('發送驗證信失敗！');
+        this.Swal.showEasyError(e.error.message);
+        // this.Swal.showEasyError('發送驗證信失敗！');
       }
     })
   }
@@ -85,7 +86,7 @@ export class UserPasswordComponent {
         }, error: (err) => {
           console.log(err.message);
           console.log(this.theEmail);
-          this.Swal.showEasyError('驗證失敗！');
+          this.Swal.showEasyError(err.message);
         }
       })
     }
