@@ -105,7 +105,28 @@ export class SellerOrderComponent {
     return 'Pending';
   }
 
-
+  generateQRcode(orderId: number) {
+    this.orderService.getQRcode(orderId).subscribe({
+      next: (blob: Blob) => {
+        const qrCodeUrl = URL.createObjectURL(blob); //blob轉換成URL
+        Swal.fire({
+          title: `訂單#${orderId}出貨單`,
+          text: "請列印出貨單",
+          imageUrl: qrCodeUrl,
+          imageWidth: 400,
+          imageHeight: 400,
+          imageAlt: `訂單${orderId}出貨單`,
+          confirmButtonText: '列印',
+          confirmButtonColor: '#28a746'
+        });
+        // 釋放記憶體
+        setTimeout(() => URL.revokeObjectURL(qrCodeUrl), 5000);
+      }, error: (error) => {
+        console.error('產生QR錯誤', error)
+        this.swal.showEasyError('產生錯誤，請稍後再試');
+      }
+    })
+  }
 
 
 

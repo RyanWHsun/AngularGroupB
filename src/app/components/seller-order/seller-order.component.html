@@ -107,14 +107,14 @@
     <table class="table table-striped text-center align-middle table-hover table-custom">
       <thead>
         <tr class=" table-success ">
-          <th>訂單編號</th>
-          <th>訂單金額</th>
+          <th>編號</th>
+          <th>金額</th>
           <th>待出貨</th>
           <th>待收貨</th>
           <th>訂單完成</th>
           <th>訂購人</th>
           <th>寄件地址</th>
-          <th>操作</th>
+          <th>出貨操作</th>
         </tr>
       </thead>
       <tbody>
@@ -142,17 +142,17 @@
           <td>{{order.buyerName}}</td>
           <td>{{order.fShipAddress}}</td>
           <!-- 操作按鈕 -->
-          <td>
-            <!-- <button class="btn btn-primary btn-sm mr-2">
-              <i class="fa-solid fa-circle-info"></i>&nbsp;訂單明細
-            </button> -->
-            <button *ngIf="order.fOrderStatusId === 1 || order.fOrderStatusId === 2"
-              class="btn btn-warning btn-sm shadow" (click)="shipOrder(order.fOrderId,order.fExtraInfo)">
-              <i class=" fa-solid fa-truck-fast"></i>&nbsp;寄件訊息
+          <td class="d-flex align-items-center gap-2">
+            <button class="btn btn-warning mr-2 rounded px-2" (click)="generateQRcode(order.fOrderId)">
+              <i class="fa-solid fa-qrcode"></i>
             </button>
-            <button *ngIf="order.fOrderStatusId==3" class="btn btn-warning btn-sm shadow"
+            <button *ngIf="order.fOrderStatusId === 1 || order.fOrderStatusId === 2"
+              class="btn btn-warning shadow rounded px-2" (click)="shipOrder(order.fOrderId,order.fExtraInfo)">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button *ngIf="order.fOrderStatusId==3" class="btn btn-warning btn-sm shadow rounded px-2"
               (click)="confirmOrder(order.fExtraInfo)">
-              <i class=" fa-solid fa-truck-fast"></i>&nbsp;寄件訊息
+              <i class="fa-solid fa-pen-to-square"></i>
             </button>
           </td>
         </tr>
