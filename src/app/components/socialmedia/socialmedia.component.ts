@@ -25,13 +25,36 @@ export class SocialmediaComponent {
   Likes: { [postId: number]: number } = {};
   LikeCounts: { [postId: number]: number } = {};
   types: { value: number, label: string }[] = [{ value: 0, label: '類別' }];
-  filterTypesValue = 0;
+  filter = {
+    popular: false,
+    TypesValue: 0,
+    keyword: ''
+  }
+  previousFilter = { ...this.filter };
   constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer) { };
   ngOnInit(): void {
     this.loadLoginInfo();
     this.loadArticles();
     this.loadTypes();
   }
+  ngDoCheck(): void {
+    if (
+      this.previousFilter.popular !== this.filter.popular ||
+      this.previousFilter.TypesValue !== this.filter.TypesValue ||
+      this.previousFilter.keyword !== this.filter.keyword
+    ) {
+      this.resetArticles();
+      this.loadArticles();
+      this.previousFilter = { ...this.filter };
+    }
+  }
+  resetArticles() {
+    this.page = 1;
+    this.loading = false;
+    this.hasMore = true;
+    this.datas = [];
+  }
+
   loadLoginInfo() {
     this.socialmediaService.getLoginUserId().subscribe(data => this.loginUserId = data);
   }
@@ -81,7 +104,7 @@ export class SocialmediaComponent {
     if (!this.hasMore || this.loading) return;
 
     this.loading = true;
-    this.socialmediaService.getPublicArticles(this.page, this.pageSize).subscribe(response => {
+    this.socialmediaService.getPublicArticles(this.page, this.pageSize, this.filter.popular, this.filter.TypesValue, this.filter.keyword).subscribe(response => {
       if (response.length > 0) {
         this.datas.push(...response);
         // console.log(this.datas);
@@ -153,7 +176,12 @@ export class SocialmediaComponent {
       })
     }
   }
-
+  filterNew() {
+    this.filter.popular = false;
+  }
+  filterPopular() {
+    this.filter.popular = true;
+  }
   onScroll() {
     this.loadArticles();
   }

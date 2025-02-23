@@ -32,8 +32,8 @@ export class SocialmediaService {
     return this.httpClient.delete(`https://localhost:7112/api/TPostImages/${postId}`, { withCredentials: true })
   }
 
-  getPublicArticles(page: number, pageSize: number): Observable<any> {
-    return this.httpClient.get(`https://localhost:7112/api/TPosts/GetPublicPosts?page=${page}&pageSize=${pageSize}`)
+  getPublicArticles(page: number, pageSize: number, popular: boolean, TypesValue: number, keyword: string): Observable<any> {
+    return this.httpClient.get(`https://localhost:7112/api/TPosts/GetPublicPosts?page=${page}&pageSize=${pageSize}&popular=${popular}&categoryId=${TypesValue}&keyword=${keyword}`)
   }
   getPublicImages(postId: number): Observable<any> {
     return this.httpClient.get(`https://localhost:7112/api/TPostImages/getPublicImages/${postId}`, { withCredentials: true })

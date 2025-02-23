@@ -19,7 +19,7 @@
     <div class="bg-light shadow" style="padding: 30px;">
       <div class="row align-items-center" style="min-height: 60px;">
         <div class="col-md-3">
-          <button class="custom-btn w-100">
+          <button class="custom-btn w-100" (click)="filterNew()">
             <div class="custom-btn-inner">
               <i class="fa-solid fa-newspaper"></i>
               <span>最新文章</span>
@@ -27,7 +27,7 @@
           </button>
         </div>
         <div class="col-md-3">
-          <button class="custom-btn w-100">
+          <button class="custom-btn w-100" (click)="filterPopular()">
             <div class="custom-btn-inner">
               <i class="fa-solid fa-fire"></i>
               <span>熱門文章</span>
@@ -35,14 +35,14 @@
           </button>
         </div>
         <div class="col-md-3 d-flex">
-          <select [(ngModel)]="filterTypesValue" class="custom-select w-100">
+          <select [(ngModel)]="filter.TypesValue" class="custom-select w-100">
             <option *ngFor="let type of types" [ngValue]="type.value">
               {{ type.label }}
             </option>
           </select>
         </div>
         <div class="col-md-3" style="height: 47px;">
-          <input type="text" class="custom-input w-100" placeholder="關鍵字搜尋">
+          <input type="text" [(ngModel)]="filter.keyword" class="custom-input w-100" placeholder="關鍵字搜尋">
         </div>
       </div>
     </div>
