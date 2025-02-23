@@ -183,12 +183,12 @@ export class SellerOrderComponent {
       .build();
 
     this.hubConnection.start().then(() => {
-      console.log('連接成功!');
+      //console.log('連接成功!');
     }).catch(err => console.log('連接失敗', err));
 
     //監聽事件
     this.hubConnection.on('OrderUpdated', (orderId) => {
-      console.log(`訂單 ${orderId} 已更新，重新載入訂單列表`);
+      //console.log(`訂單 ${orderId} 已更新，重新載入訂單列表`);
       this.swal.showEasySuccess(`訂單 ${orderId} 司機已取件`);
       this.loadSellerOrders();
     })

@@ -61,8 +61,14 @@ export class UserLoginComponent {
 
   editPassWord() { }
 
-
-
+  autoFillAccount() {
+    this.fUserEmail = "aminglin311@gmail.com";
+    this.fUserPassword = "123456";
+  }
+  autoFillAccount2() {
+    this.fUserEmail = "123@gmail.com";
+    this.fUserPassword = "123456";
+  }
 }
 
 
