@@ -222,7 +222,6 @@ export class MyarticlesComponent {
         })
       }
     });
-
   }
   save() {
     // this.finalData = this.sanitizer.bypassSecurityTrustHtml(this.editorData);
@@ -298,7 +297,23 @@ export class MyarticlesComponent {
   }
 
   deleteComment(commentId: number, postId: number) {
-    this.socialmediaService.deleteComment(commentId).subscribe(response => { this.loadComments(postId) });
+    Swal.fire({
+      title: '你確定要刪除嗎？',
+      text: '刪除後將無法復原！',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '是的，刪除！',
+      cancelButtonText: '取消'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.socialmediaService.deleteComment(commentId).subscribe(response => {
+          this.sweetAlert.showEasySuccess("留言刪除成功");
+          this.loadComments(postId);
+        });
+      }
+    });
   }
   onScroll() {
     this.loadArticles();

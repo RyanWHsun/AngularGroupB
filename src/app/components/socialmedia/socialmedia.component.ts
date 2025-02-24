@@ -3,6 +3,8 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { IPostComment } from 'src/app/interfaces/IPostComment';
 import { SocialmediaService } from 'src/app/services/socialmedia.service';
+import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-socialmedia',
@@ -32,7 +34,7 @@ export class SocialmediaComponent {
     keyword: ''
   }
   previousFilter = { ...this.filter };
-  constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer, private signalrService: SignalrService) { };
+  constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer, private signalrService: SignalrService, private sweetAlert: SweetAlert2Service) { };
   ngOnInit(): void {
     this.signalrService.startConnection();
     this.signalrService.onMessageReceived((comment: IPostComment) => {
@@ -164,7 +166,23 @@ export class SocialmediaComponent {
   }
 
   deleteComment(commentId: number, postId: number) {
-    this.socialmediaService.deleteComment(commentId).subscribe(response => { this.loadComments(postId) });
+    Swal.fire({
+      title: '你確定要刪除嗎？',
+      text: '刪除後將無法復原！',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '是的，刪除！',
+      cancelButtonText: '取消'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.socialmediaService.deleteComment(commentId).subscribe(response => {
+          this.sweetAlert.showEasySuccess("留言刪除成功");
+          this.loadComments(postId);
+        });
+      }
+    });
   }
 
   toggleLike(postId: number) {
