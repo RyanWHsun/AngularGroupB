@@ -124,9 +124,9 @@
         <!-- 設置 80% 寬度的容器 -->
         <div class="modal-content-wrapper">
           <!-- 圖片 & 資訊並排 -->
-          <div class="modal-flex">
+          <div class="modal-content-grid">
             <!-- 左側：圖片 -->
-            <div class="modal-image-container">
+            <div class="image-container">
               <!-- carousel 顯示已經存進的圖片 -->
               <div
                 id="carouselExampleInterval"
@@ -193,38 +193,42 @@
                     </div>
                   </div>
                 </div>
-                <div>
+                <div class="uri-Container">
                   <h5 class="info-title">網址</h5>
                   <a [href]="attraction.fWebsiteUrl" target="_blank">{{
                     attraction.fWebsiteUrl
                   }}</a>
                 </div>
-                <div>
+                <div class="address-Container">
                   <h5 class="info-title">地址</h5>
                   <div>{{ attraction.fAddress }}</div>
-                </div>
-                <div>
-                  <h5 class="info-title">景點介紹</h5>
-                  <p>{{ attraction.fDescription }}</p>
                 </div>
               </div>
             </div>
           </div>
-
+          <div class="description-container">
+            <h5 class="info-title">景點介紹</h5>
+            <p>{{ attraction.fDescription }}</p>
+          </div>
           <!-- 地圖 -->
           <div class="map-container">
             <div #mapContainer class="map-content"></div>
           </div>
 
           <!-- AI Button Start -->
+          <!-- [aiBtnIsClicked]="isShowingItinerary" -->
           <app-ai-button
+            (clickAiBtnEvent)="clickAiBtn($event)"
             [cAttractionName]="pAttractionName"
             (newPlanEvent)="showPlan($event)"
           ></app-ai-button>
           <!-- AI Button End -->
 
           <!-- AI 生成的 Itinerary start-->
-          <app-itinerary [cItineraryData]="pItineraryData"></app-itinerary>
+          <app-itinerary
+            [cItineraryData]="pItineraryData"
+            *ngIf="isClickedAiBtn"
+          ></app-itinerary>
           <!-- AI 生成的 Itinerary end-->
 
           <!-- 評論 -->

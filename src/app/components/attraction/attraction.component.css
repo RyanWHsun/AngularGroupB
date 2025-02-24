@@ -70,7 +70,8 @@
 }
 
 .modal-custom-width {
-  max-width: 50%;
+  max-width: 45%;
+  min-width: 1100px;
 }
 /* 設定 Modal 內容區塊的最大寬度為 80% 並置中 */
 .modal-content-wrapper {
@@ -84,20 +85,26 @@
   margin: 0 auto; /* 讓標題區置中 */
 }
 
-/* Modal 內容排版 */
-.modal-flex {
-  display: flex;
+.modal-content-grid {
+  /* ✅ 使用 grid 來排列內容 */
+  display: grid;
+  grid-template-columns: 55% 43%; /* ✅ 左右 55:43 比例 */
   gap: 20px;
-  flex-wrap: wrap;
 }
 
 /* 左側圖片區 */
-.modal-image-container {
+/* 圖片最高300px */
+.image-container {
   flex: 1;
-  min-width: 40%;
+  min-width: 55%;
+  max-height: 315px;
+  padding: 5px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.6); /* 半透明背景 */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-.modal-image-container .carousel-inner {
+.image-container .carousel-inner {
   border-radius: 10px;
   border: 2px solid rgba(0, 0, 0, 0.1);
 }
@@ -120,14 +127,20 @@
 }
 
 /* 右側資訊區 */
-.modal-info-container {
+.info-container {
   flex: 1;
-  min-width: 55%;
+  min-width: 43%;
 }
 .carousel-inner {
   border-radius: 10px;
   border: 2px solid rgba(0, 0, 0, 0.1);
 }
+
+.description-container {
+  /* ✅ 新增景點介紹區塊 */
+  margin-top: 20px;
+}
+
 .map-container {
   margin-top: 20px;
   width: 100%;
@@ -251,15 +264,6 @@
   font-size: 12px;
 }
 
-/* 評論內容 */
-/* .comment-content {
-  padding: 10px;
-  background: #f8f9fa;
-  border-radius: 5px;
-  margin-top: 5px;
-} */
-/* 修改 */
-
 .btn-detail,
 .btn-delete {
   margin: 10px 5px;
@@ -347,8 +351,10 @@
   padding: 15px;
   border-radius: 10px;
   width: 100%;
+  min-width: 360px;
   max-width: 400px; /* 可依需求調整寬度 */
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
 }
 
 /* 左側天氣圖示 */
@@ -391,4 +397,25 @@
   font-size: 16px;
   font-weight: bold;
   color: #333; /* 深色文字 */
+}
+
+.uri-Container {
+  background: rgba(255, 255, 255, 0.6); /* 半透明背景 */
+  padding: 15px;
+  border-radius: 10px;
+  width: 100%;
+  min-width: 360px;
+  max-width: 400px; /* 可依需求調整寬度 */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+}
+
+.address-Container {
+  background: rgba(255, 255, 255, 0.6); /* 半透明背景 */
+  padding: 15px;
+  border-radius: 10px;
+  width: 100%;
+  min-width: 360px;
+  max-width: 400px; /* 可依需求調整寬度 */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }

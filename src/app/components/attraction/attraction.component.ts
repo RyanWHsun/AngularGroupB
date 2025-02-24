@@ -126,24 +126,33 @@ export class AttractionComponent implements AfterViewInit {
   pAttractionName = ''; // 值為指定的 attraction name，等等傳給 child component: ai-button
   planJSONStr = ''; // AI 產生的 plan，是 JSON 字串
   // planJSONObj = {}; // 由 planJSONStr 轉成 JSON 物件
-  pItineraryData:IItineraryItem[]=[];
+  pItineraryData: IItineraryItem[] = [];
 
+  isClickedAiBtn = false;
 
   constructor(
     private attractionService: AttractionService,
-    private attractionCategoryService: AttractionCategoryService,
     private attractionImageService: AttractionImageService,
     private attractionCommentService: AttractionCommentService,
     private googleMapsService: GoogleMapAPIService,
     private attractionViewCookieService: AttractionViewCookieService,
     private attractionTagService: AttractionTagService,
-    private openWeatherService: OpenWeatherAPIService,
-    private openAIService: OpenAIService
+    private openWeatherService: OpenWeatherAPIService
   ) {}
+
+  clickAiBtn(isClick: boolean) {
+    this.isClickedAiBtn = isClick;
+    if (!this.isClickedAiBtn) {
+      this.pItineraryData = [];
+      console.log('after click, p:', this.pItineraryData);
+      return; // 第二次點擊按鈕，就要刪除原本 AI 生成的資料
+    }
+  }
 
   // 顯示 AI 生成的旅遊計畫
   showPlan(newPlan: string) {
     this.pItineraryData = [];
+
     this.planJSONStr = newPlan;
 
     // **移除 Markdown 標籤**

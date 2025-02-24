@@ -13,10 +13,12 @@ export class ItineraryComponent {
   @Input() cItineraryData: IItineraryItem[] = [];
   places: string[] = [];
   map: any;
+
   constructor(private gMapService: GoogleMapAPIService) {}
 
   async ngOnChanges(): Promise<void> {
     this.places = [];
+    console.log('after click, c:', this.cItineraryData);
     if (!this.cItineraryData || this.cItineraryData.length <= 0) return;
 
     this.places = this.cItineraryData.map((data) => data.location);
