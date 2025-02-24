@@ -1,3 +1,4 @@
+import { SignalrService } from './../../services/signalr.service';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { IPostComment } from 'src/app/interfaces/IPostComment';
@@ -31,8 +32,16 @@ export class SocialmediaComponent {
     keyword: ''
   }
   previousFilter = { ...this.filter };
-  constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer) { };
+  constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer, private signalrService: SignalrService) { };
   ngOnInit(): void {
+    this.signalrService.startConnection();
+    this.signalrService.onMessageReceived((comment: IPostComment) => {
+      if (this.activePostIds.includes(comment.fPostId)) {
+        comment.fUserImage = 'data:image/jpeg;base64,' + comment.fUserImage;
+        console.log(comment);
+        this.commentDatas[comment.fPostId].unshift(comment);
+      }
+    });
     this.loadLoginInfo();
     this.loadArticles();
     this.loadTypes();
@@ -146,7 +155,7 @@ export class SocialmediaComponent {
     }).subscribe(() => {
       this.commentTexts[postId] = '';
       if (this.activePostIds.includes(postId)) {
-        this.loadComments(postId);
+        // this.loadComments(postId);
         setTimeout(() => { this.commentContainer.nativeElement.scrollTo({ top: 0, behavior: 'smooth' }) }, 100);
       } else {
         this.toggleComments(postId);
