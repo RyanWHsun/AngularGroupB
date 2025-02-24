@@ -29,6 +29,7 @@ export class UserAddComponent {
 
   ngOnInit(): void {
     window.scrollTo(0, 400);
+    // window.scrollTo({ top: 400, behavior: 'smooth' });
   }
 
 
@@ -72,7 +73,9 @@ export class UserAddComponent {
         // alert('帳號創建成功！');
         this.Swal.showEasySuccess('帳號創建成功！');
         this.router.navigate(['/user']);
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
+        window.scrollTo({ top: 400, behavior: 'smooth' });
+
       },
       error: (error) => {
         console.log('錯誤:', error);
@@ -93,7 +96,9 @@ export class UserAddComponent {
   //前往登入
   goToUserPage() {
     this.router.navigate(['/user']).then(() => {
-      window.scrollTo(0, 400);
+      // window.scrollTo(0, 400);
+      window.scrollTo({ top: 400, behavior: 'smooth' });
+
     });
   }
 

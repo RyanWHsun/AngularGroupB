@@ -24,3 +24,20 @@
   color: #8cae78;
   cursor: pointer;
 }
+
+
+.img-div {
+  border-radius: 15px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center;
+  overflow: hidden;
+}
+
+.img-divfull {
+  border-radius: 15px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  object-fit: cover;
+}

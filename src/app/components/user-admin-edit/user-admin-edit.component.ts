@@ -1,6 +1,6 @@
 import { UserService } from 'src/app/services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { allUsersMaterial } from 'src/app/interfaces/user';
 import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
@@ -11,6 +11,7 @@ import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
   styleUrls: ['./user-admin-edit.component.css']
 })
 export class UserAdminEditComponent {
+  @ViewChild('fileInput') fileInput!: ElementRef;
 
   passwordType = "password";
 
@@ -46,10 +47,14 @@ export class UserAdminEditComponent {
       console.log('Received userId:', this.userId);
     })
     this.loadUser(this.userId);
-    window.scrollTo(0, 400);
+    // window.scrollTo(0, 400);
+    window.scrollTo({ top: 400, behavior: 'smooth' });
+
   }
 
-
+  changeImgDiv() {
+    this.fileInput.nativeElement.click();
+  }
   seePassword() {
     if (this.passwordType == "password") {
       this.passwordType = "text";
@@ -77,6 +82,7 @@ export class UserAdminEditComponent {
       // 如果选择的文件不是图片，弹出警告提示
       // alert('請選擇有效的圖片文件');
       this.swal.showEasyWarning('請選擇有效的圖片文件');
+      this.user.fUserImage = "";
     }
   }
 
@@ -109,13 +115,20 @@ export class UserAdminEditComponent {
 
   //修改開始
   updateUser(userId: number) {
-
     if (this.user.fUserImage != null) {
-      this.user.fUserImage = this.user.fUserImage.replace("data:image/png;base64,", "");
-      this.user.fUserImage = this.user.fUserImage.replace("data:image/jpg;base64,", "");
-      this.user.fUserImage = this.user.fUserImage.replace("data:image/jpeg;base64,", "");
-      console.log(this.user.fUserImage);
+      // 移除 Base64 頭部資訊
+      const base64 = this.user.fUserImage.split(',');
+      this.user.fUserImage = base64[1];
     }
+
+
+
+    // if (this.user.fUserImage != null) {
+    //   this.user.fUserImage = this.user.fUserImage.replace("data:image/png;base64,", "");
+    //   this.user.fUserImage = this.user.fUserImage.replace("data:image/jpg;base64,", "");
+    //   this.user.fUserImage = this.user.fUserImage.replace("data:image/jpeg;base64,", "");
+    //   console.log(this.user.fUserImage);
+    // }
 
     this.userService.putUser(userId, this.user).subscribe({
       next: (response) => {
@@ -123,7 +136,9 @@ export class UserAdminEditComponent {
         // alert('帳號修改成功！');
         this.swal.showEasySuccess('帳號修改成功！');
         this.goToUser();
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
       },
       error: (error) => {
         // console.log('錯誤:', error);

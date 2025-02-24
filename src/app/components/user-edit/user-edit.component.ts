@@ -1,5 +1,5 @@
 import { UserService } from './../../services/user.service';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { userEditMaterial } from 'src/app/interfaces/user';
@@ -26,14 +26,20 @@ export class UserEditComponent {
 
 
   img = "assets/images/noImage.jpg"
+  @ViewChild('fileInput') fileInput!: ElementRef;
 
   constructor(private userService: UserService, private router: Router, private Swal: SweetAlert2Service) { }
 
   ngOnInit(): void {
     this.loadUser();
-    window.scrollTo(0, 400);
+    // window.scrollTo(0, 400);
+    window.scrollTo({ top: 400, behavior: 'smooth' });
   }
 
+
+  changeImgDiv() {
+    this.fileInput.nativeElement.click();
+  }
 
   //更換圖片
   changeImg(event: any): void {
@@ -53,6 +59,7 @@ export class UserEditComponent {
       // 如果选择的文件不是图片，弹出警告提示
       // alert('請選擇有效的圖片文件');
       this.Swal.showEasyWarning('請選擇有效的圖片文件');
+      this.user.fUserImage = "";
     }
   }
 
@@ -81,10 +88,9 @@ export class UserEditComponent {
   updateUser(userId: number) {
 
     if (this.user.fUserImage != null) {
-      this.user.fUserImage = this.user.fUserImage.replace("data:image/png;base64,", "");
-      this.user.fUserImage = this.user.fUserImage.replace("data:image/jpg;base64,", "");
-      this.user.fUserImage = this.user.fUserImage.replace("data:image/jpeg;base64,", "");
-      console.log(this.user.fUserImage);
+      // 移除 Base64 頭部資訊
+      const base64 = this.user.fUserImage.split(',');
+      this.user.fUserImage = base64[1];
     }
 
     this.userService.putLoginUser(this.user).subscribe({
@@ -93,7 +99,8 @@ export class UserEditComponent {
         // alert('帳號修改成功！');
         this.Swal.showEasySuccess('帳號修改成功！');
         this.goToUserPage();
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       },
       error: (error) => {
         console.log('錯誤:', error);

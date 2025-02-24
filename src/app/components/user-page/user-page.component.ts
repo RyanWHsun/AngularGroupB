@@ -38,6 +38,8 @@ export class UserPageComponent {
   ngOnInit(): void {
     this.loadUser();
     window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
   }
 
   //找登入者的資料
