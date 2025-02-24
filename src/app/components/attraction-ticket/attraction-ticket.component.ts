@@ -233,15 +233,15 @@ export class AttractionTicketComponent {
   showPopularTickets(index: number) {}
 
   showPartialAttractionTickets(index: number) {
-    return this.attractionTicketService
+    this.partialAttractionTickets = [];
+    this.attractionTicketService
       .getPartialAttractionTickets(index, true)
       .pipe(
         map((data) => {
           this.partialAttractionTickets = data;
           this.setImage(data);
-          return data; // 回傳票券資料
         })
-      );
+      ).subscribe();;
   }
 
   getTicketQuantities(): Observable<number> {
@@ -267,13 +267,25 @@ export class AttractionTicketComponent {
       .pipe(take(1))
       .subscribe((qty) => {
         this.setPages(Math.ceil(qty / 9));
-        console.log(this.pages)
         this.showPartialAttractionTickets(0);
       });
   }
 
-  togglePopular() {
+  // 點擊"最近開賣"按鈕
+  toggleRecentSell(index: number) {
+    this.partialAttractionTickets = [];
     this.menuIsActive = false;
+    this.attractionTicketService
+      .getTicketOrderByDate(index, true, 'createdDate')
+      .subscribe({
+        next: (data) => {
+          this.partialAttractionTickets = data;
+          this.setImage(data);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
   }
 
   setViewMode(mode: 'grid' | 'list') {
@@ -320,48 +332,48 @@ export class AttractionTicketComponent {
   }
 
   // 把 attraction description 的資料填入 attractionDescription 陣列
-  setAttractionDescriptionArray(index: number) {
-    this.showPartialAttractionTickets(index).subscribe((tickets) => {
-      const request = tickets
-        .filter(
-          (ticket) =>
-            ticket !== null && typeof ticket.fAttractionId === 'number'
-        )
-        .map((ticket) => {
-          return this.getAttractionDescription(ticket.fAttractionId!).pipe(
-            catchError(() => of(''))
-          );
-        });
+  // setAttractionDescriptionArray(index: number) {
+  //   this.showPartialAttractionTickets(index).subscribe((tickets) => {
+  //     const request = tickets
+  //       .filter(
+  //         (ticket) =>
+  //           ticket !== null && typeof ticket.fAttractionId === 'number'
+  //       )
+  //       .map((ticket) => {
+  //         return this.getAttractionDescription(ticket.fAttractionId!).pipe(
+  //           catchError(() => of(''))
+  //         );
+  //       });
 
-      // forkJoin 是 RxJS 提供的一個操作符，用於並行執行多個 Observable，並在所有 Observable 完成後返回它們的結果。返回值是一個包含每個 Observable 最終值的陣列。
-      //
-      // request 是一個 Observable 陣列。其中每個元素都是一個 Observable<string>。
-      // const request = [
-      //     this.getAttractionDescription(1),
-      //     this.getAttractionDescription(2),
-      //     this.getAttractionDescription(3),
-      // ];
-      //
-      // forkJoin(request)：
-      // 開始執行所有 Observable，即所有請求將同時並行發送。
-      // 當所有 Observable 都完成時，會將每個 Observable 的結果收集為一個陣列，並將此陣列作為輸出。
-      // 如果任意一個 Observable 發生錯誤，整個 forkJoin 會進入 error，除非有使用 catchError 來處理錯誤。
-      //
-      // subscribe() 訂閱 Observable
-      // subscribe((descriptions) => {...})：
-      // 當所有請求完成後，forkJoin 的結果（即所有 Observable 的結果）會以陣列形式傳遞給 subscribe 的回呼函式。
-      // descriptions 是一個陣列，包含每個請求的最終值。
-      forkJoin(request).subscribe((descriptions) => {
-        this.attractionDescription = descriptions;
-      });
-    });
-  }
+  //     // forkJoin 是 RxJS 提供的一個操作符，用於並行執行多個 Observable，並在所有 Observable 完成後返回它們的結果。返回值是一個包含每個 Observable 最終值的陣列。
+  //     //
+  //     // request 是一個 Observable 陣列。其中每個元素都是一個 Observable<string>。
+  //     // const request = [
+  //     //     this.getAttractionDescription(1),
+  //     //     this.getAttractionDescription(2),
+  //     //     this.getAttractionDescription(3),
+  //     // ];
+  //     //
+  //     // forkJoin(request)：
+  //     // 開始執行所有 Observable，即所有請求將同時並行發送。
+  //     // 當所有 Observable 都完成時，會將每個 Observable 的結果收集為一個陣列，並將此陣列作為輸出。
+  //     // 如果任意一個 Observable 發生錯誤，整個 forkJoin 會進入 error，除非有使用 catchError 來處理錯誤。
+  //     //
+  //     // subscribe() 訂閱 Observable
+  //     // subscribe((descriptions) => {...})：
+  //     // 當所有請求完成後，forkJoin 的結果（即所有 Observable 的結果）會以陣列形式傳遞給 subscribe 的回呼函式。
+  //     // descriptions 是一個陣列，包含每個請求的最終值。
+  //     forkJoin(request).subscribe((descriptions) => {
+  //       this.attractionDescription = descriptions;
+  //     });
+  //   });
+  // }
 
   ngOnInit() {
     this.toggleAll();
 
     // 把 attraction description 的資料填入 attractionDescription 陣列
-    this.setAttractionDescriptionArray(0);
+    //this.setAttractionDescriptionArray(0);
   }
 
   ngAfterViewInit() {

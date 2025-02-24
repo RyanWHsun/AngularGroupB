@@ -27,6 +27,13 @@ export class AttractionTicketService {
     );
   }
 
+  // 將取得的票券資料根據 fCreatedDate 排序
+  getTicketOrderByDate(index: number, isDistinct: boolean, orderBy:string){
+    return this.client.get<IAttractionTicket[]>(
+      `${this.baseUrl}/Search?isDistinct=${isDistinct}&pageSize=9&pageIndex=${index}&orderBy=${orderBy}`
+    );
+  }
+
   getAttractionTicketTypes(attractionId: number) {
     return this.client.get<string[]>(`${this.baseUrl}/${attractionId}/types`);
   }

@@ -65,8 +65,12 @@
   margin: 2px;
 }
 
+.modal-dialog {
+  position: relative; /* 讓內部的絕對定位元素（按鈕）相對於它擺放 */
+}
+
 .modal-custom-width {
-  max-width: 70%;
+  max-width: 50%;
 }
 /* 設定 Modal 內容區塊的最大寬度為 80% 並置中 */
 .modal-content-wrapper {
@@ -101,6 +105,7 @@
 .modal-content {
   border-radius: 15px;
   padding: 20px;
+  position: relative;
 }
 
 /* 景點名稱 (最大字體) */
@@ -331,4 +336,59 @@
 
 .comment-submit:hover {
   background-color: #0056b3;
+}
+
+/* 天氣元件 */
+.weather-Container {
+  display: flex;
+  align-items: center; /* 垂直置中 */
+  justify-content: space-between; /* 左右對齊 */
+  background: rgba(255, 255, 255, 0.6); /* 半透明背景 */
+  padding: 15px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px; /* 可依需求調整寬度 */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* 左側天氣圖示 */
+.weather-icon {
+  flex: 1; /* 佔據可用空間 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.weather-icon img {
+  width: 80px; /* 天氣圖示大小 */
+  height: auto;
+}
+
+/* 右側氣溫 & 濕度資訊 */
+.weather-info {
+  flex: 2; /* 佔據較大空間 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 溫度 & 濕度區塊 */
+.temperature,
+.humidity {
+  display: flex;
+  align-items: center; /* 圖片 & 文字對齊 */
+  gap: 10px; /* 間距 */
+}
+
+.temperature img,
+.humidity img {
+  width: 30px; /* 小圖示 */
+  height: auto;
+}
+
+.temp-text,
+.humidity-text {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333; /* 深色文字 */
 }

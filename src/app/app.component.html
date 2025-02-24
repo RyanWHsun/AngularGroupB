@@ -53,7 +53,8 @@
             <a routerLink="attraction" routerLinkActive="active" class="nav-link dropdown-toggle"
               data-toggle="dropdown">景點</a>
             <div class="dropdown-menu border-0 rounded-0 m-0">
-              <a routerLink="attraction/admin" class="dropdown-item">景點(Admin)</a>
+              <!-- 登入者為管理者才可以顯示 -->
+              <a *ngIf="isAdmin" routerLink="attraction/admin" class="dropdown-item">景點(Admin)</a>
               <a routerLink="attraction/tickets" class="dropdown-item">景點票券</a>
             </div>
           </div>

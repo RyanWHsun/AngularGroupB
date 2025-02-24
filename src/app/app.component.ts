@@ -7,15 +7,20 @@ import { error } from 'jquery';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
   title = 'AngularGroupB';
   cartItemCount: number = 0;
   isLogin: boolean = false;
   router: any;
+  isAdmin: boolean = false;
 
-  constructor(private cartService: CartService, private authService: AuthService, private routter: Router) { }
+  constructor(
+    private cartService: CartService,
+    private authService: AuthService,
+    private routter: Router
+  ) {}
 
   scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -42,35 +47,41 @@ export class AppComponent {
         this.cartItemCount = count;
       },
       error: (error) => {
-        console.error('購物車數量獲取失敗', error)
-      }
-    })
+        console.error('購物車數量獲取失敗', error);
+      },
+    });
     this.authService.isLogin().subscribe({
       next: (a) => {
         this.isLogin = true;
-      }, error: (error) => {
+        this.authService.isAdmin().subscribe({
+          next:(isAdmin)=>{
+            this.isAdmin = true;
+          },
+          error:(error)=>{
+            this.isAdmin = false;
+          }
+        });
+      },
+      error: (error) => {
         this.isLogin = false;
-      }
-    })
+      },
+    });
   }
 
   logOut() {
     if (confirm('確定要登出嗎？')) {
       this.authService.logout().subscribe({
         next: () => {
-          alert("用戶已登出");
-          this.routter.navigate(['/user/login']).then(() => { window.location.reload(); });
+          alert('用戶已登出');
+          this.routter.navigate(['/user/login']).then(() => {
+            window.location.reload();
+          });
         },
         error: (error) => {
-          console.error("登出 API 失敗:", error);
-          alert("登出失敗，請稍後再試！");
-        }
+          console.error('登出 API 失敗:', error);
+          alert('登出失敗，請稍後再試！');
+        },
       });
-    };
+    }
   }
-
-
-
-
 }
-

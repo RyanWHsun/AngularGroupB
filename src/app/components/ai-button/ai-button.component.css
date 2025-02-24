@@ -1,0 +1,20 @@
+.floating-btn {
+  position: relative; /* 讓按鈕相對於 .modal-dialog 定位 */
+  top: 30%;
+  left: 80%;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.floating-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}

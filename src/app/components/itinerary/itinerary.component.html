@@ -1,0 +1,29 @@
+<ng-container *ngFor="let item of cItineraryData; let last = last">
+  <div class="itinerary-container">
+    <!-- ✅ 最左側時間線與時間點 -->
+    <div class="timeline-middle">
+      <div class="timeline-dot"></div>
+      <div class="timeline-line"></div>
+      <!-- ✅ 確保時間線貫穿 -->
+    </div>
+
+    <!-- 中間圖片 -->
+    <div class="timeline-left">
+      <img
+        [src]="item.imgSrc || 'assets/images/noImage.jpg'"
+        alt="行程圖片"
+        class="timeline-img"
+      />
+    </div>
+
+    <!-- 右側內容 -->
+    <div class="timeline-right">
+      <h3>{{ item.startTime }} - {{ item.endTime }}</h3>
+      <h4>{{ item.location }}</h4>
+      <p>{{ item.schedule }}</p>
+    </div>
+  </div>
+</ng-container>
+
+<!-- Google Map 放在最後 -->
+<div id="map"></div>

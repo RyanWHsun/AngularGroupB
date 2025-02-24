@@ -1,0 +1,87 @@
+/* ✅ 外層容器，讓左中右三部分對齊 */
+.itinerary-container {
+  display: flex;
+  align-items: center; /* ✅ 垂直對齊所有元素 */
+  gap: 20px;
+  margin-bottom: 10px;
+}
+
+/* 左側圖片 */
+.timeline-left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.timeline-img {
+  width: 150px;
+  height: 100px;
+  border-radius: 10%;
+  object-fit: cover;
+}
+
+/* ✅ 確保 `.timeline-middle` 高度與 `.timeline-img` 一致 */
+.timeline-middle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* ✅ 讓時間點對齊圖片 */
+  position: relative;
+  height: 80px; /* ✅ 與 `.timeline-img` 一致 */
+}
+
+/* ✅ 讓 `.timeline-line` 穿過 `.timeline-dot` 的中間，並連接下一個時間點 */
+.timeline-line {
+  width: 2px;
+  height: 120px;
+  background-color: #8d6e63;
+  position: absolute;
+  top: 0; /* ✅ 讓線條從最上方開始 */
+  bottom: 0; /* ✅ 讓線條延伸到底部 */
+  left: 10%;
+  transform: translateX(-50%);
+  z-index: 0;
+}
+
+/* ✅ 讓 `.timeline-dot` 在 `.timeline-middle` 的中央 */
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+  background-color: #8d6e63;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+/* 右側行程內容 */
+.timeline-right {
+  background: #f5f5f5;
+  padding: 15px;
+  border-radius: 10px;
+  flex: 1;
+}
+
+.timeline-right h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.timeline-right h4 {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.timeline-right p {
+  font-size: 14px;
+  color: #666;
+}
+
+#map {
+  width: 100%;
+  height: 400px;
+  margin-top: 20px;
+}

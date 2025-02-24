@@ -36,6 +36,8 @@ import { IAttractionTag } from 'src/app/interfaces/IAttractionTag';
 import { AttractionTagService } from 'src/app/services/attraction-tag.service';
 import { ICommenter } from 'src/app/interfaces/ICommenter';
 import { OpenWeatherAPIService } from 'src/app/services/open-weather-api.service';
+import { OpenAIService } from 'src/app/services/ai.service';
+import { IItineraryItem } from 'src/app/interfaces/IItineraryItem';
 
 // 宣告全域變數 google
 // 在 Google Maps JavaScript API 中，google 這個物件是由 API 動態載入的，而不是直接在 TypeScript 環境中定義的。
@@ -115,6 +117,18 @@ export class AttractionComponent implements AfterViewInit {
   selectedRating = 0;
   commentLimit = 5; // 一開始顯示 5 則評論
 
+  temp_min = 0; // 最低溫度
+  temp_max = 0; // 最高溫度
+  humidity = 0; // 濕度
+
+  keyword = ''; // 搜尋欄位
+
+  pAttractionName = ''; // 值為指定的 attraction name，等等傳給 child component: ai-button
+  planJSONStr = ''; // AI 產生的 plan，是 JSON 字串
+  // planJSONObj = {}; // 由 planJSONStr 轉成 JSON 物件
+  pItineraryData:IItineraryItem[]=[];
+
+
   constructor(
     private attractionService: AttractionService,
     private attractionCategoryService: AttractionCategoryService,
@@ -123,9 +137,58 @@ export class AttractionComponent implements AfterViewInit {
     private googleMapsService: GoogleMapAPIService,
     private attractionViewCookieService: AttractionViewCookieService,
     private attractionTagService: AttractionTagService,
-    private openWeatherService: OpenWeatherAPIService
+    private openWeatherService: OpenWeatherAPIService,
+    private openAIService: OpenAIService
   ) {}
 
+  // 顯示 AI 生成的旅遊計畫
+  showPlan(newPlan: string) {
+    this.pItineraryData = [];
+    this.planJSONStr = newPlan;
+
+    // **移除 Markdown 標籤**
+    const cleanJsonString = this.planJSONStr.replace(/```json|```/g, '').trim();
+
+    // **解析 JSON**
+    try {
+      this.pItineraryData = JSON.parse(cleanJsonString);
+      // const planJSONObj = JSON.parse(cleanJsonString);
+      // console.log('JSON Obj: ', planJSONObj);
+    } catch (error) {
+      console.error('JSON 解析失敗:', error);
+    }
+  }
+
+  // 點擊"搜尋"按鈕後，根據 keyword 找景點
+  searchAttraction() {
+    this.partialAttractions = [];
+    this.attractionService.getPartialAttractions(this.keyword, 9, 0).subscribe({
+      next: (attraction) => {
+        console.log(attraction);
+        this.partialAttractions = attraction;
+      },
+      error: (err) => {},
+    });
+  }
+
+  // 設定現在的最高溫、最低溫和濕度
+  setCurrentTemperatureAndHumidity$() {
+    return this.openWeatherService
+      .getCurrentWeather(this.latitude, this.longitude)
+      .pipe(
+        tap((weather) => {
+          console.log(weather);
+          if (weather) {
+            this.temp_min = Math.trunc(weather.main.temp_min - 273.15);
+            this.temp_max = Math.trunc(weather.main.temp_max - 273.15);
+            this.humidity = weather.main.humidity;
+          }
+        }),
+        map(() => void 0)
+      );
+  }
+
+  // 取得現在天氣的 icon
   setWeatherIcon$() {
     this.weatherIconSrc = '';
     return this.openWeatherService
@@ -347,7 +410,6 @@ export class AttractionComponent implements AfterViewInit {
             // 只在這裡更新物件屬性，避免 race condition
             this.longitude = location.lng();
             this.latitude = location.lat();
-            console.log(this.longitude, this.latitude);
             resolve({ lat: location.lat(), lng: location.lng() });
           } else {
             reject(`地址轉換失敗: ${status}`);
@@ -362,7 +424,6 @@ export class AttractionComponent implements AfterViewInit {
     return new Observable((observer) => {
       // 如果 `window.google` 和 `window.google.maps` 已經存在，代表 Google Maps API 已載入，直接執行 this.loadMap() 來初始化地圖
       if (window.google && window.google.maps) {
-        console.log('Google Maps 已載入，直接初始化地圖');
         this.loadMap();
         observer.next(); // 發送成功訊號，告訴訂閱者可以繼續
         observer.complete(); // 標記這個 Observable 已結束，確保它不會無限運行
@@ -459,12 +520,15 @@ export class AttractionComponent implements AfterViewInit {
 
   // 根據 attractionId 顯示景點資料
   showAttractionById$(id: number): Observable<void> {
+    this.pAttractionName = '';
     return this.attractionService.getAttractionById(id).pipe(
       tap((data) => {
         this.attraction = data;
-        if (data.fAttractionName)
+        if (data.fAttractionName) {
+          this.pAttractionName = data.fAttractionName;
+          console.log('pAttractionName: ', this.pAttractionName);
           this.googleMap.addressName = data.fAttractionName;
-        else this.googleMap.addressName = '';
+        } else this.googleMap.addressName = '';
       }),
       map(() => void 0)
     );
@@ -486,7 +550,8 @@ export class AttractionComponent implements AfterViewInit {
         switchMap(() => this.addViewCount$(id)),
         switchMap(() => this.showAttractionViewCount$()),
         switchMap(() => this.setCarouselImages$(id)),
-        switchMap(() => this.setWeatherIcon$())
+        switchMap(() => this.setWeatherIcon$()),
+        switchMap(() => this.setCurrentTemperatureAndHumidity$())
       )
       .subscribe();
     this.setCarouselImages$(id);

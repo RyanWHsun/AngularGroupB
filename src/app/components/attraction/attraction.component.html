@@ -18,57 +18,16 @@
 </div>
 <!-- Header End -->
 
-<!-- Booking Start -->
+<!-- Search Bar Start -->
 <div class="container-fluid booking mt-5 pb-5">
   <div class="container pb-5">
     <div class="bg-light shadow" style="padding: 30px">
       <div class="row align-items-center" style="min-height: 60px">
         <div class="col-md-10">
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-9">
               <div class="mb-3 mb-md-0">
-                <select class="custom-select px-4" style="height: 47px">
-                  <option selected>Destination</option>
-                  <option value="1">Destination 1</option>
-                  <option value="2">Destination 1</option>
-                  <option value="3">Destination 1</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <div class="date" id="date1" data-target-input="nearest">
-                  <input
-                    type="text"
-                    class="form-control p-4 datetimepicker-input"
-                    placeholder="Depart Date"
-                    data-target="#date1"
-                    data-toggle="datetimepicker"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <div class="date" id="date2" data-target-input="nearest">
-                  <input
-                    type="text"
-                    class="form-control p-4 datetimepicker-input"
-                    placeholder="Return Date"
-                    data-target="#date2"
-                    data-toggle="datetimepicker"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3 mb-md-0">
-                <select class="custom-select px-4" style="height: 47px">
-                  <option selected>Duration</option>
-                  <option value="1">Duration 1</option>
-                  <option value="2">Duration 1</option>
-                  <option value="3">Duration 1</option>
-                </select>
+                <input type="text" class="keyword" [(ngModel)]="keyword" />
               </div>
             </div>
           </div>
@@ -76,17 +35,17 @@
         <div class="col-md-2">
           <button
             class="btn btn-primary btn-block"
-            type="submit"
             style="height: 47px; margin-top: -2px"
+            (click)="searchAttraction()"
           >
-            Submit
+            搜尋
           </button>
         </div>
       </div>
     </div>
   </div>
 </div>
-<!-- Booking End -->
+<!-- Search Bar End -->
 
 <!-- start your coding here-->
 <!-- Grid View -->
@@ -207,12 +166,32 @@
             <!-- 右側：景點資訊 -->
             <div class="modal-info-container">
               <div class="info-section">
-                <div class="weather">
-                  <img [src]="weatherIconSrc" alt="weather">
-                </div>
-                <div>
-                  <h5 class="info-title">地址</h5>
-                  <div>{{ attraction.fAddress }}</div>
+                <!-- 天氣 -->
+                <div class="weather-Container">
+                  <!-- 左側: 天氣圖示 -->
+                  <div class="weather-icon">
+                    <img [src]="weatherIconSrc" alt="weather" />
+                  </div>
+
+                  <!-- 右側: 氣溫 & 濕度資訊 -->
+                  <div class="weather-info">
+                    <!-- 溫度 -->
+                    <div class="temperature">
+                      <img
+                        src="assets/images/thermometer.png"
+                        alt="thermometer"
+                      />
+                      <div class="temp-text">
+                        {{ temp_min }}°C ~ {{ temp_max }}°C
+                      </div>
+                    </div>
+
+                    <!-- 濕度 -->
+                    <div class="humidity">
+                      <img src="assets/images/humidity.png" alt="humidity" />
+                      <div class="humidity-text">{{ humidity }}%</div>
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <h5 class="info-title">網址</h5>
@@ -221,12 +200,12 @@
                   }}</a>
                 </div>
                 <div>
-                  <h5 class="info-title">景點介紹</h5>
-                  <p>{{ attraction.fDescription }}</p>
+                  <h5 class="info-title">地址</h5>
+                  <div>{{ attraction.fAddress }}</div>
                 </div>
                 <div>
-                  <h5 class="info-title">交通資訊</h5>
-                  <div>{{ attraction.fTrafficInformation }}</div>
+                  <h5 class="info-title">景點介紹</h5>
+                  <p>{{ attraction.fDescription }}</p>
                 </div>
               </div>
             </div>
@@ -236,6 +215,17 @@
           <div class="map-container">
             <div #mapContainer class="map-content"></div>
           </div>
+
+          <!-- AI Button Start -->
+          <app-ai-button
+            [cAttractionName]="pAttractionName"
+            (newPlanEvent)="showPlan($event)"
+          ></app-ai-button>
+          <!-- AI Button End -->
+
+          <!-- AI 生成的 Itinerary start-->
+          <app-itinerary [cItineraryData]="pItineraryData"></app-itinerary>
+          <!-- AI 生成的 Itinerary end-->
 
           <!-- 評論 -->
           <div class="comment-section">
