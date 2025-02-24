@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 import { IPostComment } from 'src/app/interfaces/IPostComment';
 import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
 import Swal from 'sweetalert2';
+import { SignalrService } from 'src/app/services/signalr.service';
 const LICENSE_KEY = environment.ckeditorLicenseKey;
 const cloudConfig = {
   version: '44.1.0'
@@ -58,12 +59,19 @@ export class MyarticlesComponent {
     keyword: ''
   }
   previousFilter = { ...this.filter };
-  constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer, private sweetAlert: SweetAlert2Service) { };
+  constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer, private sweetAlert: SweetAlert2Service, private signalrService: SignalrService) { };
   ngOnInit(): void {
     this.loadArticles();
     this.loadTypes();
     this.loadLoginInfo();
     loadCKEditorCloud(cloudConfig).then(this._setupEditor.bind(this));
+    this.signalrService.startConnection();
+    this.signalrService.onMessageReceived((comment: IPostComment) => {
+      if (this.currentData.fPostId == comment.fPostId) {
+        comment.fUserImage = 'data:image/jpeg;base64,' + comment.fUserImage;
+        this.commentDatas[comment.fPostId].unshift(comment);
+      }
+    });
   }
   ngDoCheck(): void {
 
@@ -292,7 +300,7 @@ export class MyarticlesComponent {
       FContent: this.commentTexts
     }).subscribe(() => {
       this.commentTexts = '';
-      this.loadComments(postId);
+      // this.loadComments(postId);
     })
   }
 

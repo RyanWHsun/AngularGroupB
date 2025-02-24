@@ -40,7 +40,6 @@ export class SocialmediaComponent {
     this.signalrService.onMessageReceived((comment: IPostComment) => {
       if (this.activePostIds.includes(comment.fPostId)) {
         comment.fUserImage = 'data:image/jpeg;base64,' + comment.fUserImage;
-        console.log(comment);
         this.commentDatas[comment.fPostId].unshift(comment);
       }
     });
