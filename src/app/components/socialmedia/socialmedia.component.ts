@@ -1,6 +1,7 @@
 import { SignalrService } from './../../services/signalr.service';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { IPostComment } from 'src/app/interfaces/IPostComment';
 import { SocialmediaService } from 'src/app/services/socialmedia.service';
 import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
@@ -34,7 +35,7 @@ export class SocialmediaComponent {
     keyword: ''
   }
   previousFilter = { ...this.filter };
-  constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer, private signalrService: SignalrService, private sweetAlert: SweetAlert2Service) { };
+  constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer, private signalrService: SignalrService, private sweetAlert: SweetAlert2Service, private router: Router) { };
   ngOnInit(): void {
     this.signalrService.startConnection();
     this.signalrService.onMessageReceived((comment: IPostComment) => {
@@ -210,5 +211,9 @@ export class SocialmediaComponent {
   }
   onScroll() {
     this.loadArticles();
+  }
+
+  goToProduct(keyword: string) {
+    this.router.navigate(['products'], { queryParams: { keyword: keyword } });
   }
 }
