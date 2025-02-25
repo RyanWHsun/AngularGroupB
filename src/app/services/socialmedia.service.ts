@@ -80,4 +80,7 @@ export class SocialmediaService {
   getChatbyID(contactId: number): Observable<IChat[]> {
     return this.httpClient.get<IChat[]>(`https://localhost:7112/api/TChats/${contactId}`, { withCredentials: true })
   }
+  postChat(contactData: any): Observable<any> {
+    return this.httpClient.post('https://localhost:7112/api/TChats', contactData, { withCredentials: true })
+  }
 }

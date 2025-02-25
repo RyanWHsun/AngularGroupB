@@ -84,7 +84,7 @@
           <div class="d-flex align-items-center mb-2">
             <img [src]="userData[data['fUserId']].image" class="rounded-circle mr-2"
               style="width: 30px;height: 30px; object-fit: cover">
-            <strong>{{userData[data['fUserId']].nickName}}</strong>
+            <strong class="text-middle">{{userData[data['fUserId']].nickName}}</strong>
           </div>
 
           <!-- Image -->
@@ -112,13 +112,14 @@
           <!-- Likes and Caption -->
           <p *ngIf="!activePostIds.includes(data['fPostId'])"><img [src]="userData[data['fUserId']].image"
               class="rounded-circle mr-2" style="width: 30px;height: 30px; object-fit: cover">
-            <strong class="mr-1">{{userData[data['fUserId']].nickName}}</strong>{{data['fTitle']}}
+            <strong class="text-middle mr-1">{{userData[data['fUserId']].nickName}}</strong>{{data['fTitle']}}
           </p>
 
           <!-- Comment Section -->
           <div #commentContainer *ngIf="activePostIds.includes(data['fPostId'])" class="comment-container">
             <p><img [src]="userData[data['fUserId']].image" class="rounded-circle mr-2"
-                style="width: 30px;height: 30px; object-fit: cover"><strong>{{userData[data['fUserId']].nickName}}
+                style="width: 30px;height: 30px; object-fit: cover"><strong
+                class="text-middle">{{userData[data['fUserId']].nickName}}
               </strong>{{data['fTitle']}}</p>
             <div [innerHTML]="contentData[data['fPostId']]">
             </div>
@@ -126,7 +127,7 @@
             <p *ngFor="let comments of commentDatas[data['fPostId']]" class="comment-context">
               <img [src]="comments.fUserImage" class="rounded-circle mr-2"
                 style="width: 30px;height: 30px; object-fit: cover">
-              <strong class="mr-1">{{comments.fUserNickName}}</strong>
+              <strong class="text-middle mr-1">{{comments.fUserNickName}}</strong>
               {{comments.fContent}}
               <a *ngIf="loginUserId==comments.fUserId" role="button" class="comment-delete"
                 (click)="deleteComment(comments.fCommentId, comments.fPostId)"><i class="fa-solid fa-trash-can"></i></a>
@@ -148,7 +149,7 @@
         <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">聯絡人</h4>
         <div *ngIf="contactIds">
           <div *ngFor="let contactId of contactIds" class="contact-card">
-            <a class="text-decoration-none" role="button" (click)="openChat(contactId)"><img
+            <a class="text-decoration-none text-middle" role="button" (click)="openChat(contactId)"><img
                 [src]="userData[contactId].image" class="rounded-circle mr-2"
                 style="width: 30px;height: 30px; object-fit: cover">{{userData[contactId].nickName}}</a>
             <div *ngIf="chatRooms.includes(contactId)">

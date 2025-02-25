@@ -178,3 +178,8 @@ strong {
 .comment-context:hover .comment-delete:active {
   color: rgb(177, 175, 175, 0.7)
 }
+
+.text-middle {
+  margin: 0;
+  line-height: 30px;
+}

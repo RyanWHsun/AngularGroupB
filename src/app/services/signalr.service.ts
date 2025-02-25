@@ -22,4 +22,9 @@ export class SignalrService {
       callback(comment);
     });
   }
+  public onPrivateMessageReceived(callback: (message: any) => void) {
+    this.hubConnection.on('ReceivePrivateMessage', (message) => {
+      callback(message);
+    });
+  }
 }
