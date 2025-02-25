@@ -27,10 +27,29 @@
 
 .message {
   padding: 5px;
-  margin: 5px 0;
   border-radius: 5px;
-  max-width: 80%;
 }
+
+.message-header {
+  display: flex;
+  line-height: 30px;
+  height: 30px;
+}
+
+.message-text {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background-color: antiquewhite;
+  word-wrap: break-word;
+  max-width: 60%;
+}
+
+.message-header-right {
+  justify-content: flex-end;
+}
+
+.message-text-right {}
 
 .sent {
   background: #ff69b4;

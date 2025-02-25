@@ -1,14 +1,20 @@
 <div class="chat-box">
   <div class="chat-header">
-    <img [src]="chatUser.image" class="rounded-circle mr-2" style="width: 30px;height: 30px; object-fit: cover" />
-    <span>{{ chatUser.name }}</span>
+    <div>
+      <img [src]="chatUser.image" class="rounded-circle mr-2" style="width: 30px;height: 30px; object-fit: cover" />
+      <span>{{ chatUser.name }}</span>
+    </div>
     <button (click)="closeChat()">✖</button>
   </div>
 
   <div class="chat-messages">
-    <div *ngFor="let msg of messages">
-      <div class="message">
-        {{ messageText }}
+    <div *ngFor="let msg of messages" class="message">
+      <div class="message-header message-header-right">
+        <img [src]="msg.senderImg" class="rounded-circle mr-2" style="width: 30px;height: 30px; object-fit: cover" />
+        <p>{{ msg.senderName }}</p>
+      </div>
+      <div class="message-text mt-1 message-text-right">
+        {{ msg.message }}
       </div>
     </div>
   </div>

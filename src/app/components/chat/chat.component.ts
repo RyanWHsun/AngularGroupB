@@ -14,14 +14,21 @@ export class ChatComponent {
 
   @Output() closeChatEvent = new EventEmitter();
 
-  messages: { senderId: number, receiverId: number, message: string }[] = [];
+  messages: { senderId: number, senderImg: string, senderName: string, message: string }[] = [];
   messageText: string = '';
 
   constructor(private socialmediaService: SocialmediaService) { }
   ngOnInit(): void {
-    // this.socialmediaService.getChatbyID(this.chatUser.id).subscribe((datas:IChat[])=>this.messages=datas.map(chat=>({
-    //   senderId:chat.senderId,
-    // })))
+    this.socialmediaService.getChatbyID(this.chatUser.id).subscribe((datas: IChat[]) => {
+      this.messages = datas.map((chat: IChat) => ({
+        senderId: chat.fSenderId,
+        senderImg: chat.fSenderId === this.currentUser.id ? this.currentUser.image : this.chatUser.image,
+        senderName: chat.fSenderId === this.currentUser.id ? this.currentUser.name : this.chatUser.name,
+        message: chat.fMessageText
+      }))
+    }
+    );
+
   }
   closeChat() {
     this.closeChatEvent.emit(this.chatUser.id);
