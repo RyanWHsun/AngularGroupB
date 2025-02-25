@@ -146,21 +146,16 @@
     <div class="col-2">
       <div class="contacts-list fixed-sidebar">
         <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">聯絡人</h4>
-        <div class="contact-card">
-          <img src="/assets/images/head001.jpg" class="avatar">
-          <span class="name">葉大仁</span>
-        </div>
-        <div class="contact-card">
-          <img src="/assets/images/head003.jpg" class="avatar">
-          <span class="name">蔡馬寇</span>
-        </div>
-        <div class="contact-card">
-          <img src="/assets/images/head002.jpg" class="avatar">
-          <span class="name">王瑞安</span>
-        </div>
-        <div class="contact-card">
-          <img src="/assets/images/head005.jpg" class="avatar">
-          <span class="name">艾小葉</span>
+        <div *ngIf="contactIds">
+          <div *ngFor="let contactId of contactIds" class="contact-card">
+            <a class="text-decoration-none" role="button" (click)="openChat(contactId)"><img
+                [src]="userData[contactId].image" class="rounded-circle mr-2"
+                style="width: 30px;height: 30px; object-fit: cover">{{userData[contactId].nickName}}</a>
+            <div *ngIf="chatRooms.includes(contactId)">
+              <app-chat [currentUser]="currentUser" [chatUser]="chatUser"
+                (closeChatEvent)="closeChat(contactId)"></app-chat>
+            </div>
+          </div>
         </div>
       </div>
     </div>

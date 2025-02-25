@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
+import { IChat } from '../interfaces/IChat';
 
 @Injectable({
   providedIn: 'root'
@@ -71,5 +72,12 @@ export class SocialmediaService {
   }
   getTypes(): Observable<any> {
     return this.httpClient.get(`https://localhost:7112/api/TPostCategories`)
+  }
+
+  getContactId(): Observable<any> {
+    return this.httpClient.get('https://localhost:7112/api/TChats/Contact', { withCredentials: true })
+  }
+  getChatbyID(contactId: number): Observable<IChat> {
+    return this.httpClient.get<IChat>(`https://localhost:7112/api/TChats/${contactId}`, { withCredentials: true })
   }
 }

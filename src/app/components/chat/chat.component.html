@@ -1,0 +1,20 @@
+<div class="chat-box">
+  <div class="chat-header">
+    <img [src]="chatUser.image" class="rounded-circle mr-2" style="width: 30px;height: 30px; object-fit: cover" />
+    <span>{{ chatUser.name }}</span>
+    <button (click)="closeChat()">✖</button>
+  </div>
+
+  <div class="chat-messages">
+    <div *ngFor="let msg of messages">
+      <div class="message">
+        {{ messageText }}
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input">
+    <input type="text" [(ngModel)]="messageText" placeholder="輸入訊息..." (keydown.enter)="sendMessage()" />
+    <button (click)="sendMessage()">發送</button>
+  </div>
+</div>

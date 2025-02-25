@@ -20,6 +20,19 @@ strong {
   gap: 10px;
 }
 
+.contact-card a {
+  color: black;
+}
+
+.contact-card a:hover {
+  color: gray;
+}
+
+.contact-card a:active {
+  color: rgb(144, 144, 144);
+}
+
+
 .avatar {
   width: 40px;
   height: 40px;

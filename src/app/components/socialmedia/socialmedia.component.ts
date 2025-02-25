@@ -35,6 +35,10 @@ export class SocialmediaComponent {
     keyword: ''
   }
   previousFilter = { ...this.filter };
+  contactIds: number[] = [];
+  chatRooms: number[] = [];
+  currentUser = { id: 0, name: '', image: '/assets/images/noImage.jpg' };
+  chatUser = { id: 0, name: '', image: '/assets/images/noImage.jpg' };
   constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer, private signalrService: SignalrService, private sweetAlert: SweetAlert2Service, private router: Router) { };
   ngOnInit(): void {
     this.signalrService.startConnection();
@@ -47,6 +51,7 @@ export class SocialmediaComponent {
     this.loadLoginInfo();
     this.loadArticles();
     this.loadTypes();
+    this.loadContactId();
   }
   ngDoCheck(): void {
     if (
@@ -65,9 +70,18 @@ export class SocialmediaComponent {
     this.hasMore = true;
     this.datas = [];
   }
+  loadContactId() {
+    this.socialmediaService.getContactId().subscribe(data => {
+      this.contactIds = data;
+      data.forEach((id: any) => this.loadUserInfo(id));
+    })
+  }
 
   loadLoginInfo() {
-    this.socialmediaService.getLoginUserId().subscribe(data => this.loginUserId = data);
+    this.socialmediaService.getLoginUserId().subscribe(data => {
+      this.loginUserId = data;
+      this.loadUserInfo(data);
+    });
   }
   loadTypes() {
     this.socialmediaService.getTypes().subscribe(datas => this.types = [
@@ -215,5 +229,25 @@ export class SocialmediaComponent {
 
   goToProduct(keyword: string) {
     this.router.navigate(['products'], { queryParams: { keyword: keyword } });
+  }
+  openChat(contactId: number) {
+    this.chatRooms = [];
+    this.chatRooms.push(contactId);
+    this.currentUser = {
+      id: this.loginUserId,
+      name: this.userData[this.loginUserId].nickName,
+      image: this.userData[this.loginUserId].image
+    }
+    this.chatUser = {
+      id: contactId,
+      name: this.userData[contactId].nickName,
+      image: this.userData[contactId].image
+    }
+  }
+  closeChat(contactId: number) {
+    const index = this.chatRooms.indexOf(contactId);
+    if (index !== -1) {
+      this.chatRooms.splice(index, 1);
+    }
   }
 }

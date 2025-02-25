@@ -43,6 +43,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { EventEditDialogComponent } from './components/event-edit-dialog/event-edit-dialog.component';
 import { EventFormComponent } from './components/event-form/event-form.component';
 import { ImageBrowserComponent } from './share-components/image-browser/image-browser.component';
+import { ChatComponent } from './components/chat/chat.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { ImageBrowserComponent } from './share-components/image-browser/image-br
     EventFormComponent,
     UserAdminEditComponent,
     ImageBrowserComponent,
+    ChatComponent,
   ],
   imports: [
     BrowserModule,
