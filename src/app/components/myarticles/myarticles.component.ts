@@ -5,7 +5,7 @@ import { loadCKEditorCloud, CKEditorModule, type CKEditorCloudResult, type CKEdi
 import type { ClassicEditor, EditorConfig } from 'https://cdn.ckeditor.com/typings/ckeditor5.d.ts';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { concatMap, of } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.example';
 import { IPostComment } from 'src/app/interfaces/IPostComment';
 import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
 import Swal from 'sweetalert2';
