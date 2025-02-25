@@ -4,6 +4,7 @@ import { CheckoutRequest, itemsForOrder, Seller, ShoppingCartItem, userInfo } fr
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { OrderService } from 'src/app/services/order.service';
+import { LinePayService } from 'src/app/services/line-pay.service';
 declare var $: any; // 宣告 jQuery
 import Swal from 'sweetalert2';
 import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
@@ -33,7 +34,7 @@ export class CartComponent {
   selectedCount = 0;
   fPaymentMethod: string = ''; // 預設付款方式
 
-  constructor(private cartService: CartService, private authService: AuthService, private router: Router, private orderService: OrderService, private swal: SweetAlert2Service) { }
+  constructor(private cartService: CartService, private authService: AuthService, private router: Router, private orderService: OrderService, private swal: SweetAlert2Service,private linePayService: LinePayService) { }
   @ViewChild('popoverButton', { static: false }) popoverButton!: ElementRef;
 
 
@@ -282,105 +283,127 @@ export class CartComponent {
   }
 
   checkOut() {
-    const selectedItems: itemsForOrder[] = [];
-
-    // 取得所有勾選的商品、票券、活動
-    this.sellers.forEach(seller => {
-      seller.products.forEach(product => {
-        if (product.selected) {
-          selectedItems.push({
-            fCartItemId: product.fCartItemId,
-            fItemType: product.fItemType,
-            fItemId: product.fItemId,
-            fQuantity: product.fQuantity,
-            fSellerId: product.fSellerId
-          });
-        }
-      });
-    });
-
-    this.tickets.forEach(ticket => {
-      if (ticket.selected) {
-        selectedItems.push({
-          fCartItemId: ticket.fCartItemId,
-          fItemType: ticket.fItemType,
-          fItemId: ticket.fItemId,
-          fQuantity: ticket.fQuantity,
-          fSellerId: ticket.fSellerId
-        });
-      }
-    });
-
-    this.eventFee.forEach(event => {
-      if (event.selected) {
-        selectedItems.push({
-          fCartItemId: event.fCartItemId,
-          fItemType: event.fItemType,
-          fItemId: event.fItemId,
-          fQuantity: event.fQuantity,
-          fSellerId: event.fSellerId
-        });
-      }
-    });
+    const selectedItems: itemsForOrder[] = this.sellers
+      .flatMap(seller => seller.products)
+      .concat(this.tickets)
+      .concat(this.eventFee)
+      .filter(item => item.selected)
+      .map(item => ({
+        fCartItemId: item.fCartItemId,
+        fItemType: item.fItemType,
+        fItemId: item.fItemId,
+        fQuantity: item.fQuantity,
+        fSellerId: item.fSellerId,
+        fProductName: item.fProductName || "未命名商品" // ✅ 確保商品名稱不為空
+      }));
 
     const userInfo: userInfo = {
-      fUserId: this.userInfo?.fUserId ?? 0,  // 預設為 0 避免 null
+      fUserId: this.userInfo?.fUserId ?? 0,
       fUserName: this.userInfo?.fUserName ?? '',
       fUserPhone: this.userInfo?.fUserPhone ?? '',
       fUserAddress: this.userInfo?.fUserAddress ?? '',
       totalBalance: this.userInfo?.totalBalance ?? 0,
     };
 
-
-    // 檢查是否有選擇商品
     if (selectedItems.length === 0) {
       this.swal.showEasyWarning('請選擇至少一個商品進行結帳');
       return;
     }
-    // 檢查是否有選擇付款方式
+
     if (!this.fPaymentMethod) {
       this.swal.showEasyWarning('請選擇付款方式');
       return;
     }
 
-    //如果選擇Wallet付款，檢查餘額
     if (this.fPaymentMethod === 'Wallet' && this.totalPrice > (this.userInfo?.totalBalance || 0)) {
       this.swal.showEasyError(`您的錢包餘額為 NT$${this.userInfo?.totalBalance}\n餘額不足!請修改支付方式`);
       return;
     }
 
-    //console.log('會員資訊:', userInfo);
-    //console.log('選取的商品:', selectedItems);
-    //console.log("目前付款方式:", this.fPaymentMethod);
-
-    // 組合checkoutRequest
-    const checkoutRequest: CheckoutRequest = {
-      userInfo: this.userInfo,
-      selectedItems: selectedItems,
+    const checkoutRequest = {
+      userInfo: userInfo,
+      selectedItems: selectedItems, // ✅ 確保這裡有商品
       fPaymentMethod: this.fPaymentMethod
     };
-    console.log('準備發送訂單資料:', checkoutRequest);
 
-    //呼叫後端API
+    console.log("📦 發送的結帳請求：", JSON.stringify(checkoutRequest, null, 2)); // ✅ 確保請求內容正確
+
     this.orderService.checkOut(checkoutRequest).subscribe({
       next: (response) => {
+        console.log("✅ 訂單建立成功:", response);
         Swal.fire({
           title: response.message,
           position: 'center',
           icon: 'success',
           showConfirmButton: false,
-          timer: 2000, // 1秒後自動關閉
+          timer: 2000,
         }).then(() => {
           window.location.reload();
-          this.loadUserWallet(); // 這裡確保彈窗關閉後才刷新頁面
+          this.loadUserWallet();
         });
       },
       error: (error) => {
+        console.error("❌ 訂單建立失敗:", error);
         const errorMessage = error.error?.message || "訂單建立失敗，請稍後再試";
         this.swal.showEasyError(errorMessage);
-        console.log('訂單建立失敗', error);
-        window.location.reload(); //刷新頁面
+        window.location.reload();
       }
     });
+}
+
+processLinePay(selectedItems: itemsForOrder[]) {
+  if (!this.userInfo?.fUserId) {
+    this.swal.showEasyError('使用者資訊載入錯誤，請重新登入');
+    return;
   }
+
+  const orderId = 'ORDER_' + new Date().getTime() + '_' + Math.floor(Math.random() * 10000);
+  console.log("📌 送出的 orderId：", orderId);  // ✅ 檢查是否為有效 ID
+
+  const confirmUrl = 'https://yourfrontend.com/payment-success?orderId=' + orderId;
+  const cancelUrl = 'https://yourfrontend.com/payment-failed';
+
+  const totalAmount = selectedItems.reduce((sum, item) => {
+    const price = this.carItems.find(ci => ci.fCartItemId === item.fCartItemId)?.fPrice ?? 0;
+    return sum + (price * item.fQuantity);
+  }, 0);
+
+  const paymentRequest = {
+    totalAmount: totalAmount,
+    orderId: orderId,
+    packages: [
+      {
+        id: "PKG001",
+        amount: totalAmount,
+        name: "購物車結帳",
+        products: selectedItems.map(item => ({
+          id: item.fItemId.toString(),
+          name: item.fProductName?.trim() || "未命名商品",
+          imageUrl: "https://example.com/default-product.jpg",
+          quantity: item.fQuantity,
+          price: (typeof item.fPrice === "number" ? item.fPrice : 0)
+        }))
+      }
+    ],
+    confirmUrl: confirmUrl,
+    cancelUrl: cancelUrl
+  };
+
+  console.log("📦 發送的付款請求：", JSON.stringify(paymentRequest, null, 2));
+
+  this.linePayService.requestPayment(paymentRequest).subscribe({
+    next: (response) => {
+        console.log("🟢 LINE Pay API 回應：", JSON.stringify(response, null, 2));
+        if (response.returnCode === "0000") {
+            window.location.href = response.info.paymentUrl.web;
+        } else {
+            this.swal.showEasyError('付款失敗，請檢查資訊');
+        }
+    },
+    error: (error) => {
+        console.error("🔴 付款請求錯誤：", error);
+        this.swal.showEasyError('付款請求失敗，請稍後再試');
+    }
+  });
+}
 }

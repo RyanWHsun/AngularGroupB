@@ -12,6 +12,7 @@ export interface ShoppingCartItem {
   fSpecification: string | null;
   selected?: boolean | null;
   fProductStock?: number | null;
+  fProductName?: string;
 }
 
 export interface Seller {
@@ -48,4 +49,6 @@ export interface itemsForOrder {
   fItemId: number;
   fQuantity: number;
   fSellerId: number;
+  fProductName?: string;
+  fPrice?: number;
 }
