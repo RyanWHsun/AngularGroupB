@@ -63,14 +63,15 @@
             <div class="control-group mb-4">
               <h5 class="text-uppercase">密碼</h5>
               <div class="input-group">
-                <input type="{{passwordType}}" class="form-control p-4" id="userPassword" placeholder="請輸入密碼"
-                  required="required" [(ngModel)]="user.fUserPassword" name="fUserPassword" #userPassword="ngModel" />
+                <input type="{{passwordType}}" class="form-control p-4" minlength="6" id="userPassword"
+                  placeholder="請輸入密碼" required="required" [(ngModel)]="user.fUserPassword" name="fUserPassword"
+                  #userPassword="ngModel" />
                 <button class="btn btn-outline-primary pb-0" style="width: 55px;" (click)="seePassword()">
                   <i *ngIf="passwordType == 'text'" class="fa-regular fa-eye h4"></i>
                   <i *ngIf="passwordType == 'password'" class="fa-regular fa-eye-slash h4"></i>
                 </button>
               </div>
-              <p class="help-block text-danger" *ngIf="userPassword.invalid && userPassword.touched">請輸入密碼</p>
+              <p class="help-block text-danger" *ngIf="userPassword.invalid && userPassword.touched">請輸入密碼，密碼須至少6個字元</p>
             </div>
 
             <div class="control-group mb-4">
