@@ -192,7 +192,8 @@
               </p>
             </div>
             <div class="comment-input-box">
-              <input type="text" class="commentInput w-100 ml-2" placeholder="留言......" [(ngModel)]="commentTexts">
+              <input type="text" class="commentInput w-100 ml-2" placeholder="留言......" [(ngModel)]="commentTexts"
+                (keydown.enter)="submitComment(currentData['fPostId'])">
               <a role="button" class="mr-2" (click)="submitComment(currentData['fPostId'])"><i
                   class="fa-solid fa-paper-plane"></i></a>
             </div>
