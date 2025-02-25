@@ -134,7 +134,11 @@ export class UserPageComponent {
   logout() {
     this.authService.logout().subscribe({
       next: () => {
-        this.router.navigate(['/user/login']).then(() => { window.location.reload(); });
+        this.router.navigate(['/user/login']).then(() => {
+          window.scrollTo(0, 0);
+
+          window.location.reload();
+        });
       },
       error: (error) => {
         // console.error("登出 API 失敗:", error);

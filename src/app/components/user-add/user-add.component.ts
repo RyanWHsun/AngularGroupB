@@ -15,12 +15,12 @@ export class UserAddComponent {
   // emailHelpText = "請輸入電子郵件";
   // 存放輸入的表單資料
   user = {
-    fUserName: null,
-    fUserNickName: null,
+    fUserName: "",
+    fUserNickName: "",
     fUserRankId: 1,
     fUserSex: "不願透露",
-    fUserEmail: null,
-    fUserPassword: null,
+    fUserEmail: "",
+    fUserPassword: "",
   };
   passwordType = "password";
   chackPassword: string = '';
@@ -32,7 +32,17 @@ export class UserAddComponent {
     // window.scrollTo({ top: 400, behavior: 'smooth' });
   }
 
-
+  setPerson() {
+    this.user = {
+      fUserName: "吳銘勢",
+      fUserNickName: "空洞騎士",
+      fUserRankId: 1,
+      fUserSex: "不願透露",
+      fUserEmail: "IAmTheNullPeople111@gmail.com",
+      fUserPassword: "123456",
+    };
+    this.chackPassword = "123456";
+  }
 
   seePassword() {
     if (this.passwordType == "password") {

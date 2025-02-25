@@ -38,6 +38,12 @@ export class UserPasswordComponent {
     window.scrollTo(0, 400);
   }
 
+
+  setEmail() {
+    this.user.email = 'aminglin311@gmail.com';
+  }
+
+
   // 密碼顯示
   seePassword() {
     if (this.passwordType == "password") {
