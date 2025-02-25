@@ -13,7 +13,7 @@ export class EventComponent implements OnInit {
   displayedEvents: any[] = [];
   savedEvents: any[] = [];
   uniqueLocations: string[] = [];
-  uniqueDurations: number[] = [1, 2, 3, 5, 7]; // ✅ 預設行程天數
+  uniqueDurations: number[] = []; // ✅ 預設行程天數
   currentIndex = 0;
   eventsPerPage = 3;
   apiUrl = 'https://localhost:7112/api/Event';
@@ -50,9 +50,9 @@ export class EventComponent implements OnInit {
 
         this.events.forEach(event => {
           event.fLocation = event.fLocation ?? '未知地點';
-          event.fParticipant = event.fParticipant ?? 0;
-          event.fDuration = event.fDuration ?? 1;
-          event.fPrice = event.registrationFee ?? 0;
+          event.fParticipant = event.fParticipant ?? 0; // ✅ 改用 API 回傳的 FParticipant
+          event.fDuration = event.fDuration ?? 1; // ✅ 改用 API 回傳的 FDuration
+          event.fPrice = event.fPrice ?? 0; // ✅ 改用 API 回傳的 FPrice
           event.fEventImageUrl = event.imageBase64 ?? 'assets/images/noImage.jpg';
         });
 
@@ -67,10 +67,13 @@ export class EventComponent implements OnInit {
     );
   }
 
+
   /** 🏷️ 取得所有篩選選項 */
   extractUniqueFilters() {
-    this.uniqueLocations = [...new Set(this.events.map(e => e.fLocation))];
-    this.uniqueDurations = [...new Set(this.events.map(e => e.fDuration || 1))];
+    this.uniqueLocations = [...new Set(this.events.map(e => e.fLocation))]
+    .sort((a, b) => a.length - b.length);
+    this.uniqueDurations = [...new Set(this.events.map(e => e.fDuration))]
+    .sort((a, b) => a - b);
   }
 
   /** 🔍 依據篩選條件搜尋活動 */
