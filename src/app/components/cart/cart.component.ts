@@ -33,8 +33,12 @@ export class CartComponent {
   totalPrice = 0;
   selectedCount = 0;
   fPaymentMethod: string = ''; // 預設付款方式
+  storeName: string = '';
+  storeID: string = '';
+  storeInfo: string = '';
+  windowClosed: boolean = false;
 
-  constructor(private cartService: CartService, private authService: AuthService, private router: Router, private orderService: OrderService, private swal: SweetAlert2Service,private linePayService: LinePayService) { }
+  constructor(private cartService: CartService, private authService: AuthService, private router: Router, private orderService: OrderService, private swal: SweetAlert2Service, private linePayService: LinePayService) { }
   @ViewChild('popoverButton', { static: false }) popoverButton!: ElementRef;
 
 
@@ -242,7 +246,37 @@ export class CartComponent {
 
   updatePaymentMethod(method: string) {
     this.fPaymentMethod = method;
-    //console.log("目前付款方式:", this.fPaymentMethod);
+  }
+
+  openStoreMap() {
+    this.cartService.openStoreMap().subscribe({
+      next: (response) => {
+        if (response.mapUrl) {
+          window.open(response.mapUrl, '_blank');
+          this.getSelectedStore();
+        } else {
+          console.error('無法獲取門市選擇 URL');
+        }
+      },
+      error: (error) => {
+        console.error('API錯誤', error)
+      }
+    });
+  }
+
+
+  // 取得選擇的門市資訊
+  getSelectedStore() {
+    this.cartService.getSelectedStore().subscribe({
+      next: (data) => {
+        this.storeName = data.storeName;
+        this.storeID = data.storeID;
+        this.storeInfo = `${this.storeID}+${this.storeName}`
+        this.userInfo.fUserAddress = this.storeInfo;
+      }, error: (error) => {
+        console.error('無法獲取選擇的門市資訊:', error)
+      }
+    })
   }
 
   removeItem(fCartItemId: number) {
@@ -349,61 +383,61 @@ export class CartComponent {
         window.location.reload();
       }
     });
-}
-
-processLinePay(selectedItems: itemsForOrder[]) {
-  if (!this.userInfo?.fUserId) {
-    this.swal.showEasyError('使用者資訊載入錯誤，請重新登入');
-    return;
   }
 
-  const orderId = 'ORDER_' + new Date().getTime() + '_' + Math.floor(Math.random() * 10000);
-  console.log("📌 送出的 orderId：", orderId);  // ✅ 檢查是否為有效 ID
+  processLinePay(selectedItems: itemsForOrder[]) {
+    if (!this.userInfo?.fUserId) {
+      this.swal.showEasyError('使用者資訊載入錯誤，請重新登入');
+      return;
+    }
 
-  const confirmUrl = 'https://yourfrontend.com/payment-success?orderId=' + orderId;
-  const cancelUrl = 'https://yourfrontend.com/payment-failed';
+    const orderId = 'ORDER_' + new Date().getTime() + '_' + Math.floor(Math.random() * 10000);
+    console.log("📌 送出的 orderId：", orderId);  // ✅ 檢查是否為有效 ID
 
-  const totalAmount = selectedItems.reduce((sum, item) => {
-    const price = this.carItems.find(ci => ci.fCartItemId === item.fCartItemId)?.fPrice ?? 0;
-    return sum + (price * item.fQuantity);
-  }, 0);
+    const confirmUrl = 'https://yourfrontend.com/payment-success?orderId=' + orderId;
+    const cancelUrl = 'https://yourfrontend.com/payment-failed';
 
-  const paymentRequest = {
-    totalAmount: totalAmount,
-    orderId: orderId,
-    packages: [
-      {
-        id: "PKG001",
-        amount: totalAmount,
-        name: "購物車結帳",
-        products: selectedItems.map(item => ({
-          id: item.fItemId.toString(),
-          name: item.fProductName?.trim() || "未命名商品",
-          imageUrl: "https://example.com/default-product.jpg",
-          quantity: item.fQuantity,
-          price: (typeof item.fPrice === "number" ? item.fPrice : 0)
-        }))
-      }
-    ],
-    confirmUrl: confirmUrl,
-    cancelUrl: cancelUrl
-  };
+    const totalAmount = selectedItems.reduce((sum, item) => {
+      const price = this.carItems.find(ci => ci.fCartItemId === item.fCartItemId)?.fPrice ?? 0;
+      return sum + (price * item.fQuantity);
+    }, 0);
 
-  console.log("📦 發送的付款請求：", JSON.stringify(paymentRequest, null, 2));
+    const paymentRequest = {
+      totalAmount: totalAmount,
+      orderId: orderId,
+      packages: [
+        {
+          id: "PKG001",
+          amount: totalAmount,
+          name: "購物車結帳",
+          products: selectedItems.map(item => ({
+            id: item.fItemId.toString(),
+            name: item.fProductName?.trim() || "未命名商品",
+            imageUrl: "https://example.com/default-product.jpg",
+            quantity: item.fQuantity,
+            price: (typeof item.fPrice === "number" ? item.fPrice : 0)
+          }))
+        }
+      ],
+      confirmUrl: confirmUrl,
+      cancelUrl: cancelUrl
+    };
 
-  this.linePayService.requestPayment(paymentRequest).subscribe({
-    next: (response) => {
+    console.log("📦 發送的付款請求：", JSON.stringify(paymentRequest, null, 2));
+
+    this.linePayService.requestPayment(paymentRequest).subscribe({
+      next: (response) => {
         console.log("🟢 LINE Pay API 回應：", JSON.stringify(response, null, 2));
         if (response.returnCode === "0000") {
-            window.location.href = response.info.paymentUrl.web;
+          window.location.href = response.info.paymentUrl.web;
         } else {
-            this.swal.showEasyError('付款失敗，請檢查資訊');
+          this.swal.showEasyError('付款失敗，請檢查資訊');
         }
-    },
-    error: (error) => {
+      },
+      error: (error) => {
         console.error("🔴 付款請求錯誤：", error);
         this.swal.showEasyError('付款請求失敗，請稍後再試');
-    }
-  });
-}
+      }
+    });
+  }
 }

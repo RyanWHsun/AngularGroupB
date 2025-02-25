@@ -4,6 +4,7 @@ import { sellerOrderAll, OrderDetail, OrderStatusHistory } from './../../interfa
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import * as signalR from '@microsoft/signalr';
 
 @Component({
   selector: 'app-seller-order',
@@ -15,6 +16,7 @@ export class SellerOrderComponent {
   filteredOrders: sellerOrderAll[] = [];
   selectedStatus: number | null = null;
   searchText: string = ''; // 搜尋文字
+  private hubConnection!: signalR.HubConnection;
 
   constructor(private orderService: OrderService, private swal: SweetAlert2Service, private router: Router) { }
 
@@ -25,6 +27,7 @@ export class SellerOrderComponent {
       const scrollY = window.innerHeight * 0.2; //視窗高度百分比
       window.scrollTo({ top: scrollY, behavior: 'smooth' });
     }, 200);
+    this.startSignalRConnection();
   }
 
   loadSellerOrders(): void {
@@ -80,20 +83,54 @@ export class SellerOrderComponent {
   }
 
   getBadgeText(order: sellerOrderAll, statusId: number): string {
-    if (order.fOrderStatusId === 3) {
-      // 訂單完成，回傳最新的 fTimestamp
-      const latestStatus = order.statusHistory.find(h => h.fOrderStatusId === 3);
-      return latestStatus ? new Date(latestStatus.fTimestamp).toLocaleDateString() : 'Pending';
+    // 先找出當前狀態
+    const currentStatus = order.statusHistory.find(h => h.fOrderStatusId === statusId);
+
+    if (!currentStatus) {
+      return 'Pending';
     }
 
+    // 如果訂單已完成（fOrderStatusId === 3），則只顯示完成時間
+    if (order.fOrderStatusId === 3) {
+      return new Date(currentStatus.fTimestamp).toLocaleDateString();
+    }
+
+    // 如果當前狀態正在進行
     if (order.fOrderStatusId === statusId) {
       return '進行中';
-    } else if (order.fOrderStatusId > statusId) {
-      const status = order.statusHistory.find(h => h.fOrderStatusId === statusId);
-      return status ? new Date(status.fTimestamp).toLocaleDateString() : 'Pending';
     }
+
+    // 如果訂單已經超過此狀態，則顯示該狀態的變更時間
+    if (order.fOrderStatusId > statusId) {
+      return new Date(currentStatus.fTimestamp).toLocaleDateString();
+    }
+
     return 'Pending';
   }
+
+  generateQRcode(orderId: number) {
+    this.orderService.getQRcode(orderId).subscribe({
+      next: (blob: Blob) => {
+        const qrCodeUrl = URL.createObjectURL(blob); //blob轉換成URL
+        Swal.fire({
+          title: `訂單#${orderId}出貨單`,
+          text: "請列印出貨單",
+          imageUrl: qrCodeUrl,
+          imageWidth: 400,
+          imageHeight: 400,
+          imageAlt: `訂單${orderId}出貨單`,
+          confirmButtonText: '列印',
+          confirmButtonColor: '#28a746'
+        });
+        // 釋放記憶體
+        setTimeout(() => URL.revokeObjectURL(qrCodeUrl), 5000);
+      }, error: (error) => {
+        console.error('產生QR錯誤', error)
+        this.swal.showEasyError('產生錯誤，請稍後再試');
+      }
+    })
+  }
+
 
 
   shipOrder(orderId: number, fExtraInfo: string) {
@@ -138,6 +175,23 @@ export class SellerOrderComponent {
       text: fExtraInfo,
       confirmButtonColor: 'black',
     });
+  }
+
+  private startSignalRConnection() {
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl('https://localhost:7112/orderHub')
+      .build();
+
+    this.hubConnection.start().then(() => {
+      //console.log('連接成功!');
+    }).catch(err => console.log('連接失敗', err));
+
+    //監聽事件
+    this.hubConnection.on('OrderUpdated', (orderId) => {
+      //console.log(`訂單 ${orderId} 已更新，重新載入訂單列表`);
+      this.swal.showEasySuccess(`訂單 ${orderId} 司機已取件`);
+      this.loadSellerOrders();
+    })
   }
 }
 

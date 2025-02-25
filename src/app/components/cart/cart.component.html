@@ -211,60 +211,79 @@
   </div>
 
   <!-- 固定在底部的結帳欄位 -->
-  <div class="row fixed-bottom bg-white shadow-lg p-3 d-flex justify-content-between align-items-center">
-    <div class="d-flex align-items-center w-100" *ngIf="userInfo">
-      <!-- 收件人 -->
-      <div class="input-group  mx-3" style="width: 180px;">
-        <div class="input-group-prepend">
-          <span class="input-group-text">購買人</span>
+  <div class="row fixed-bottom bg-white shadow-lg p-3 d-flex flex-wrap justify-content-between align-items-start"
+    style="height: 20vh; overflow-y: auto;">
+
+    <div class="d-flex flex-wrap w-100">
+      <!-- 收件人資訊 -->
+      <div class="d-flex flex-wrap align-items-center w-100">
+        <div class="input-group mx-3 mb-2" style="width: 200px;">
+          <div class="input-group-prepend">
+            <span class="input-group-text">購買人</span>
+          </div>
+          <input type="text" class="form-control form-control-lg" [(ngModel)]="userInfo.fUserName">
         </div>
-        <input type="text" class="form-control" [(ngModel)]="userInfo.fUserName">
-      </div>
 
-      <!-- 電話 -->
-      <div class="input-group mr-3" style="width:200px;">
-        <div class="input-group-prepend">
-          <span class="input-group-text">電話</span>
+        <div class="input-group mx-3 mb-2" style="width: 220px;">
+          <div class="input-group-prepend">
+            <span class="input-group-text">電話</span>
+          </div>
+          <input type="text" class="form-control form-control-lg" [(ngModel)]="userInfo.fUserPhone">
         </div>
-        <input type="text" class="form-control" [(ngModel)]="userInfo.fUserPhone">
-      </div>
 
-      <!-- 地址 -->
-      <div class="input-group mr-3" style="width: 350px;" *ngIf="hasSelectedProduct()">
-        <div class="input-group-prepend">
-          <span class="input-group-text">地址</span>
+        <div class="input-group mx-3 mb-2" style="width: 600px;" *ngIf="this.fPaymentMethod=='Wallet'">
+          <div class="input-group-prepend">
+            <span class="input-group-text">收件地址</span>
+          </div>
+          <input type="text" class="form-control form-control-lg" [(ngModel)]="userInfo.fUserAddress">
         </div>
-        <input type="text" class="form-control" [(ngModel)]="userInfo.fUserAddress">
+        <div class="input-group mx-3 mb-2" style="width: 600px;" *ngIf="this.fPaymentMethod=='Store'">
+          <div class="input-group-prepend">
+            <span class="input-group-text">取貨超商</span>
+          </div>
+          <input type="text" class="form-control form-control-lg" value={{this.storeInfo}}>
+          <button class="btn btn-primary" (click)="openStoreMap()">請選擇取貨門市</button>
+        </div>
       </div>
 
-      <!-- 付款方式 -->
-      <!-- Popover 按鈕 (Angular) -->
-      <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <label class="btn btn-outline-primary rounded" [class.active]="fPaymentMethod === 'LinePay'">
-          <input type="radio" name="paymentMethod" value="LinePay" (click)="updatePaymentMethod('LinePay')"> Line Pay
-        </label>
-        <label class="btn btn-outline-primary rounded" #popoverButton data-toggle="popover" data-placement="top"
-          data-content="" [class.active]="fPaymentMethod === 'Wallet'">
-          <input type="radio" name="paymentMethod" value="Wallet" (click)="updatePaymentMethod('Wallet')">平台錢包
-        </label>
+      <!-- 付款方式 & 按鈕 -->
+      <div class=" d-flex flex-wrap align-items-center w-100 mt-2 justify-content-end">
+
+        <!-- 付款方式 -->
+        <div class="btn-group btn-group-toggle mx-3 mb-2" data-toggle="buttons">
+          <label class="btn btn-outline-primary rounded btn-lg" [class.active]="fPaymentMethod === 'LinePay'">
+            <input type="radio" name="paymentMethod" value="LinePay" (click)="updatePaymentMethod('LinePay')"> Line
+            Pay
+          </label>
+          <label class="btn btn-outline-primary rounded btn-lg" #popoverButton data-toggle="popover"
+            data-placement="top" data-content="" [class.active]="fPaymentMethod === 'Wallet'">
+            <input type="radio" name="paymentMethod" value="Wallet" (click)="updatePaymentMethod('Wallet')"> 平台錢包
+          </label>
+          <label class="btn btn-outline-primary rounded btn-lg" [class.active]="fPaymentMethod === 'Store'">
+            <input type="radio" name="paymentMethod" value="LinePay" (click)="updatePaymentMethod('Store')"> 全家貨到付款
+          </label>
+        </div>
+
+        <!-- 總金額 -->
+        <div class="mx-3 mb-2">
+          <span class="font-weight-bold">總金額 ({{ selectedCount }} 個商品): </span>
+          <span class="text-danger font-weight-bold display-6">NT${{ totalPrice | number:'1.0-0' }}</span>
+        </div>
+
+        <!-- 按鈕 -->
+        <div class="ml-3 mb-2">
+          <button class="btn btn-primary btn-lg btn-square rounded text-center mr-2 pb-2"
+            style="width: 120px; height: auto;" (click)="checkOut()">
+            <i class="fa-solid fa-cash-register"></i>&nbsp;&nbsp;買單
+          </button>
+          <button class="btn btn-secondary btn-lg btn-square rounded text-center mr-2"
+            style="width: 120px; height: auto;" (click)="removeSelectedItems()">
+            <i class="fa-solid fa-trash"></i>&nbsp;&nbsp;刪除
+          </button>
+        </div>
+
       </div>
 
-      <!-- 總金額 -->
-      <div class="ml-auto text-left">
-        <span class="font-weight-bold">總金額 ({{ selectedCount }} 個商品): </span>
-        <span class="text-danger font-weight-bold">NT${{ totalPrice | number:'1.0-0' }}</span>
-      </div>
-
-      <!-- 按鈕 -->
-      <div class="ml-3">
-        <button class="btn btn-primary btn-sm btn-square rounded text-center mr-2" style="width: 100px;"
-          (click)="checkOut()">
-          <i class="fa-solid fa-cash-register"></i>&nbsp;&nbsp;買單
-        </button>
-        <button class="btn btn-secondary btn-sm btn-square rounded text-center mr-2" style="width: 100px;"
-          (click)="removeSelectedItems()">
-          <i class="fa-solid fa-trash"></i>&nbsp;&nbsp;刪除
-        </button>
-      </div>
     </div>
+
   </div>

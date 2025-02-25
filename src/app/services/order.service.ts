@@ -59,6 +59,21 @@ export class OrderService {
     const url = `${this.baseAddress}api/TOrders/completeOrder/${orderId}`
     return this.http.put<{ message: string }>(url, orderId);
   }
+
+  //賣家端產生QRCode
+  getQRcode(orderId: number): Observable<Blob> {
+    const url = `${this.baseAddress}api/TOrders/generateQR/${orderId}`
+    return this.http.get<Blob>(url, { responseType: 'blob' as 'json' });
+  }
+
+  //賣家用QR更新訂單
+  shipOrderByQR(orderId: number): Observable<{ message: string }> {
+    const url = `${this.baseAddress}api/TOrders/shipOrderByQR/${orderId}`
+    return this.http.put<{ message: string }>(url, orderId);
+  }
+
+
+
 }
 
 
