@@ -1,4 +1,6 @@
 export const environment = {
-  production:true,
-  googleAPIKey:'YOUR_API_KEY'
+  production: true,
+  apiUrl: 'http://localhost:7112/api',
+  googleAPIKey: 'YOUR_API_KEY',
+  ckeditorLicenseKey: 'your-license-key-here'
 };

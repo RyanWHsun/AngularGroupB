@@ -43,4 +43,5 @@ Thumbs.db
 
 # google api key
 src/environments/environment.ts
+src/environments/environment.prod.ts
 src/environments/environment.development.ts

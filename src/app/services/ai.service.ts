@@ -4,7 +4,7 @@ import {
   GenerateContentResult,
   GoogleGenerativeAI,
 } from '@google/generative-ai';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
 
 // 定義回傳的資料型別
 interface InlineDataPart {
@@ -18,9 +18,9 @@ interface InlineDataPart {
   providedIn: 'root',
 })
 export class OpenAIService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  async recommend(attraction:string) {
+  async recommend(attraction: string) {
     const genAI = new GoogleGenerativeAI(environment.googleAIKey);
     const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
     const prompt = `請幫我規劃${attraction}的單日旅遊行程，並輸出為 JSON 格式，範例如下：
