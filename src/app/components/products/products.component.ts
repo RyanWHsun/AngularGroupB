@@ -159,7 +159,7 @@ export class ProductsComponent {
           this.router.navigate(['user/login']);
         } else {
           console.log('加入購物車錯誤:', error);
-          this.swal.showEasyError('加入購物車錯誤');
+          this.swal.showEasyError(error.error.message);
         }
       }
     })

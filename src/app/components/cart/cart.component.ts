@@ -8,6 +8,7 @@ import { LinePayService } from 'src/app/services/line-pay.service';
 declare var $: any; // 宣告 jQuery
 import Swal from 'sweetalert2';
 import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-cart',
@@ -43,9 +44,8 @@ export class CartComponent {
 
 
   ngOnInit(): void {
-    this.loadCart();
-    //console.log("初始化付款方式:", this.fPaymentMethod);
     this.isLoading = true;
+    this.loadCart();
   };
 
   ngAfterViewInit() {
@@ -53,7 +53,13 @@ export class CartComponent {
   }
 
   loadUserWallet() {
-    this.cartService.getUserInfo().subscribe({
+    this.cartService.getUserInfo().pipe(
+      finalize(() => {
+        setTimeout(() => {
+          this.isLoading = false; // 延遲關閉動畫
+        }, 3000);
+      })
+    ).subscribe({
       next: (response) => {
         //console.log('用戶資訊', response);
         this.userInfo = { ...response };  // 確保userInfo是完整的物件
@@ -271,7 +277,7 @@ export class CartComponent {
       next: (data) => {
         this.storeName = data.storeName;
         this.storeID = data.storeID;
-        this.storeInfo = `${this.storeID}+${this.storeName}`
+        this.storeInfo = `${this.storeID}  ${this.storeName}`
         this.userInfo.fUserAddress = this.storeInfo;
       }, error: (error) => {
         console.error('無法獲取選擇的門市資訊:', error)
