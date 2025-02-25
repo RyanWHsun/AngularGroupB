@@ -52,12 +52,13 @@
           *ngFor="let ticket of partialAttractionTickets; let i = index"
         >
           <div class="card">
-            <!-- <div class="views"><i class="fas fa-eye"></i> {{ 99999 }}</div> -->
-            <img
-              [src]="ticket.fimageSrc || 'assets/images/noImage.jpg'"
-              class="card-img-top"
-              [alt]="ticket.fAttractionName"
-            />
+            <div class="card-img-container">
+              <img
+                [src]="ticket.fimageSrc || 'assets/images/noImage.jpg'"
+                class="card-img-top"
+                [alt]="ticket.fAttractionName"
+              />
+            </div>
             <div class="card-body">
               <h5 class="card-title">{{ ticket.fAttractionName }}</h5>
               <div class="tags">{{ attractionDescription[i] }}</div>
@@ -69,9 +70,6 @@
                 <i class="fa-solid fa-cart-shopping"></i>
                 購買
               </button>
-              <!-- <div class="tags ticketPrice">
-                {{ ticket.fPrice | currency : "TWD" : "symbol" : "1.0-0" }}
-              </div> -->
             </div>
           </div>
         </div>
@@ -164,7 +162,11 @@
           <button (click)="subTicketQuantity()">
             <i class="fa-solid fa-minus"></i>
           </button>
-          <input type="text" [(ngModel)]="buyTicketModal.attractionTicketQuantity" (change)="changeTicketQty()"/>
+          <input
+            type="text"
+            [(ngModel)]="buyTicketModal.attractionTicketQuantity"
+            (change)="changeTicketQty()"
+          />
           <button (click)="addTicketQuantity()">
             <i class="fa-solid fa-plus"></i>
           </button>
