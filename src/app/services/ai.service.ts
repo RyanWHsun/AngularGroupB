@@ -4,7 +4,7 @@ import {
   GenerateContentResult,
   GoogleGenerativeAI,
 } from '@google/generative-ai';
-import { environment } from 'src/environments/environment.example';
+import { environment } from 'src/environments/environment';
 
 // 定義回傳的資料型別
 interface InlineDataPart {

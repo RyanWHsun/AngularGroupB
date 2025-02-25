@@ -34,7 +34,7 @@
           <form name="sentMessage" id="contactForm" #f="ngForm" novalidate="novalidate">
             <!-- 帳號輸入 -->
             <div class="control-group mb-3">
-              <h5>帳號</h5>
+              <h5 (click)="autoFillAccount()">帳號</h5>
               <input type="email" class="form-control p-4" id="account" placeholder="請輸入Email" required="required"
                 [(ngModel)]="fUserEmail" name="fUserEmail" #Email="ngModel" email />
               <p class="help-block text-danger" *ngIf="Email.invalid && Email.touched">請輸入帳號</p>
