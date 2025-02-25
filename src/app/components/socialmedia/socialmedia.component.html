@@ -4,9 +4,9 @@
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
       <h3 class="display-4 text-white text-uppercase">社群</h3>
       <div class="d-inline-flex text-white">
-        <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
-        <i class="fa fa-angle-double-right pt-1 px-3"></i>
         <p class="m-0 text-uppercase">社群</p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase"><a class="text-white" routerLink="/socialmedia/articles">個人文章</a></p>
       </div>
     </div>
   </div>
@@ -19,7 +19,7 @@
     <div class="bg-light shadow" style="padding: 30px;">
       <div class="row align-items-center" style="min-height: 60px;">
         <div class="col-md-3">
-          <button class="custom-btn w-100">
+          <button class="custom-btn w-100" (click)="filterNew()">
             <div class="custom-btn-inner">
               <i class="fa-solid fa-newspaper"></i>
               <span>最新文章</span>
@@ -27,7 +27,7 @@
           </button>
         </div>
         <div class="col-md-3">
-          <button class="custom-btn w-100">
+          <button class="custom-btn w-100" (click)="filterPopular()">
             <div class="custom-btn-inner">
               <i class="fa-solid fa-fire"></i>
               <span>熱門文章</span>
@@ -35,14 +35,14 @@
           </button>
         </div>
         <div class="col-md-3 d-flex">
-          <select class="custom-select w-100">
-            <option value="">類別</option>
-            <option value="tech">健行</option>
-            <option value="lifestyle">美食</option>
+          <select [(ngModel)]="filter.TypesValue" class="custom-select w-100">
+            <option *ngFor="let type of types" [ngValue]="type.value">
+              {{ type.label }}
+            </option>
           </select>
         </div>
         <div class="col-md-3" style="height: 47px;">
-          <input type="text" class="custom-input w-100" placeholder="關鍵字搜尋">
+          <input type="text" [(ngModel)]="filter.keyword" class="custom-input w-100" placeholder="關鍵字搜尋">
         </div>
       </div>
     </div>
@@ -57,17 +57,20 @@
     <div class="col-2">
       <div class="mb-5 fixed-sidebar">
         <h4 class="text-uppercase mb-2" style="letter-spacing: 5px;">推薦商品</h4>
-        <a class="d-flex flex-column align-items-center text-decoration-none bg-white mb-3 border" href="">
-          <img class="img-fluid w-100" src="/assets/images/p0001.jpg" alt="">
-          <h6 class="text-center">28吋行李箱</h6>
+        <a class="d-flex flex-column align-items-center text-decoration-none bg-white mb-3 border" role="button"
+          (click)="goToProduct('RIWAWA 28吋 行李箱(紅色款)')">
+          <img class="img-fluid w-100" style="height: 150px;object-fit: cover" src="/assets/images/p0001.jpg" alt="">
+          <h6 class="text-center pt-1">RIWAWA 28吋 行李箱(紅色款)</h6>
         </a>
-        <a class="d-flex flex-column align-items-center text-decoration-none bg-white mb-3 border" href="">
-          <img class="img-fluid w-100" src="/assets/images/p0002.jpg" alt="">
-          <h6 class="text-center">二手帳篷組</h6>
+        <a class="d-flex flex-column align-items-center text-decoration-none bg-white mb-3 border" role="button"
+          (click)="goToProduct('BECATHLON 戶外登山保暖襪')">
+          <img class="img-fluid w-100" style="height: 150px;object-fit: cover" src="/assets/images/p0002.jpg" alt="">
+          <h6 class="text-center pt-1">BECATHLON 戶外登山保暖襪</h6>
         </a>
-        <a class="d-flex flex-column align-items-center text-decoration-none bg-white mb-3 border" href="">
-          <img class="img-fluid w-100" src="/assets/images/p0003.jpg" alt="">
-          <h6 class="text-center">超CP值登山包</h6>
+        <a class="d-flex flex-column align-items-center text-decoration-none bg-white mb-3 border" role="button"
+          (click)="goToProduct('UrbanFlex 休閒鞋')">
+          <img class="img-fluid w-100" style="height: 150px;object-fit: cover" src="/assets/images/p0003.jpg" alt="">
+          <h6 class="text-center pt-1">UrbanFlex 休閒鞋</h6>
         </a>
       </div>
     </div>
@@ -85,44 +88,53 @@
           </div>
 
           <!-- Image -->
-          <div *ngIf="imageData[data['fPostId']] && imageData[data['fPostId']].length > 0" class="mb-2">
+          <!-- <div *ngIf="imageData[data['fPostId']] && imageData[data['fPostId']].length > 0" class="mb-2">
             <img [src]="imageData[data['fPostId']][0]" class="w-100" style='height: 444.75px;object-fit: cover' />
           </div>
 
           <div *ngIf="!imageData[data['fPostId']] || imageData[data['fPostId']].length == 0" class="mb-2">
             <img src="/assets/images/noImage.jpg" class="w-100" style='height: 444.75px;object-fit: cover' />
-          </div>
+          </div> -->
+          <app-image-browser *ngIf="imageData[data['fPostId']]"
+            [imagePreviews]="imageData[data['fPostId']]"></app-image-browser>
 
           <!-- Actions -->
-          <div class="d-flex justify-content-start mb-2">
-            <button class="btn mr-2 shadow-none"><i class="fa-regular fa-heart" style="color: #000000;"></i></button>
-            <button class="btn mr-2 shadow-none" (click)="toggleComments(data['fPostId'])"><i
-                class="fa-regular fa-comment" style="color: #000000;"></i></button>
+          <div id="actions" class="d-flex justify-content-start mb-2">
+            <a role="button" class="my-1 mx-2" (click)="toggleLike(data['fPostId'])"><i
+                [ngClass]="{ 'fa-regular': !Likes[data['fPostId']], 'fa-solid': Likes[data['fPostId']] }"
+                class="fa-heart heart-icon fa-lg" [style.color]="Likes[data['fPostId']] ? '#FF5151' : ''">
+              </i></a>
+            <a role="button" class="my-1 mx-2" (click)="toggleComments(data['fPostId'])"><i
+                class="fa-regular fa-comment fa-lg"></i></a>
           </div>
+          <p class="mb-1"><strong>{{LikeCounts[data['fPostId']]}}個讚</strong></p>
 
           <!-- Likes and Caption -->
-          <p class="mb-1"><strong>10個讚</strong></p>
           <p *ngIf="!activePostIds.includes(data['fPostId'])"><img [src]="userData[data['fUserId']].image"
-              class="rounded-circle mr-2"
-              style="width: 30px;height: 30px; object-fit: cover"><strong>{{userData[data['fUserId']].nickName}}
-            </strong>{{data['fTitle']}}</p>
+              class="rounded-circle mr-2" style="width: 30px;height: 30px; object-fit: cover">
+            <strong class="mr-1">{{userData[data['fUserId']].nickName}}</strong>{{data['fTitle']}}
+          </p>
 
           <!-- Comment Section -->
-          <div *ngIf="activePostIds.includes(data['fPostId'])" class="comment-container">
+          <div #commentContainer *ngIf="activePostIds.includes(data['fPostId'])" class="comment-container">
             <p><img [src]="userData[data['fUserId']].image" class="rounded-circle mr-2"
                 style="width: 30px;height: 30px; object-fit: cover"><strong>{{userData[data['fUserId']].nickName}}
               </strong>{{data['fTitle']}}</p>
             <div [innerHTML]="contentData[data['fPostId']]">
             </div>
             <hr>
-            <p *ngFor="let comments of commentDatas[data['fPostId']]"><img [src]="comments.fUserImage"
-                class="rounded-circle mr-2"
-                style="width: 30px;height: 30px; object-fit: cover"><strong>{{comments.fUserNickName}}
-              </strong>{{comments.fContent}}</p>
+            <p *ngFor="let comments of commentDatas[data['fPostId']]" class="comment-context">
+              <img [src]="comments.fUserImage" class="rounded-circle mr-2"
+                style="width: 30px;height: 30px; object-fit: cover">
+              <strong class="mr-1">{{comments.fUserNickName}}</strong>
+              {{comments.fContent}}
+              <a *ngIf="loginUserId==comments.fUserId" role="button" class="comment-delete"
+                (click)="deleteComment(comments.fCommentId, comments.fPostId)"><i class="fa-solid fa-trash-can"></i></a>
+            </p>
           </div>
           <div class="comment-input-box">
             <input type="text" class="commentInput w-100 ml-2" placeholder="留言......"
-              [(ngModel)]="commentTexts[data['fPostId']]">
+              [(ngModel)]="commentTexts[data['fPostId']]" (keydown.enter)="submitComment(data['fPostId'])">
             <a role="button" class="mr-2" (click)="submitComment(data['fPostId'])"><i
                 class="fa-solid fa-paper-plane"></i></a>
           </div>
@@ -134,21 +146,16 @@
     <div class="col-2">
       <div class="contacts-list fixed-sidebar">
         <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">聯絡人</h4>
-        <div class="contact-card">
-          <img src="/assets/images/head001.jpg" class="avatar">
-          <span class="name">葉大仁</span>
-        </div>
-        <div class="contact-card">
-          <img src="/assets/images/head003.jpg" class="avatar">
-          <span class="name">蔡馬寇</span>
-        </div>
-        <div class="contact-card">
-          <img src="/assets/images/head002.jpg" class="avatar">
-          <span class="name">王瑞安</span>
-        </div>
-        <div class="contact-card">
-          <img src="/assets/images/head005.jpg" class="avatar">
-          <span class="name">艾小葉</span>
+        <div *ngIf="contactIds">
+          <div *ngFor="let contactId of contactIds" class="contact-card">
+            <a class="text-decoration-none" role="button" (click)="openChat(contactId)"><img
+                [src]="userData[contactId].image" class="rounded-circle mr-2"
+                style="width: 30px;height: 30px; object-fit: cover">{{userData[contactId].nickName}}</a>
+            <div *ngIf="chatRooms.includes(contactId)">
+              <app-chat [currentUser]="currentUser" [chatUser]="chatUser"
+                (closeChatEvent)="closeChat(contactId)"></app-chat>
+            </div>
+          </div>
         </div>
       </div>
     </div>

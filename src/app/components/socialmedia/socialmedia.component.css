@@ -20,6 +20,19 @@ strong {
   gap: 10px;
 }
 
+.contact-card a {
+  color: black;
+}
+
+.contact-card a:hover {
+  color: gray;
+}
+
+.contact-card a:active {
+  color: rgb(144, 144, 144);
+}
+
+
 .avatar {
   width: 40px;
   height: 40px;
@@ -29,7 +42,7 @@ strong {
 
 .fixed-sidebar {
   position: sticky;
-  top: 200px;
+  top: 150px;
 }
 
 .custom-btn {
@@ -121,19 +134,47 @@ strong {
   outline: none;
 }
 
-.comment-input-box a {
+.comment-input-box a,
+#actions a {
   color: gray
 }
 
-.comment-input-box a:hover {
+.comment-input-box a:hover,
+#actions a:hover {
   color: rgba(119, 119, 119, 0.5);
 }
 
-.comment-input-box a:active {
+.comment-input-box a:active,
+#actions a:active {
   color: rgb(119, 119, 119, 0.7);
 }
 
 .comment-container {
   max-height: 300px;
   overflow-y: auto;
+}
+
+.comment-context {
+  display: block;
+}
+
+.comment-delete {
+  display: none;
+  position: relative;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.comment-context:hover .comment-delete {
+  display: inline;
+  color: rgb(216, 215, 215);
+}
+
+.comment-context:hover .comment-delete:hover {
+  color: rgb(177, 175, 175, 0.5)
+}
+
+.comment-context:hover .comment-delete:active {
+  color: rgb(177, 175, 175, 0.7)
 }

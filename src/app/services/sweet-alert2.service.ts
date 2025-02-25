@@ -37,4 +37,5 @@ export class SweetAlert2Service {
       timer: 2000,
     });
   }
+
 }

@@ -5,7 +5,7 @@
       <h3 class="display-4 text-white text-uppercase">個人文章</h3>
       <div class="d-inline-flex text-white">
         <p class="m-0 text-uppercase"><a class="text-white" routerLink="/socialmedia">社群</a></p>
-        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <i class="fa fa-angle-double-left pt-1 px-3"></i>
         <p class="m-0 text-uppercase">個人文章</p>
       </div>
     </div>
@@ -19,7 +19,7 @@
     <div class="bg-light shadow" style="padding: 30px;">
       <div class="row align-items-center" style="min-height: 60px;">
         <div class="col-md-3">
-          <button class="custom-btn w-100" data-toggle="modal" data-target="#modal" (click)="reset()">
+          <button class="custom-btn w-100" data-toggle="modal" data-target="#CreateArticleModal" (click)="reset()">
             <div class="custom-btn-inner">
               <i class="fa-solid fa-pencil"></i>
               <span>寫文章</span>
@@ -27,17 +27,17 @@
           </button>
         </div>
         <div class="col-md-3">
-          <select class="custom-select w-100">
-            <option value="">類別</option>
-            <option value="tech">健行</option>
-            <option value="lifestyle">美食</option>
+          <select [(ngModel)]="filter.TypesValue" class="custom-select w-100">
+            <option *ngFor="let type of types" [ngValue]="type.value">
+              {{ type.label }}
+            </option>
           </select>
         </div>
         <div class="col-md-3 w-100" style="height: 47px;">
-          <input type="date" class="custom-date w-100">
+          <input type="date" [(ngModel)]="filter.afterDate" class="custom-date w-100">
         </div>
         <div class="col-md-3" style="height: 47px;">
-          <input type="text" class="custom-input w-100" placeholder="關鍵字搜尋">
+          <input type="text" [(ngModel)]="filter.keyword" class="custom-input w-100" placeholder="關鍵字搜尋">
         </div>
       </div>
     </div>
@@ -46,37 +46,37 @@
 <!-- Booking End -->
 
 <!-- start your coding here-->
-<div>{{editorData}}</div>
-<div [innerHTML]="finalData">123</div>
-
 <div id="myArticle" class="container">
-  <div class="row">
+  <div class="row" infiniteScroll [infiniteScrollDistance]="0.5" [infiniteScrollThrottle]="300" (scrolled)="onScroll()">
     <div *ngFor="let data of datas" class="col-4">
       <div *ngIf="imageData[data['fPostId']] && imageData[data['fPostId']].length > 0" class="image-container">
         <img [src]="imageData[data['fPostId']][0]" class="w-100" style="border-radius: 5px;" />
-        <div class="overlay">
-          <p><i class="fas fa-heart"></i> 10</p>
-          <p><i class="fas fa-comment"></i> 3</p>
-        </div>
+        <a class="overlay" role="button" data-toggle="modal" data-target="#DetailArticleModal"
+          (click)="fetchCurrentData(data)">
+          <p><i class="fas fa-heart"></i> {{LikeCounts[data['fPostId']]}}</p>
+          <p><i class="fas fa-comment"></i> {{CommentCounts[data['fPostId']]}}</p>
+        </a>
       </div>
       <div *ngIf="!imageData[data['fPostId']] || imageData[data['fPostId']].length == 0" class="image-container">
         <img src="/assets/images/noImage.jpg" class="w-100" />
-        <div class="overlay">
-          <p><i class="fas fa-heart"></i> 10</p>
-          <p><i class="fas fa-comment"></i> 3</p>
-        </div>
+        <a class="overlay" role="button" data-toggle="modal" data-target="#DetailArticleModal"
+          (click)="fetchCurrentData(data)">
+          <p><i class="fas fa-heart"></i> {{LikeCounts[data['fPostId']]}}</p>
+          <p><i class="fas fa-comment"></i> {{CommentCounts[data['fPostId']]}}</p>
+        </a>
       </div>
     </div>
+    <div *ngIf="loading" class="loading-spinner"></div>
   </div>
 </div>
 
 
-<!-- Modal -->
-<div class="modal fade" id="modal" tabindex="-1" aria-hidden="true">
+<!-- CreateArticleModal -->
+<div class="modal fade" id="CreateArticleModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-custom modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">建立新貼文</h5>
+        <strong>建立新貼文</strong>
         <button type="button" class="close" data-dismiss="modal">
           <span>&times;</span>
         </button>
@@ -103,7 +103,14 @@
             </div>
           </div>
           <div class="col-4">
-            <input type="text" class="form-control mb-3" placeholder="請輸入文章標題!" [(ngModel)]="articleTitle">
+            <div class="mb-3 w-100 input-group">
+              <input type="text" class="form-control" placeholder="請輸入文章標題!" [(ngModel)]="articleTitle">
+              <select [(ngModel)]="articleTypesValue" class="ml-1">
+                <option *ngFor="let type of types" [ngValue]="type.value">
+                  {{ type.label }}
+                </option>
+              </select>
+            </div>
             <div class="editor-container">
               <ckeditor [editor]="Editor" [config]="config" [(ngModel)]="editorData" *ngIf="Editor && config" />
             </div>
@@ -111,7 +118,7 @@
             <input type="file" #fileInput (change)="onFileSelected($event)" multiple class="d-none">
             <label for="articleStatus" class="mt-3 ml-1">文章狀態：</label>
             <select id="articleStatus" [(ngModel)]="articleStatus">
-              <option *ngFor="let status of statuses" [value]="status.value">
+              <option *ngFor="let status of statuses" [ngValue]="status.value">
                 {{ status.label }}
               </option>
             </select>
@@ -122,3 +129,138 @@
       </div>
     </div>
   </div>
+</div>
+
+
+
+<!-- DetailArticleModal -->
+<div class="modal fade" id="DetailArticleModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-custom modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="dropdown show">
+          <a role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa-solid fa-ellipsis"></i>
+          </a>
+
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" role="button" data-toggle="modal" data-dismiss="modal"
+              data-target="#EditArticleModal">編輯</a>
+            <a class="dropdown-item" role="button" (click)="delete()" data-dismiss="modal">刪除</a>
+          </div>
+        </div>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-8">
+            <div>
+              <div *ngIf="imagePreviews.length > 0" class="image-container">
+                <img [src]="imagePreviews[currentIndex]" class="w-100" style="object-fit: cover;height: 465px">
+              </div>
+              <div *ngIf="imagePreviews.length === 0">
+                <img src="assets/images/noImage.jpg" class="w-100" style="object-fit: cover;height: 465px">
+              </div>
+              <a class="carousel-control-prev" (click)="prevImage()">
+                <span class="carousel-control-prev-icon"></span>
+              </a>
+              <a class="carousel-control-next" (click)="nextImage()">
+                <span class="carousel-control-next-icon"></span>
+              </a>
+            </div>
+          </div>
+          <div class="col-4">
+            <!-- Comment Section -->
+            <div #commentContainer class="comment-container border rounded p-3 mb-2">
+              <p *ngIf="userData[currentData['fUserId']]"><img [src]="userData[currentData['fUserId']].image"
+                  class="rounded-circle mr-2"
+                  style="width: 30px;height: 30px; object-fit: cover"><strong>{{userData[currentData['fUserId']].nickName}}
+                </strong>{{articleTitle}}</p>
+              <div [innerHTML]="finalData">
+              </div>
+              <hr>
+              <p *ngFor="let comments of commentDatas[currentData['fPostId']]" class="comment-context">
+                <img [src]="comments.fUserImage" class="rounded-circle mr-2"
+                  style="width: 30px;height: 30px; object-fit: cover">
+                <strong class="mr-1">{{comments.fUserNickName}}</strong>
+                {{comments.fContent}}
+                <a *ngIf="loginUserId==comments.fUserId" role="button" class="comment-delete"
+                  (click)="deleteComment(comments.fCommentId, comments.fPostId)"><i
+                    class="fa-solid fa-trash-can"></i></a>
+              </p>
+            </div>
+            <div class="comment-input-box">
+              <input type="text" class="commentInput w-100 ml-2" placeholder="留言......" [(ngModel)]="commentTexts"
+                (keydown.enter)="submitComment(currentData['fPostId'])">
+              <a role="button" class="mr-2" (click)="submitComment(currentData['fPostId'])"><i
+                  class="fa-solid fa-paper-plane"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- EditArticleModal -->
+<div class="modal fade" id="EditArticleModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-custom modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <strong>編輯貼文</strong>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-8">
+            <div>
+              <div *ngIf="imagePreviews.length > 0" class="image-container">
+                <img [src]="imagePreviews[currentIndex]" class="w-100" style="object-fit: cover;height: 465px">
+                <div class="overlay">
+                  <a (click)="removeImage(currentIndex)" role="button"><i class="fa-solid fa-trash-can"></i></a>
+                </div>
+              </div>
+              <div *ngIf="imagePreviews.length === 0">
+                <img src="assets/images/noImage.jpg" class="w-100" style="object-fit: cover;height: 465px">
+              </div>
+              <a class="carousel-control-prev" (click)="prevImage()">
+                <span class="carousel-control-prev-icon"></span>
+              </a>
+              <a class="carousel-control-next" (click)="nextImage()">
+                <span class="carousel-control-next-icon"></span>
+              </a>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="mb-3 w-100 input-group">
+              <input type="text" class="form-control" placeholder="請輸入文章標題!" [(ngModel)]="articleTitle">
+              <select [(ngModel)]="articleTypesValue" class="ml-1">
+                <option *ngFor="let type of types" [ngValue]="type.value">
+                  {{ type.label }}
+                </option>
+              </select>
+            </div>
+            <div class="editor-container">
+              <ckeditor [editor]="Editor" [config]="config" [(ngModel)]="editorData" *ngIf="Editor && config" />
+            </div>
+            <button type="button" class="btn btn-secondary" (click)="fileInput.click()">選擇圖片</button>
+            <input type="file" #fileInput (change)="onFileSelected($event)" multiple class="d-none">
+            <label for="articleStatus" class="mt-3 ml-1">文章狀態：</label>
+            <select id="articleStatus" [(ngModel)]="articleStatus">
+              <option *ngFor="let status of statuses" [ngValue]="status.value">
+                {{ status.label }}
+              </option>
+            </select>
+            <button type="button" class="btn btn-primary mt-2 float-right" data-dismiss="modal"
+              (click)="edit()">修改</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

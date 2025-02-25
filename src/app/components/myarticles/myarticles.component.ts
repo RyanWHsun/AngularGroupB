@@ -4,9 +4,13 @@ import { loadCKEditorCloud, CKEditorModule, type CKEditorCloudResult, type CKEdi
 
 import type { ClassicEditor, EditorConfig } from 'https://cdn.ckeditor.com/typings/ckeditor5.d.ts';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { concatMap } from 'rxjs';
-const LICENSE_KEY =
-  'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NDAwOTU5OTksImp0aSI6IjAyNDhiMTFhLTU0ZDQtNDIzZi04NTFmLWEyYTA2ODIzY2FiZCIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImEwOWU3ZDIwIn0.vxr1VsfKg7W4Q58SL66gRKE3eqcERkRaMXA4AZyywVzwS9vx0O6WLlIkuNrWFTBn1Q34TeRofuRdm-Z1mDRlqw';
+import { concatMap, of } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { IPostComment } from 'src/app/interfaces/IPostComment';
+import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
+import Swal from 'sweetalert2';
+import { SignalrService } from 'src/app/services/signalr.service';
+const LICENSE_KEY = environment.ckeditorLicenseKey;
 const cloudConfig = {
   version: '44.1.0'
 } satisfies CKEditorCloudConfig;
@@ -21,7 +25,7 @@ export class MyarticlesComponent {
   config: EditorConfig | null = null;
   articleTitle = '';
   editorData = '';
-  datas = [];
+  datas: any[] = [];
   finalData: SafeHtml = '';
   imageData: { [key: number]: string[] } = {};
   articleStatus: boolean = true;
@@ -33,46 +37,212 @@ export class MyarticlesComponent {
     { value: true, label: '公開' },
     { value: false, label: '私人' }
   ];
+  currentData: any = {};
+  types: { value: number, label: string }[] = [{ value: 0, label: '類別' }];
+  articleTypesValue = 0;
+  filterTypesValue = 0;
   imagePreviews: string[] = [];
   currentIndex = 0;
-  constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer) { };
-  ngOnInit(): void {
-    this.get();
-    loadCKEditorCloud(cloudConfig).then(this._setupEditor.bind(this));
+  page: number = 1;
+  pageSize: number = 6;
+  loading: boolean = false;
+  hasMore: boolean = true;
+  LikeCounts: { [postId: number]: number } = {};
+  CommentCounts: { [postId: number]: number } = {};
+  loginUserId = 0;
+  userData: { [userId: number]: { image: string, nickName: string } } = {};
+  commentDatas: { [postId: number]: IPostComment[] } = {};
+  commentTexts = '';
+  filter = {
+    TypesValue: 0,
+    afterDate: '',
+    keyword: ''
   }
+  previousFilter = { ...this.filter };
+  constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer, private sweetAlert: SweetAlert2Service, private signalrService: SignalrService) { };
+  ngOnInit(): void {
+    this.loadArticles();
+    this.loadTypes();
+    this.loadLoginInfo();
+    loadCKEditorCloud(cloudConfig).then(this._setupEditor.bind(this));
+    this.signalrService.startConnection();
+    this.signalrService.onMessageReceived((comment: IPostComment) => {
+      if (this.currentData.fPostId == comment.fPostId) {
+        comment.fUserImage = 'data:image/jpeg;base64,' + comment.fUserImage;
+        this.commentDatas[comment.fPostId].unshift(comment);
+      }
+    });
+  }
+  ngDoCheck(): void {
 
+    if (
+      this.previousFilter.afterDate !== this.filter.afterDate ||
+      this.previousFilter.TypesValue !== this.filter.TypesValue ||
+      this.previousFilter.keyword !== this.filter.keyword
+    ) {
+      console.log(this.filter);
+      this.resetArticles();
+      this.loadArticles();
+      this.previousFilter = { ...this.filter };
+    }
+  }
   reset() {
     this.articleTitle = '';
     this.editorData = '';
     this.articleStatus = true;
     this.imagePreviews = [];
     this.currentIndex = 0;
-    loadCKEditorCloud(cloudConfig).then(this._setupEditor.bind(this));
+    this.articleTypesValue = 0;
   }
-
+  loadLoginInfo() {
+    this.socialmediaService.getLoginUserId().subscribe(data => this.loginUserId = data);
+  }
+  loadUserInfo(userId: number) {
+    if (!this.userData[userId]) {
+      this.userData[userId] = { image: '', nickName: '' };
+    }
+    this.socialmediaService.getUserInfo(userId).subscribe(data => {
+      this.userData[userId] = {
+        image: `data:image/jpeg;base64,${data.fUserImage}`,
+        nickName: data.fUserNickName
+      }
+    })
+  }
+  loadComments(postId: number) {
+    this.socialmediaService.getArticleComments(postId).subscribe((comments: IPostComment[]) => {
+      if (!comments)
+        return;
+      this.commentDatas[postId] = comments.map((comment: IPostComment) => {
+        comment.fUserImage = 'data:image/jpeg;base64,' + comment.fUserImage;
+        return comment;
+      });;
+    });
+  }
+  loadTypes() {
+    this.socialmediaService.getTypes().subscribe(datas => this.types = [
+      { value: 0, label: '類別' },
+      ...datas.map((item: any) => ({
+        value: item.fCategoryId,
+        label: item.fName
+      }))]
+    )
+  }
+  loadLikeCount(postId: number) {
+    this.socialmediaService.getArticleLikeCount(postId).subscribe(data => this.LikeCounts[postId] = data);
+  }
+  loadCommentCount(postId: number) {
+    this.socialmediaService.getArticleCommentCount(postId).subscribe(data => this.CommentCounts[postId] = data);
+  }
   loadImages(postId: number) {
     this.socialmediaService.getMyImages(postId).subscribe(data => {
       this.imageData[postId] = data.map((imageBase64: string) => 'data:image/jpeg;base64,' + imageBase64);
     })
   }
-  get() {
-    this.socialmediaService.getMyArticles().subscribe(data => {
-      // console.log('api', data);
-      this.datas = data;
-      this.datas.forEach(post => {
-        this.loadImages(post['fPostId']);
-      });
+
+  loadArticles() {
+    if (!this.hasMore || this.loading) return;
+
+    this.loading = true;
+    this.socialmediaService.getMyArticles(this.page, this.pageSize, this.filter.TypesValue, this.filter.afterDate, this.filter.keyword).subscribe(response => {
+      if (response.length > 0) {
+        this.datas.push(...response);
+        this.datas.forEach(post => {
+          this.loadImages(post['fPostId']);
+          this.loadLikeCount(post['fPostId']);
+          this.loadCommentCount(post['fPostId']);
+        });
+        this.page++;
+        // console.log(this.datas);
+      } else {
+        this.hasMore = false;
+      }
+      this.loading = false;
+    }, error => {
+      console.error("載入文章失敗", error);
+      this.loading = false;
+    });
+  }
+
+  fetchCurrentData(data: any) {
+    this.reset();
+    this.loadComments(data.fPostId);
+    this.loadUserInfo(data.fUserId);
+    this.currentData = data;
+    this.articleTitle = data.fTitle;
+    this.editorData = data.fContent;
+    this.finalData = this.sanitizer.bypassSecurityTrustHtml(this.editorData);
+    this.articleStatus = data.fIsPublic;
+    if (this.imageData[data.fPostId])
+      this.imagePreviews = this.imageData[data.fPostId];
+    this.currentIndex = 0;
+    if (data.fCategoryId)
+      this.articleTypesValue = data.fCategoryId;
+    else
+      this.articleTypesValue = 0;
+  }
+  edit() {
+    this.socialmediaService.putArticle({
+      FPostId: this.currentData.fPostId,
+      FTitle: this.articleTitle,
+      FContent: this.editorData,
+      FIsPublic: this.articleStatus,
+      ...(this.articleTypesValue != 0 && { FCategoryId: this.articleTypesValue })
+    }).pipe(
+      concatMap(response => {
+        const postId = this.currentData.fPostId;
+        return this.socialmediaService.deleteAllImages(postId);
+      })
+    ).pipe(
+      concatMap(response => {
+        if (this.imagePreviews.length == 0)
+          return of(null);
+        const postId = this.currentData.fPostId;
+        const imageData = this.imagePreviews.map(img => ({
+          FPostId: postId,
+          FImage: img
+        }));
+        return this.socialmediaService.postImages(imageData);
+      })
+    ).subscribe(response => {
+      this.sweetAlert.showEasySuccess("文章修改成功");
+      this.resetArticles();
+      this.loadArticles();
+    });
+  }
+
+  delete() {
+    Swal.fire({
+      title: '你確定要刪除嗎？',
+      text: '刪除後將無法復原！',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '是的，刪除！',
+      cancelButtonText: '取消'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const postId = this.currentData.fPostId;
+        this.socialmediaService.deleteArticle(postId).subscribe(response => {
+          this.sweetAlert.showEasySuccess("文章刪除成功");
+          this.resetArticles();
+          this.loadArticles();
+        })
+      }
     });
   }
   save() {
-    this.finalData = this.sanitizer.bypassSecurityTrustHtml(this.editorData);
+    // this.finalData = this.sanitizer.bypassSecurityTrustHtml(this.editorData);
     this.socialmediaService.postArticle({
       FTitle: this.articleTitle,
       FContent: this.editorData,
-      FIsPublic: this.articleStatus
+      FIsPublic: this.articleStatus,
+      ...(this.articleTypesValue != 0 && { FCategoryId: this.articleTypesValue })
     }).pipe(
       concatMap(response => {
         // console.log('文章發佈成功', response);
+        if (this.imagePreviews.length == 0)
+          return of(null);
         const postId = response['fPostId'];
         const imageData = this.imagePreviews.map(img => ({
           FPostId: postId,
@@ -81,8 +251,17 @@ export class MyarticlesComponent {
         return this.socialmediaService.postImages(imageData);
       })
     ).subscribe(response => {
+      this.resetArticles();
+      this.loadArticles();
       // console.log('文章圖片發佈成功', response);
+      this.sweetAlert.showEasySuccess("新增文章成功");
     });
+  }
+  resetArticles() {
+    this.page = 1;
+    this.loading = false;
+    this.hasMore = true;
+    this.datas = [];
   }
   onFileSelected(event: Event): void {
     let files = (event.target as HTMLInputElement).files;
@@ -111,6 +290,41 @@ export class MyarticlesComponent {
     if (this.imagePreviews.length > 0) {
       this.currentIndex = (this.currentIndex + 1) % this.imagePreviews.length;
     }
+  }
+
+  submitComment(postId: number) {
+    if (this.loginUserId == 0)
+      return;
+    this.socialmediaService.postArticleComment({
+      FPostId: postId,
+      FContent: this.commentTexts
+    }).subscribe(() => {
+      this.commentTexts = '';
+      // this.loadComments(postId);
+    })
+  }
+
+  deleteComment(commentId: number, postId: number) {
+    Swal.fire({
+      title: '你確定要刪除嗎？',
+      text: '刪除後將無法復原！',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '是的，刪除！',
+      cancelButtonText: '取消'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.socialmediaService.deleteComment(commentId).subscribe(response => {
+          this.sweetAlert.showEasySuccess("留言刪除成功");
+          this.loadComments(postId);
+        });
+      }
+    });
+  }
+  onScroll() {
+    this.loadArticles();
   }
   //
   private _setupEditor(cloud: CKEditorCloudResult<typeof cloudConfig>) {

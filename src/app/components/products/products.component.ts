@@ -1,7 +1,7 @@
 import { addProductToCart } from './../../interfaces/shoppingCart';
 import { CartService } from './../../services/cart.service';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { latestProducts, Products } from 'src/app/interfaces/products';
 import { ProductsService } from 'src/app/services/products.service';
 import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
@@ -29,10 +29,11 @@ export class ProductsComponent {
   favorites: boolean[] = new Array(this.products.length).fill(false);
 
 
-  constructor(private productService: ProductsService, private cartService: CartService, private router: Router, private swal: SweetAlert2Service) { }
+  constructor(private productService: ProductsService, private cartService: CartService, private router: Router, private swal: SweetAlert2Service, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.loadProducts(); // 初始化加載商品
+    // this.loadProducts(); // 初始化加載商品
+    this.loadProductsByKeywordOrDefault(); //來自其他網站的query或初始化加載商品
     this.loadCategories(); // 加載分類數據
     this.loadLatestProducts();//加載最新商品
   }
@@ -178,6 +179,20 @@ export class ProductsComponent {
 
   toggleFavorite(index: number) {
     this.favorites[index] = !this.favorites[index];
+  }
+
+  loadProductsByKeywordOrDefault() {
+    this.route.queryParams.subscribe(params => {
+      const keyword = params['keyword'];
+      if (keyword) {
+        this.keyword = keyword;
+        this.searchProducts();
+        window.scrollTo({ top: window.innerHeight / 2, behavior: 'smooth' });
+      }
+      else {
+        this.loadProducts();
+      }
+    });
   }
 }
 

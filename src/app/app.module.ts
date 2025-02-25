@@ -42,6 +42,8 @@ import { WalletComponent } from './components/wallet/wallet.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { EventEditDialogComponent } from './components/event-edit-dialog/event-edit-dialog.component';
 import { EventFormComponent } from './components/event-form/event-form.component';
+import { ImageBrowserComponent } from './share-components/image-browser/image-browser.component';
+import { ChatComponent } from './components/chat/chat.component';
 import { AiButtonComponent } from './components/ai-button/ai-button.component';
 import { ItineraryComponent } from './components/itinerary/itinerary.component';
 
@@ -78,6 +80,8 @@ import { ItineraryComponent } from './components/itinerary/itinerary.component';
     EventEditDialogComponent,
     EventFormComponent,
     UserAdminEditComponent,
+    ImageBrowserComponent,
+    ChatComponent,
     AiButtonComponent,
     ItineraryComponent,
   ],
