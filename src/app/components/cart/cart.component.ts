@@ -317,70 +317,109 @@ export class CartComponent {
   }
 
   checkOut() {
-    const selectedItems: itemsForOrder[] = this.sellers
-      .flatMap(seller => seller.products)
-      .concat(this.tickets)
-      .concat(this.eventFee)
-      .filter(item => item.selected)
-      .map(item => ({
-        fCartItemId: item.fCartItemId,
-        fItemType: item.fItemType,
-        fItemId: item.fItemId,
-        fQuantity: item.fQuantity,
-        fSellerId: item.fSellerId,
-        fProductName: item.fProductName || "未命名商品" // ✅ 確保商品名稱不為空
-      }));
+    const selectedItems: itemsForOrder[] = [];
+
+    // 取得所有勾選的商品、票券、活動
+    this.sellers.forEach(seller => {
+      seller.products.forEach(product => {
+        if (product.selected) {
+          selectedItems.push({
+            fCartItemId: product.fCartItemId,
+            fItemType: product.fItemType,
+            fItemId: product.fItemId,
+            fQuantity: product.fQuantity,
+            fSellerId: product.fSellerId
+          });
+        }
+      });
+    });
+
+    this.tickets.forEach(ticket => {
+      if (ticket.selected) {
+        selectedItems.push({
+          fCartItemId: ticket.fCartItemId,
+          fItemType: ticket.fItemType,
+          fItemId: ticket.fItemId,
+          fQuantity: ticket.fQuantity,
+          fSellerId: ticket.fSellerId
+        });
+      }
+    });
+
+    this.eventFee.forEach(event => {
+      if (event.selected) {
+        selectedItems.push({
+          fCartItemId: event.fCartItemId,
+          fItemType: event.fItemType,
+          fItemId: event.fItemId,
+          fQuantity: event.fQuantity,
+          fSellerId: event.fSellerId
+        });
+      }
+    });
 
     const userInfo: userInfo = {
-      fUserId: this.userInfo?.fUserId ?? 0,
+      fUserId: this.userInfo?.fUserId ?? 0,  // 預設為 0 避免 null
       fUserName: this.userInfo?.fUserName ?? '',
       fUserPhone: this.userInfo?.fUserPhone ?? '',
       fUserAddress: this.userInfo?.fUserAddress ?? '',
       totalBalance: this.userInfo?.totalBalance ?? 0,
     };
 
+
+    // 檢查是否有選擇商品
     if (selectedItems.length === 0) {
       this.swal.showEasyWarning('請選擇至少一個商品進行結帳');
       return;
     }
-
+    // 檢查是否有選擇付款方式
     if (!this.fPaymentMethod) {
       this.swal.showEasyWarning('請選擇付款方式');
       return;
     }
 
+    //如果選擇Wallet付款，檢查餘額
     if (this.fPaymentMethod === 'Wallet' && this.totalPrice > (this.userInfo?.totalBalance || 0)) {
       this.swal.showEasyError(`您的錢包餘額為 NT$${this.userInfo?.totalBalance}\n餘額不足!請修改支付方式`);
       return;
     }
 
-    const checkoutRequest = {
-      userInfo: userInfo,
-      selectedItems: selectedItems, // ✅ 確保這裡有商品
+    if (this.fPaymentMethod === 'Store' && this.storeInfo === '') {
+      this.swal.showEasyWarning('請先選擇超商');
+      return;
+    }
+
+    //console.log('會員資訊:', userInfo);
+    //console.log('選取的商品:', selectedItems);
+    //console.log("目前付款方式:", this.fPaymentMethod);
+
+    // 組合checkoutRequest
+    const checkoutRequest: CheckoutRequest = {
+      userInfo: this.userInfo,
+      selectedItems: selectedItems,
       fPaymentMethod: this.fPaymentMethod
     };
+    console.log('準備發送訂單資料:', checkoutRequest);
 
-    console.log("📦 發送的結帳請求：", JSON.stringify(checkoutRequest, null, 2)); // ✅ 確保請求內容正確
-
+    //呼叫後端API
     this.orderService.checkOut(checkoutRequest).subscribe({
       next: (response) => {
-        console.log("✅ 訂單建立成功:", response);
         Swal.fire({
           title: response.message,
           position: 'center',
           icon: 'success',
           showConfirmButton: false,
-          timer: 2000,
+          timer: 2000, // 1秒後自動關閉
         }).then(() => {
           window.location.reload();
-          this.loadUserWallet();
+          this.loadUserWallet(); // 這裡確保彈窗關閉後才刷新頁面
         });
       },
       error: (error) => {
-        console.error("❌ 訂單建立失敗:", error);
         const errorMessage = error.error?.message || "訂單建立失敗，請稍後再試";
         this.swal.showEasyError(errorMessage);
-        window.location.reload();
+        console.log('訂單建立失敗', error);
+        window.location.reload(); //刷新頁面
       }
     });
   }
