@@ -16,20 +16,64 @@
 <!-- Header End -->
 
 <!-- Booking Start -->
+
+<div class="container-fluid booking mt-5 pb-5 search-bar-container">
+  <div class="container pb-1">
+    <div class="bg-light shadow pb-0" style=" padding: 30px;">
+      <div class="row align-items-center " style="min-height: 60px;">
+
+        <div class="w-100 row mx-3 mb-4">
+
+          <div class="col-4 " (click)="goToShoppingCart()">
+            <div class="p-2 threeBtn d-flex justify-content-between">
+              <i class="fa-solid fa-cart-shopping" style="font-size:25px"></i>
+              <span style="font-weight: bold; font-size: 20px;">購物車</span>
+              <span style="opacity: 0;">空</span>
+            </div>
+          </div>
+
+          <div class="col-4" (click)="goToWallet()">
+            <div class="p-2 threeBtn d-flex justify-content-between">
+
+              <i class="fa-solid fa-sack-dollar" style="font-size:25px"></i>
+              <span style="font-weight: bold; font-size: 20px;">點數</span>
+              <span style="opacity: 0;">空</span>
+
+            </div>
+          </div>
+
+          <div class="col-4 " (click)="goToUserEdit()">
+            <div class="p-2 threeBtn d-flex justify-content-between">
+
+              <i class="fa-solid fa-pen-to-square" style="font-size:25px"></i>
+              <span style="font-weight: bold; font-size: 20px;">修改資料</span>
+              <span style="opacity: 0;">空</span>
+
+            </div>
+          </div>
+
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Booking End -->
 
 <!-- start your coding here-->
-<div class="container-fluid mt-5 pb-5">
-  <div class="container pt-5 pb-3">
+<div class="container-fluid mt-5 pb-5 ">
+  <div class="container pt-5 pb-3 ">
     <!-- <div class="text-center mb-3 pb-3">
       <h1>會員中心</h1>
     </div> -->
 
 
     <!-- 頭像 -->
-    <div class=" mb-3">
-      <div class="container col-lg-3 col-md-3 col-sm-6  mb-3">
-        <div class="w-100 img-div">
+
+    <div class="mb-3 booking">
+      <div class="container col-lg-3 col-md-3 col-sm-6  mb-4">
+        <div class="w-100 img-div bg-light shadow">
 
           <img class="img-fluid img-thumbnail img-divfull" [src]="fUserImage">
 
@@ -37,17 +81,18 @@
       </div>
     </div>
 
+
     <!-- 姓名 -->
     <div class="container-fluid mb-3">
       <div class="d-flex align-items-start flex-column h-100">
         <div class="container">
           <h4 class="text-truncate text-center">{{fUserNickName}}</h4>
-          <h5 class="text-primary  text-center">{{fUserName}}</h5>
+          <h5 class="text-primary text-center">{{fUserName}}</h5>
           <hr>
 
           <div class="w-100 d-flex justify-content-evenly row">
-            <h5 class="text-primary  text-center mx-auto">性別：{{fUserSex}}</h5>
-            <h5 class="text-primary  text-center mx-auto">生日：{{fUserBirthday}}</h5>
+            <h5 class="text-primary mx-auto">點數：NT${{availableBalance|number}}</h5>
+            <h5 class="text-primary mx-auto">生日：{{fUserBirthday}}</h5>
           </div>
         </div>
       </div>
@@ -55,7 +100,7 @@
 
     <!-- 三常用 -->
     <!-- <div class=" container-fluid mb-3"> -->
-    <div class="container d-flex justify-content-evenly w-100 mt-3 mb-3">
+    <!-- <div class="container d-flex justify-content-evenly w-100 mt-3 mb-3">
 
       <div class="mx-auto threeBtnDiv" (click)="goToShoppingCart()">
         <div class="bg-white p-3" style="border-radius: 15px; border:solid 3px; border-color: #BAD8A8;">
@@ -78,7 +123,7 @@
         <h6 class="text-center mt-1 threeBtn">修改資料</h6>
       </div>
 
-    </div>
+    </div> -->
     <!-- </div> -->
 
 

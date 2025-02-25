@@ -5,6 +5,8 @@ import { Component, OnInit } from '@angular/core';
 import { data, error } from 'jquery';
 import { UserService } from 'src/app/services/user.service';
 import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
+import { WalletService } from 'src/app/services/wallet.service';
+import { userWallet } from 'src/app/interfaces/wallet';
 
 @Component({
   selector: 'app-user-page',
@@ -23,8 +25,10 @@ export class UserPageComponent {
     fUserRankId: 0
   };
 
+  walletData: userWallet[] = [];
+  availableBalance: number = 0;
 
-  constructor(private userService: UserService, private router: Router, private authService: AuthService, private Swal: SweetAlert2Service) { }
+  constructor(private userService: UserService, private router: Router, private authService: AuthService, private Swal: SweetAlert2Service, private wallet: WalletService,) { }
 
 
   fUserName = "你的名字";
@@ -37,10 +41,33 @@ export class UserPageComponent {
 
   ngOnInit(): void {
     this.loadUser();
+    this.loadBalance();
     window.scrollTo(0, 0);
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
   }
+
+
+  //錢包
+  loadBalance(): void {
+    this.wallet.getUserWallet().subscribe({
+      next: (data) => {
+        this.walletData = data
+        this.calculateBalance();
+        console.log(this.walletData);
+      }, error: (error) => {
+        console.error(error.message);
+      }
+    })
+  }
+
+  calculateBalance(): void {
+    this.walletData.forEach(t => {
+      this.availableBalance += t.fAmountChange
+    })
+  }
+
+
 
   //找登入者的資料
   loadUser() {
@@ -76,7 +103,10 @@ export class UserPageComponent {
   goToUserEdit() {
     this.router.navigate(['/user/edit']);
   }
-
+  //前往點數
+  goToWallet() {
+    this.router.navigate(['/user/wallet']);
+  }
 
 
   //註銷帳號

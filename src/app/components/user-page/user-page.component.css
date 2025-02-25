@@ -3,19 +3,28 @@ a {
 }
 
 .threeBtn {
-  opacity: 0;
-  color: #56bda9;
-  transition: opacity 0.3s ease;
+  border-radius: 15px;
+  border: solid 3px;
+  border-color: #8cae78;
+  background-color: #ffffff;
+  color: #8cae78;
+  transition: background-color 0.3s ease;
 
 }
 
-.threeBtnDiv:hover .threeBtn {
-  opacity: 1;
-  transition: opacity 0.3s ease;
+.threeBtn:hover {
+  color: #ffffff;
+  background-color: #8cae78;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
+
+
 
 .topBtn:hover {
-  transform: translateY(+10px);
+  transform: translateY(-5px);
+  transition: transform 0.3s ease;
+
 }
 
 .img-div {
