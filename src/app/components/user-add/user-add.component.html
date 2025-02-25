@@ -24,7 +24,7 @@
   <div class="container py-5">
     <div class="text-center mb-3 pb-3">
       <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">帳戶註冊</h6>
-      <h1>建立帳戶</h1>
+      <h1 (click)="setPerson()">建立帳戶</h1>
     </div>
     <div class="row justify-content-center">
       <div class="col-lg-8">
@@ -37,7 +37,8 @@
             <div class="control-group mb-2">
               <h5 class="text-uppercase">用戶名稱</h5>
               <input type="text" class="form-control p-4" id="userName" placeholder="用戶名稱最多20字" required="required"
-                maxlength="20" [(ngModel)]="user.fUserName" name="fUserName" #name="ngModel" />
+                maxlength="20" [(ngModel)]="user.fUserName" name="fUserName" #name="ngModel"
+                (keydown)="preventSpace($event)" />
               <p class="help-block text-danger" *ngIf="name.invalid && name.touched">請輸入用戶名稱</p>
             </div>
 
@@ -45,7 +46,8 @@
             <div class="control-group mb-2">
               <h5 class="text-uppercase">暱稱</h5>
               <input type="text" class="form-control p-4" id="userNickName" placeholder="暱稱最多20字" required="required"
-                maxlength="20" [(ngModel)]="user.fUserNickName" name="fUserNickName" #nickName="ngModel" />
+                maxlength="20" [(ngModel)]="user.fUserNickName" name="fUserNickName" (keydown)="preventSpace($event)"
+                #nickName="ngModel" />
               <p class="help-block text-danger" *ngIf="nickName.invalid && nickName.touched">請輸入暱稱</p>
             </div>
 
@@ -54,7 +56,8 @@
             <div class="control-group mb-2">
               <h5 class="text-uppercase">帳號</h5>
               <input type="email" class="form-control p-4" id="userEmail" placeholder="請輸入電子郵件" required="required"
-                [(ngModel)]="user.fUserEmail" name="fUserEmail" #userEmail="ngModel" />
+                [(ngModel)]="user.fUserEmail" name="fUserEmail" (keydown)="preventSpace($event)" #userEmail="ngModel"
+                email />
               <p class="help-block text-danger" *ngIf="userEmail.invalid && userEmail.touched">請輸入電子郵件</p>
             </div>
 
@@ -63,14 +66,29 @@
             <div class="control-group mb-4">
               <h5 class="text-uppercase">密碼</h5>
               <div class="input-group">
-                <input type="{{passwordType}}" class="form-control p-4" id="userPassword" placeholder="請輸入密碼"
-                  required="required" [(ngModel)]="user.fUserPassword" name="fUserPassword" #userPassword="ngModel" />
-                <button class="btn btn-outline-primary pb-0" (click)="seePassword()">
+                <input type="{{passwordType}}" class="form-control p-4" minlength="6" id="userPassword"
+                  placeholder="請輸入密碼" required="required" [(ngModel)]="user.fUserPassword" name="fUserPassword"
+                  (keydown)="preventSpace($event)" #userPassword="ngModel" />
+                <button class="btn btn-outline-primary pb-0" style="width: 55px;" (click)="seePassword()">
                   <i *ngIf="passwordType == 'text'" class="fa-regular fa-eye h4"></i>
                   <i *ngIf="passwordType == 'password'" class="fa-regular fa-eye-slash h4"></i>
                 </button>
               </div>
-              <p class="help-block text-danger" *ngIf="userPassword.invalid && userPassword.touched">請輸入密碼</p>
+              <p class="help-block text-danger" *ngIf="userPassword.invalid && userPassword.touched">請輸入密碼，密碼須至少6個字元</p>
+            </div>
+
+            <div class="control-group mb-4">
+              <h5 class="text-uppercase">用戶密碼確認</h5>
+              <div class="input-group">
+                <input type="{{passwordType}}" class="form-control p-4" id="userPassword" placeholder="請再次輸入用戶密碼"
+                  (keydown)="preventSpace($event)" required="required" [(ngModel)]="chackPassword" name="chackPassword"
+                  #userPassword="ngModel" />
+                <button class="btn btn-outline-primary pb-0" style="width: 55px;" (click)="seePassword()">
+                  <i *ngIf="passwordType == 'text'" class="fa-regular fa-eye h4"></i>
+                  <i *ngIf="passwordType == 'password'" class="fa-regular fa-eye-slash h4"></i>
+                </button>
+              </div>
+              <p class="help-block text-danger" *ngIf="userPassword.invalid && userPassword.touched">請再次輸入用戶密碼</p>
             </div>
 
 

@@ -38,4 +38,26 @@ export class SweetAlert2Service {
     });
   }
 
+
+  //帶是否的
+  showYesNo(message: string) {
+    return Swal.fire({
+      title: "警告",
+      text: message,
+      position: 'center',
+      showConfirmButton: true,
+      showDenyButton: true,
+      confirmButtonText: "確認",//確認按鈕上的文字
+      denyButtonText: "取消",//取消按鈕上的文字
+      customClass: {
+        confirmButton: 'btn-primary', // 確認按鈕的樣式
+        denyButton: 'btn-secondary' // 取消按鈕的樣式
+      }
+    });
+  }
+
+
+
+
+
 }

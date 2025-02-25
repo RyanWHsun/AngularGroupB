@@ -23,7 +23,7 @@
   <div class="container py-5">
     <div class="text-center mb-3 pb-3">
       <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">帳戶登入</h6>
-      <h1>已有帳號?</h1>
+      <h1 (click)="setDEMO()">已有帳號?</h1>
     </div>
     <div class="row justify-content-center">
       <div class="col-lg-8">
@@ -34,20 +34,19 @@
           <form name="sentMessage" id="contactForm" #f="ngForm" novalidate="novalidate">
             <!-- 帳號輸入 -->
             <div class="control-group mb-3">
-              <h5 class="text-uppercase" (click)="autoFillAccount()">帳號</h5>
-              <input type="text" class="form-control p-4" id="account" placeholder="請輸入Email" required="required"
-                [(ngModel)]="fUserEmail" name="fUserEmail" #Email="ngModel" />
+              <h5>帳號</h5>
+              <input type="email" class="form-control p-4" id="account" placeholder="請輸入Email" required="required"
+                [(ngModel)]="fUserEmail" name="fUserEmail" #Email="ngModel" email />
               <p class="help-block text-danger" *ngIf="Email.invalid && Email.touched">請輸入帳號</p>
             </div>
 
-            <!-- 密碼輸入 -->
             <!-- 密碼輸入 -->
             <div class="control-group mb-4">
               <h5 class="text-uppercase" (click)="autoFillAccount2()">密碼</h5>
               <div class="input-group">
                 <input type="{{passwordType}}" class="form-control p-4" id="userPassword" placeholder="請輸入密碼"
                   required="required" [(ngModel)]="fUserPassword" name="fUserPassword" #userPassword="ngModel" />
-                <button class="btn btn-outline-primary pb-0" (click)="seePassword()">
+                <button class="btn btn-outline-primary pb-0" style="width: 55px;" (click)="seePassword()">
                   <i *ngIf="passwordType == 'text'" class="fa-regular fa-eye h4"></i>
                   <i *ngIf="passwordType == 'password'" class="fa-regular fa-eye-slash h4"></i>
                 </button>
@@ -56,12 +55,6 @@
             </div>
 
 
-            <!-- <div class="control-group mb-3">
-              <h5 class="text-uppercase">密碼</h5>
-              <input type="password" class="form-control p-4" id="password" placeholder="請輸入密碼" required="required"
-                [(ngModel)]="fUserPassword" name="fUserPassword" #Password="ngModel" />
-              <p class="help-block text-danger" *ngIf="Password.invalid && Password.touched">請輸入密碼</p>
-            </div> -->
           </form>
 
 
@@ -82,7 +75,9 @@
 
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-              <a (click)="editPassWord()" [routerLink]="['/user/editPassword']">忘記密碼</a>
+              <!-- <a (click)="editPassWord()" [routerLink]="['/user/editPassword']">忘記密碼</a> -->
+
+              <a [routerLink]="['/user/UserPassword']">忘記密碼</a>
             </h5>
 
 
@@ -94,3 +89,36 @@
     </div>
   </div>
 </div>
+
+
+
+<!-- <div
+  style="border-radius:15px;transform: translateX(50%);text-align: center;width: 50%;box-shadow:0 15px 15px #cccccc;">
+  <div style="width: 100%;
+padding: 30px 30px 10px 30px;
+border-radius: 15px 15px 0 0;
+background-color: #8cae78">
+    <h2>旅勸步町-密碼修改驗證</h2>
+  </div>
+
+  <div style="width: 100%;
+padding: 50px;
+background-color: #ffffff;
+border-radius: 0 0 15px 15px;
+">
+    <h4 style="color: #6b6b6b;">你的驗證碼是</h4>
+    <hr style=" border: 0;
+  padding-top: 1px;
+  background: linear-gradient(to right, transparent, #8cae78, transparent);">
+
+
+    <div style="box-shadow:0 15px 15px #cccccc;border-radius: 15px;padding: 30px;background-color: white;">
+      <div
+        style="border: solid #8cae78 3px;border-radius: 15px;padding: 10px;width: 50%;position: relative;transform: translateX(50%);margin-bottom: 15px;">
+        <h2 style="text-align: center;"> + _VerificationCode +</h2>
+      </div>
+      <h5 style="color: rgb(183, 37, 37);">此驗證碼將在1分鐘後過期!</h5>
+    </div>
+
+  </div>
+</div> -->

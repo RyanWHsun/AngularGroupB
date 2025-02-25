@@ -27,9 +27,13 @@
 
 
     <!-- 頭像 -->
-    <div class="container-fluid mb-3">
-      <div class="container col-lg-3 col-md-3 col-sm-6 w-75 mb-3">
-        <img class="img-fluid w-100" style="border-radius: 15px;" [src]="fUserImage" alt="">
+    <div class=" mb-3">
+      <div class="container col-lg-3 col-md-3 col-sm-6  mb-3">
+        <div class="w-100 img-div">
+
+          <img class="img-fluid img-thumbnail img-divfull" [src]="fUserImage">
+
+        </div>
       </div>
     </div>
 
@@ -78,33 +82,11 @@
     <!-- </div> -->
 
 
-    <!-- 嘗試增加 -->
-    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm rounded mb-3">
-      <ul class="nav nav-tabs border-0">
-        <li class="nav-item">
-          <a class="nav-link">我的商品</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link">我的文章</a>
-        </li>
-      </ul>
-    </nav>
- -->
-
-
-
-
-
-
-
-
-
-
 
     <!-- 按鈕們 -->
     <div class="row">
-      <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['/tickets']">
-        <div class="w-100 p-1 mb-3"
+      <a class="nav-link col-lg-6 col-md-6 col-sm-6 " [routerLink]="['#']">
+        <div class="w-100 p-1 mb-3  topBtn"
           style="border-radius:15px;border: solid 3px; border-color:#8cae78;; background-color: #ffffff;">
 
           <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
@@ -118,7 +100,7 @@
       </a>
 
       <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['/events']">
-        <div class="w-100 p-1 mb-3"
+        <div class="w-100 p-1 mb-3 topBtn"
           style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
 
           <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
@@ -132,7 +114,7 @@
       </a>
 
       <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['/socialmedia/articles']">
-        <div class="w-100 p-1 mb-3"
+        <div class="w-100 p-1 mb-3 topBtn"
           style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
 
           <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
@@ -146,7 +128,7 @@
       </a>
 
       <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['/products', 'buyerOrder']">
-        <div class="w-100 p-1 mb-3"
+        <div class="w-100 p-1 mb-3 topBtn"
           style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
 
           <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
@@ -160,7 +142,7 @@
       </a>
 
       <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['/products/cart']">
-        <div class="w-100 p-1 mb-3"
+        <div class="w-100 p-1 mb-3 topBtn"
           style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
 
           <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
@@ -173,7 +155,7 @@
         </div>
       </a>
       <a class="nav-link col-lg-6 col-md-6 col-sm-6" [routerLink]="['/user/wallet']">
-        <div class="w-100 p-1 mb-3"
+        <div class="w-100 p-1 mb-3 topBtn"
           style="border-radius:15px;border: solid 3px; border-color:#8cae78; background-color: #ffffff;">
 
           <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #8cae78;">
@@ -194,7 +176,7 @@
     <hr>
     <div class="w-100"></div>
     <a [routerLink]="['/user/editUsers']" *ngIf="user?.fUserRankId==99">
-      <div class="w-100 p-1 mb-3"
+      <div class="w-100 p-1 mb-3 topBtn"
         style="border-radius:15px;border: solid 3px; border-color:#b0b0b0; background-color: #ffffff;">
         <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #b0b0b0;">
           <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-pen-to-square"></i></h4>
@@ -207,7 +189,7 @@
     </a>
 
     <a [routerLink]="['/user/edit']">
-      <div class="w-100 p-1 mb-3"
+      <div class="w-100 p-1 mb-3 topBtn"
         style="border-radius:15px;border: solid 3px; border-color:#b0b0b0; background-color: #ffffff;">
         <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #b0b0b0;">
           <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-pen-to-square"></i></h4>
@@ -220,7 +202,7 @@
     </a>
 
     <a (click)="setRank()">
-      <div class="w-100 p-1 mb-3"
+      <div class="w-100 p-1 mb-3 topBtn"
         style="border-radius:15px;border: solid 3px; border-color:#b0b0b0; background-color: #ffffff;">
         <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #b0b0b0;">
           <h4 class="mb-0 text-white px-3"><i class="fa-regular fa-circle-xmark"></i></h4>
@@ -234,7 +216,7 @@
     </a>
     <!-- 登出 -->
     <a (click)="logOut()">
-      <div class="w-100 p-1 mb-3 nav-link"
+      <div class="w-100 p-1 mb-3 nav-link topBtn"
         style="border-radius:15px;border: solid 3px; border-color:#ebbaba; background-color: #ffffff;">
         <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #ebbaba;">
           <h4 class="mb-0 text-white px-3"><i class="fa-solid fa-right-from-bracket"></i></h4>

@@ -36,22 +36,25 @@
 
 
             <!-- 用戶頭像輸入 -->
-            <div class="control-group mb-2">
-              <h5 class="text-uppercase">用戶頭像</h5>
-              <div class="col-lg-4 col-md-6 mb-4">
-                <div class="destination-item position-relative overflow-hidden mb-2">
+            <div class=" mb-3">
+              <h5>用戶頭像</h5>
+              <div class="col-lg-4 col-md-6 mb-4" (click)="changeImgDiv()">
+                <div class="w-100 img-div destination-item">
 
-                  <img class="img-fluid mb-5" [src]="user.fUserImage||'assets/images/noImage.jpg'" alt="">
-                  <input type="file" (change)="changeImg($event)" id="userImage" accept="image/*" name="fUserImage" />
+                  <img class="img-fluid img-divfull mb-5" [src]="user.fUserImage||'assets/images/noImage.jpg'">
+
                 </div>
               </div>
+              <input type="file" #fileInput (change)="changeImg($event)" id="userImage" accept="image/*"
+                name="fUserImage" style="display: none;" />
             </div>
 
             <!-- 用戶名稱輸入 -->
             <div class="control-group mb-3">
               <h5 class="text-uppercase"> 用戶名稱</h5>
               <input type="text" class="form-control p-4" id="userName" placeholder="用戶名稱最多20字" required="required"
-                maxlength="20" [(ngModel)]="user.fUserName" name="fUserName" #name="ngModel" />
+                maxlength="20" [(ngModel)]="user.fUserName" name="fUserName" #name="ngModel"
+                (keydown)="preventSpace($event)" />
               <p class="help-block text-danger" *ngIf="name.invalid && name.touched">請輸入用戶名稱</p>
             </div>
 
@@ -59,7 +62,8 @@
             <div class="control-group mb-3">
               <h5 class="text-uppercase">暱稱</h5>
               <input type="text" class="form-control p-4" id="userName" placeholder="請輸入用戶暱稱" required="required"
-                maxlength="20" [(ngModel)]="user.fUserNickName" name="fUserNickName" #nickName="ngModel" />
+                maxlength="20" [(ngModel)]="user.fUserNickName" name="fUserNickName" #nickName="ngModel"
+                (keydown)="preventSpace($event)" />
               <p class="help-block text-danger" *ngIf="nickName.invalid && nickName.touched">請輸入用戶暱稱</p>
             </div>
 
@@ -108,27 +112,39 @@
             </div>
 
             <!-- 密碼輸入 -->
-            <a class="nav-link" *ngIf="!updatePassword" (click)="showPassword()">我要更改密碼</a>
-            <a class="nav-link" *ngIf="updatePassword" (click)="showPassword()">取消密碼修改</a>
+            <hr class="hr-edge-weak mt-5 mb-5 h5" *ngIf="!updatePassword" (click)="showPassword()">
 
-            <div class="control-group mb-4">
+            <!-- <a class=" nav-link mb-3 h5" style=" cursor:pointer;text-align: center;" *ngIf="!updatePassword"
+              (click)="showPassword()">我要更改密碼</a> -->
+
+
+            <div *ngIf="updatePassword" class="control-group mb-4">
               <h5 class="text-uppercase">用戶密碼</h5>
               <div class="input-group">
                 <input type="{{passwordType}}" class="form-control p-4" id="userPassword" placeholder="請輸入用戶密碼"
                   required="required" [(ngModel)]="user.fUserPassword" name="fUserPassword" #userPassword="ngModel" />
-                <button class="btn btn-outline-primary pb-0" (click)="seePassword()">
+                <button class="btn btn-outline-primary pb-0" style="width: 55px;" (click)="seePassword()">
                   <i *ngIf="passwordType == 'text'" class="fa-regular fa-eye h4"></i>
                   <i *ngIf="passwordType == 'password'" class="fa-regular fa-eye-slash h4"></i>
                 </button>
               </div>
               <p class="help-block text-danger" *ngIf="userPassword.invalid && userPassword.touched">請輸入用戶密碼</p>
             </div>
-            <!-- <div *ngIf="updatePassword" class="control-group mb-3">
-              <h5 class="text-uppercase"> 用戶密碼</h5>
-              <input type="text" class="form-control p-4" id="fUserPassword" placeholder="請輸入用戶密碼，不更改即可不輸入"
-                maxlength="20" [(ngModel)]="user.fUserPassword" name="fUserPassword" #password="ngModel" />
-              <p class="help-block text-danger" *ngIf="password.invalid && password.touched">請輸入用戶密碼</p>
-            </div> -->
+
+            <div *ngIf="updatePassword" class="control-group mb-4">
+              <h5 class="text-uppercase">用戶密碼確認</h5>
+              <div class="input-group">
+                <input type="{{passwordType}}" class="form-control p-4" id="userPassword" placeholder="請再次輸入用戶密碼"
+                  required="required" [(ngModel)]="chackPassword" name="chackPassword" #userPassword="ngModel" />
+                <button class="btn btn-outline-primary pb-0" style="width: 55px;" (click)="seePassword()">
+                  <i *ngIf="passwordType == 'text'" class="fa-regular fa-eye h4"></i>
+                  <i *ngIf="passwordType == 'password'" class="fa-regular fa-eye-slash h4"></i>
+                </button>
+              </div>
+              <p class="help-block text-danger" *ngIf="userPassword.invalid && userPassword.touched">請再次輸入用戶密碼</p>
+            </div>
+
+
           </form>
 
 

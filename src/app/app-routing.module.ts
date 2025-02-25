@@ -28,6 +28,7 @@ import { SellerOrderComponent } from './components/seller-order/seller-order.com
 import { SellerCenterComponent } from './components/seller-center/seller-center.component';
 import { BuyerOrderComponent } from './components/buyer-order/buyer-order.component';
 import { WalletComponent } from './components/wallet/wallet.component';
+import { UserPasswordComponent } from './components/user-password/user-password.component';
 
 
 const routes: Routes = [
@@ -164,6 +165,9 @@ const routes: Routes = [
     }, {
       path: 'UserAdminEdit/:id',
       component: UserAdminEditComponent
+    }, {
+      path: 'UserPassword',
+      component: UserPasswordComponent
     }]
   },
   {

@@ -4,6 +4,8 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { CartService } from 'src/app/services/cart.service';
 import * as nodemailer from 'nodemailer';
+import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
+import Swal from 'sweetalert2';
 
 
 
@@ -19,10 +21,18 @@ export class UserLoginComponent {
 
   passwordType = "password";
 
-  constructor(private router: Router, private authService: AuthService, private cartService: CartService) { }
+  constructor(private router: Router, private authService: AuthService, private cartService: CartService, private Swal: SweetAlert2Service) { }
 
   ngOnInit(): void {
   }
+
+
+  // DEMO
+  setDEMO() {
+    this.fUserEmail = "IAmTheNullPeople111@gmail.com";
+    this.fUserPassword = "123456";
+  }
+
 
   seePassword() {
     if (this.passwordType == "password") {
@@ -41,25 +51,36 @@ export class UserLoginComponent {
       Object.values(form.controls).forEach(a => {
         a.markAllAsTouched();
       });
-      alert("請輸入帳號密碼");
+      // alert("請輸入帳號密碼");
+      this.Swal.showEasyWarning("請輸入帳號密碼");
       return;
     }
     this.authService.login(this.fUserEmail, this.fUserPassword).subscribe({
       next: (response) => {
-        console.log("成功", response);
-        alert("登入成功!");
-        this.cartService.loadCartCount();  // 登入成功後，刷新購物車數量
-        this.router.navigate(['/user/page']).then(() => { window.location.reload(); });
+        // console.log("成功", response);
+        // alert("登入成功!");
+        Swal.fire({
+          title: "登入成功!",
+          position: 'center',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000,
+        }).then(() => {
+          this.cartService.loadCartCount();  // 登入成功後，刷新購物車數量
+          this.router.navigate(['/user/page']).then(() => { window.location.reload(); });
+        })
+
       },
       error: (error) => {
-        console.log(error);
-        alert(error.error.message);
+        // console.log(error);
+        // alert(error.error.message);
+        this.Swal.showEasyError(error.error.message);
       }
     })
   }
 
 
-  editPassWord() { }
+
 
   autoFillAccount() {
     this.fUserEmail = "aminglin311@gmail.com";

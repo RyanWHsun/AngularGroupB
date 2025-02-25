@@ -11,11 +11,15 @@ import { UserService } from 'src/app/services/user.service';
 export class UserComponent {
 
 
-  Users: allUsersMaterial[] = []; // 存放 API 回傳的商品列表
+  Users: allUsersMaterial[] = []; // 存放 API 回傳
   filteredUsers: allUsersMaterial[] = []; // 存放篩選後的資料
   searchRank = 0;
   search = "";
 
+  userPage: number = 1;//當前頁
+  pageSize: number = 10;//一頁幾筆
+  hasMorePages: boolean = true;//是否有下一頁
+  totalUser: number = 0;
 
   constructor(private userService: UserService, private router: Router) { }
 
@@ -26,7 +30,7 @@ export class UserComponent {
 
   //抓取所有檔案
   logAll() {
-    this.userService.getUsers().subscribe({
+    this.userService.getUsers(this.userPage, this.pageSize, this.searchRank, this.search).subscribe({
       next: (data) => {
         // console.log(data);
         if (Array.isArray(data)) {
@@ -43,51 +47,83 @@ export class UserComponent {
             fUserEmail: user.fUserEmail,
             fUserAddress: user.fUserAddress,
             fUserComeDate: user.fUserComeDate,
-            fUserPassword: user.fUserPassword,
+            fUserPassword: user.fUserPassword
           }));
         } else {
           console.log('返回資料不是陣列');
         }
-        this.applyFilter();
+        this.hasMorePages = this.pageSize === this.Users.length;
+        this.filteredUsers = this.Users;
+
+        // this.applyFilter();
       }, error: (err) => {
         console.log("讀取失敗", err);
       }
     })
   }
 
-
-
-
-
-
-
-
-
-  // 應用篩選
-  applyFilter() {
-    let filtered = this.Users;
-
-    // 篩選條件: 根據會員等級篩選
-    if (this.searchRank > 0) {
-      filtered = filtered.filter(user => user.fUserRankId == this.searchRank);
-    } else if (this.searchRank == 0) {
-      filtered = this.Users;
-    }
-
-    console.log("filtered", filtered);
-
-    // 關鍵字篩選
-    if (this.search) {
-      filtered = filtered.filter(user =>
-        user.fUserName.toLowerCase().includes(this.search.toLowerCase()) ||
-        user.fUserNickName.toLowerCase().includes(this.search.toLowerCase()) ||
-        user.fUserEmail.toLowerCase().includes(this.search.toLowerCase())
-      );
-    }
-
-    // 更新篩選後的資料
-    this.filteredUsers = filtered;
+  log() {
+    this.userPage = 1;
+    this.logAll();
+    window.scrollTo(0, 400);
   }
+
+
+
+
+
+
+
+
+  // // 應用篩選
+  // applyFilter() {
+  //   let filtered = this.Users;
+
+  //   // 篩選條件: 根據會員等級篩選
+  //   if (this.searchRank > 0) {
+  //     filtered = filtered.filter(user => user.fUserRankId == this.searchRank);
+  //   } else if (this.searchRank == 0) {
+  //     filtered = this.Users;
+  //   }
+
+  //   console.log("filtered", filtered);
+
+  //   // 關鍵字篩選
+  //   if (this.search) {
+  //     filtered = filtered.filter(user =>
+  //       user.fUserName.toLowerCase().includes(this.search.toLowerCase()) ||
+  //       user.fUserNickName.toLowerCase().includes(this.search.toLowerCase()) ||
+  //       user.fUserEmail.toLowerCase().includes(this.search.toLowerCase())
+  //     );
+  //   }
+
+  //   // 更新篩選後的資料
+  //   this.filteredUsers = filtered;
+  // }
+
+
+
+  //頁面
+  //前一頁
+  forwardPage() {
+
+    this.userPage--;
+    this.logAll();
+    window.scrollTo(0, 400);
+
+  }
+
+  //後一頁
+  nextPage() {
+    if (this.hasMorePages) {
+      this.userPage++;
+      this.logAll();
+      window.scrollTo(0, 400);
+    }
+  }
+
+
+  // SMTP
 
 
 
