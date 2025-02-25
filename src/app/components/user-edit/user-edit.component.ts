@@ -30,6 +30,13 @@ export class UserEditComponent {
 
   constructor(private userService: UserService, private router: Router, private Swal: SweetAlert2Service) { }
 
+  // 阻止輸入空白鍵
+  preventSpace(event: KeyboardEvent) {
+    if (event.key === " ") {
+      event.preventDefault();
+    }
+  }
+
   ngOnInit(): void {
     this.loadUser();
     // window.scrollTo(0, 400);

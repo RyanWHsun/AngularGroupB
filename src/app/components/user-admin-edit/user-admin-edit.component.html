@@ -53,7 +53,8 @@
             <div class="control-group mb-3">
               <h5 class="text-uppercase"> 用戶名稱</h5>
               <input type="text" class="form-control p-4" id="userName" placeholder="用戶名稱最多20字" required="required"
-                maxlength="20" [(ngModel)]="user.fUserName" name="fUserName" #name="ngModel" />
+                maxlength="20" [(ngModel)]="user.fUserName" name="fUserName" #name="ngModel"
+                (keydown)="preventSpace($event)" />
               <p class="help-block text-danger" *ngIf="name.invalid && name.touched">請輸入用戶名稱</p>
             </div>
 
@@ -61,7 +62,8 @@
             <div class="control-group mb-3">
               <h5 class="text-uppercase">暱稱</h5>
               <input type="text" class="form-control p-4" id="userName" placeholder="請輸入用戶暱稱" required="required"
-                maxlength="20" [(ngModel)]="user.fUserNickName" name="fUserNickName" #nickName="ngModel" />
+                maxlength="20" [(ngModel)]="user.fUserNickName" name="fUserNickName" #nickName="ngModel"
+                (keydown)="preventSpace($event)" />
               <p class="help-block text-danger" *ngIf="nickName.invalid && nickName.touched">請輸入用戶暱稱</p>
             </div>
 

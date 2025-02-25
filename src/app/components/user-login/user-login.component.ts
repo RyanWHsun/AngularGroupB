@@ -26,6 +26,14 @@ export class UserLoginComponent {
   ngOnInit(): void {
   }
 
+
+  // DEMO
+  setDEMO() {
+    this.fUserEmail = "IAmTheNullPeople111@gmail.com";
+    this.fUserPassword = "123456";
+  }
+
+
   seePassword() {
     if (this.passwordType == "password") {
       this.passwordType = "text";

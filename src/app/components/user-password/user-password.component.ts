@@ -38,7 +38,14 @@ export class UserPasswordComponent {
     window.scrollTo(0, 400);
   }
 
+  // 阻止輸入空白鍵
+  preventSpace(event: KeyboardEvent) {
+    if (event.key === " ") {
+      event.preventDefault();
+    }
+  }
 
+  // DEMO
   setEmail() {
     this.user.email = 'aminglin311@gmail.com';
   }

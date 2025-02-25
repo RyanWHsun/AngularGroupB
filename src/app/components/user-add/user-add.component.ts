@@ -32,16 +32,24 @@ export class UserAddComponent {
     // window.scrollTo({ top: 400, behavior: 'smooth' });
   }
 
+  // DEMO
   setPerson() {
     this.user = {
       fUserName: "吳銘勢",
-      fUserNickName: "空洞騎士",
+      fUserNickName: "不如歸去",
       fUserRankId: 1,
       fUserSex: "不願透露",
       fUserEmail: "IAmTheNullPeople111@gmail.com",
       fUserPassword: "123456",
     };
     this.chackPassword = "123456";
+  }
+
+  // 阻止輸入空白鍵
+  preventSpace(event: KeyboardEvent) {
+    if (event.key === " ") {
+      event.preventDefault();
+    }
   }
 
   seePassword() {

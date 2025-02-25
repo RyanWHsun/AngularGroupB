@@ -37,7 +37,8 @@
             <div class="control-group mb-2">
               <h5 class="text-uppercase">用戶名稱</h5>
               <input type="text" class="form-control p-4" id="userName" placeholder="用戶名稱最多20字" required="required"
-                maxlength="20" [(ngModel)]="user.fUserName" name="fUserName" #name="ngModel" />
+                maxlength="20" [(ngModel)]="user.fUserName" name="fUserName" #name="ngModel"
+                (keydown)="preventSpace($event)" />
               <p class="help-block text-danger" *ngIf="name.invalid && name.touched">請輸入用戶名稱</p>
             </div>
 
@@ -45,7 +46,8 @@
             <div class="control-group mb-2">
               <h5 class="text-uppercase">暱稱</h5>
               <input type="text" class="form-control p-4" id="userNickName" placeholder="暱稱最多20字" required="required"
-                maxlength="20" [(ngModel)]="user.fUserNickName" name="fUserNickName" #nickName="ngModel" />
+                maxlength="20" [(ngModel)]="user.fUserNickName" name="fUserNickName" (keydown)="preventSpace($event)"
+                #nickName="ngModel" />
               <p class="help-block text-danger" *ngIf="nickName.invalid && nickName.touched">請輸入暱稱</p>
             </div>
 
@@ -54,7 +56,8 @@
             <div class="control-group mb-2">
               <h5 class="text-uppercase">帳號</h5>
               <input type="email" class="form-control p-4" id="userEmail" placeholder="請輸入電子郵件" required="required"
-                [(ngModel)]="user.fUserEmail" name="fUserEmail" #userEmail="ngModel" email />
+                [(ngModel)]="user.fUserEmail" name="fUserEmail" (keydown)="preventSpace($event)" #userEmail="ngModel"
+                email />
               <p class="help-block text-danger" *ngIf="userEmail.invalid && userEmail.touched">請輸入電子郵件</p>
             </div>
 
@@ -65,7 +68,7 @@
               <div class="input-group">
                 <input type="{{passwordType}}" class="form-control p-4" minlength="6" id="userPassword"
                   placeholder="請輸入密碼" required="required" [(ngModel)]="user.fUserPassword" name="fUserPassword"
-                  #userPassword="ngModel" />
+                  (keydown)="preventSpace($event)" #userPassword="ngModel" />
                 <button class="btn btn-outline-primary pb-0" style="width: 55px;" (click)="seePassword()">
                   <i *ngIf="passwordType == 'text'" class="fa-regular fa-eye h4"></i>
                   <i *ngIf="passwordType == 'password'" class="fa-regular fa-eye-slash h4"></i>
@@ -78,7 +81,8 @@
               <h5 class="text-uppercase">用戶密碼確認</h5>
               <div class="input-group">
                 <input type="{{passwordType}}" class="form-control p-4" id="userPassword" placeholder="請再次輸入用戶密碼"
-                  required="required" [(ngModel)]="chackPassword" name="chackPassword" #userPassword="ngModel" />
+                  (keydown)="preventSpace($event)" required="required" [(ngModel)]="chackPassword" name="chackPassword"
+                  #userPassword="ngModel" />
                 <button class="btn btn-outline-primary pb-0" style="width: 55px;" (click)="seePassword()">
                   <i *ngIf="passwordType == 'text'" class="fa-regular fa-eye h4"></i>
                   <i *ngIf="passwordType == 'password'" class="fa-regular fa-eye-slash h4"></i>

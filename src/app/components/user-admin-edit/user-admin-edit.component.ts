@@ -41,6 +41,14 @@ export class UserAdminEditComponent {
   constructor(private router: Router, private userService: UserService, private activatedRoute: ActivatedRoute, private swal: SweetAlert2Service) { }
 
 
+
+  // 阻止輸入空白鍵
+  preventSpace(event: KeyboardEvent) {
+    if (event.key === " ") {
+      event.preventDefault();
+    }
+  }
+
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((p) => {
       this.userId = +p.get('id')!;
