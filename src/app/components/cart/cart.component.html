@@ -35,9 +35,8 @@
             <div class="col-1 text-center">
               <input type="checkbox" [(ngModel)]="selectAllTickets" (click)="toggleAllTickets()" />
             </div>
-            <div class="col-3 text-left">景點票券
+            <div class="col-4 text-left">景點票券
             </div>
-            <div class="col-1 text-center">票種</div>
             <div class="col-2 text-center">單價</div>
             <div class="col-2 text-center">數量</div>
             <div class="col-2 text-center">小計</div>
@@ -52,11 +51,8 @@
               <img *ngIf="item.fSingleImage" [src]="'data:image/png;base64,' + item.fSingleImage"
                 class="img-fluid rounded" alt="商品圖片" />
             </div>
-            <div class="col-2 text-left">
-              <p class="h6">{{ item.fItemName }}</p>
-            </div>
-            <div class="col-1 text-center">
-              <p class="h6">{{ item.fSpecification}}</p>
+            <div class="col-3 text-left">
+              <p class="h6">{{ item.fItemName }}&nbsp;&nbsp;{{ item.fSpecification}}</p>
             </div>
             <div class="col-2 text-center">
               <p class="text-danger font-weight-bold" style="font-size: 16px;">NT${{ item.fPrice | number:'1.0-0' }}</p>
@@ -97,11 +93,7 @@
             <div class="col-1 text-center">
               <input type="checkbox" [(ngModel)]="selectAllEvents" (click)="toggleAllEvents()" />
             </div>
-            <div class="col-1 text-center">
-              <strong class="h6">活動</strong>
-            </div>
-            <div class="col-2 text-left">活動名稱</div>
-            <div class="col-1 text-center">活動日期</div>
+            <div class="col-4 text-left">活動報名</div>
             <div class="col-2 text-center">單價</div>
             <div class="col-2 text-center">數量</div>
             <div class="col-2 text-center">小計</div>
@@ -116,11 +108,9 @@
               <img *ngIf="item.fSingleImage" [src]="'data:image/png;base64,' + item.fSingleImage"
                 class="img-fluid rounded" alt="商品圖片" />
             </div>
-            <div class="col-2  text-left">
-              <p class="h6">{{ item.fItemName }}</p>
-            </div>
-            <div class="col-1 text-center">
-              <p class="h6">{{ item.fSpecification}}</p>
+            <div class="col-3  text-left">
+              <p class="h6">{{ item.fItemName }}
+              </p>
             </div>
             <div class="col-2 text-center">
               <p class="text-danger font-weight-bold" style="font-size: 16px;">NT${{ item.fPrice | number:'1.0-0' }}</p>
