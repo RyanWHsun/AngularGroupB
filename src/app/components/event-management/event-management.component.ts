@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { EventService, Event } from '../../services/event.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-event-management',
@@ -12,7 +13,7 @@ export class EventManagementComponent implements OnInit {
   events: Event[] = [];
   private userApiUrl = 'https://localhost:7112/api/TUsers/loginUser'; // ✅ 取得當前登入用戶的 API
 
-  constructor(private eventService: EventService, private router: Router, private http: HttpClient) {}
+  constructor(private eventService: EventService, private router: Router, private http: HttpClient) { }
 
   ngOnInit() {
     this.checkAdminAccess(); // ✅ 先檢查是否為管理員
@@ -24,19 +25,32 @@ export class EventManagementComponent implements OnInit {
       (user) => {
         console.log("📌 取得登入用戶資訊:", user);
         if (!user || user.fUserRankId !== 99) {
-          alert("❌ 你沒有權限存取此頁面！");
-          this.router.navigate(['/']); // ✅ 轉回首頁
+          Swal.fire({
+            icon: 'error',
+            title: '❌ 權限不足',
+            text: '你沒有權限存取此頁面！',
+            confirmButtonText: '確定'
+          }).then(() => {
+            this.router.navigate(['/']); // ✅ 轉回首頁
+          });
         } else {
           this.loadEvents(); // ✅ 如果是管理員，才載入活動列表
         }
       },
       (error) => {
         console.error("🚨 取得用戶資訊失敗:", error);
-        alert("❌ 你沒有權限存取此頁面！");
-        this.router.navigate(['/']); // ✅ 轉回首頁
+        Swal.fire({
+          icon: 'error',
+          title: '❌ 權限不足',
+          text: '你沒有權限存取此頁面！',
+          confirmButtonText: '確定'
+        }).then(() => {
+          this.router.navigate(['/']); // ✅ 轉回首頁
+        });
       }
     );
   }
+
 
   /** 📌 取得所有活動 */
   loadEvents() {
@@ -58,17 +72,42 @@ export class EventManagementComponent implements OnInit {
 
   /** ✅ 刪除活動 */
   deleteEvent(eventId: number) {
-    if (!confirm('確定要刪除這個活動嗎？')) return;
-
-    this.eventService.deleteEvent(eventId).subscribe(
-      () => {
-        alert('活動刪除成功！');
-        this.loadEvents();
-      },
-      (error) => console.error('🚨 刪除活動失敗:', error)
-    );
+    Swal.fire({
+      title: '確定要刪除這個活動嗎？',
+      text: '刪除後將無法恢復！',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: '確定刪除',
+      cancelButtonText: '取消'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.eventService.deleteEvent(eventId).subscribe(
+          () => {
+            Swal.fire({
+              icon: 'success',
+              title: '刪除成功',
+              text: '活動已成功刪除！',
+              confirmButtonText: '確定'
+            });
+            this.loadEvents();
+          },
+          (error) => {
+            console.error('🚨 刪除活動失敗:', error);
+            Swal.fire({
+              icon: 'error',
+              title: '刪除失敗',
+              text: '無法刪除此活動，請稍後再試。',
+              confirmButtonText: '確定'
+            });
+          }
+        );
+      }
+    });
   }
 }
+
 
 
 

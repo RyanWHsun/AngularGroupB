@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { CartService } from "src/app/services/cart.service"; // ✅ 引入購物車服務
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-event-detail",
@@ -22,7 +23,7 @@ export class EventDetailComponent implements OnInit {
     private router: Router,
     private cdr: ChangeDetectorRef,
     private cartService: CartService // ✅ 加入購物車服務
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.eventId = Number(this.route.snapshot.paramMap.get("id"));
@@ -79,22 +80,39 @@ export class EventDetailComponent implements OnInit {
   /** ✅ 點擊「我要報名」，將活動加入購物車 */
   registerForEvent() {
     if (!this.isAuthenticated) {
-      alert("請先登入才能報名活動！");
-      this.router.navigate(["/user"]);
+      Swal.fire({
+        icon: 'warning',
+        title: '請先登入',
+        text: '請登入後再進行報名！',
+        confirmButtonText: '確定'
+      }).then(() => {
+        this.router.navigate(["/user"]); // 導向登入頁
+      });
       return;
     }
 
     this.http.post(this.registerApiUrl, this.eventId, { withCredentials: true })
       .subscribe(
         () => {
-          alert("🎉 活動已成功加入購物車！");
-          this.cartService.loadCartCount(); // ✅ 更新購物車數量
+          Swal.fire({
+            icon: 'success',
+            title: '🎉 活動已成功加入購物車！',
+            text: '請到購物車查看您的報名活動。',
+            confirmButtonText: '確定'
+          });
+          this.cartService.loadCartCount(); // 更新購物車數量
         },
         (error) => {
-          alert("⚠ 加入購物車失敗：" + (error.error?.message || "請稍後再試"));
+          Swal.fire({
+            icon: 'error',
+            title: '⚠ 加入購物車失敗',
+            text: error.error?.message || '請稍後再試',
+            confirmButtonText: '確定'
+          });
         }
       );
   }
+
 
   /** ✅ 導向登入頁面 */
   redirectToLogin() {
