@@ -83,4 +83,7 @@ export class SocialmediaService {
   postChat(contactData: any): Observable<any> {
     return this.httpClient.post('https://localhost:7112/api/TChats', contactData, { withCredentials: true })
   }
+  searchUserInfo(keyword: string): Observable<any> {
+    return this.httpClient.get(`https://localhost:7112/api/TPosts/searchUserInfo/${keyword}`)
+  }
 }

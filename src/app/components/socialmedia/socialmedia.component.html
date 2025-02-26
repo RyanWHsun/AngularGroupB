@@ -2,7 +2,7 @@
 <div class="container-fluid page-header">
   <div class="container">
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
-      <h3 class="display-4 text-white text-uppercase">社群</h3>
+      <h3 class="display-4 text-white text-uppercase" (click)="defaultfilter()">社群</h3>
       <div class="d-inline-flex text-white">
         <p class="m-0 text-uppercase">社群</p>
         <i class="fa fa-angle-double-right pt-1 px-3"></i>
@@ -54,7 +54,7 @@
 <div class="container">
   <div class="row">
     <!-- 推薦 -->
-    <div class="col-2">
+    <div class="col-lg-2 d-none d-lg-block">
       <div class="mb-5 fixed-sidebar">
         <h4 class="text-uppercase mb-2" style="letter-spacing: 5px;">推薦商品</h4>
         <a class="d-flex flex-column align-items-center text-decoration-none bg-white mb-3 border" role="button"
@@ -75,9 +75,9 @@
       </div>
     </div>
     <!-- 文章 -->
-    <div class="col-8" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="300"
+    <div class="col-9 col-lg-8" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="300"
       (scrolled)="onScroll()">
-      <div *ngFor="let data of datas" class="container-fluid mb-3" style="width: 90%;">
+      <div *ngFor="let data of datas" class="container-fluid mb-3 responsive-width">
         <!-- Post Wrapper -->
         <div class="post border rounded p-3">
           <!-- Header -->
@@ -88,13 +88,6 @@
           </div>
 
           <!-- Image -->
-          <!-- <div *ngIf="imageData[data['fPostId']] && imageData[data['fPostId']].length > 0" class="mb-2">
-            <img [src]="imageData[data['fPostId']][0]" class="w-100" style='height: 444.75px;object-fit: cover' />
-          </div>
-
-          <div *ngIf="!imageData[data['fPostId']] || imageData[data['fPostId']].length == 0" class="mb-2">
-            <img src="/assets/images/noImage.jpg" class="w-100" style='height: 444.75px;object-fit: cover' />
-          </div> -->
           <app-image-browser *ngIf="imageData[data['fPostId']]"
             [imagePreviews]="imageData[data['fPostId']]"></app-image-browser>
 
@@ -107,7 +100,8 @@
             <a role="button" class="my-1 mx-2" (click)="toggleComments(data['fPostId'])"><i
                 class="fa-regular fa-comment fa-lg"></i></a>
           </div>
-          <p class="mb-1"><strong>{{LikeCounts[data['fPostId']]}}個讚</strong></p>
+          <p class="mb-1"><strong (click)="defaultComment(data['fPostId'])">{{LikeCounts[data['fPostId']]}}個讚</strong>
+          </p>
 
           <!-- Likes and Caption -->
           <p *ngIf="!activePostIds.includes(data['fPostId'])"><img [src]="userData[data['fUserId']].image"
@@ -144,12 +138,27 @@
       </div>
       <div *ngIf="loading" class="loading-spinner"></div>
     </div>
-    <div class="col-2">
-      <div class="contacts-list fixed-sidebar">
-        <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">聯絡人</h4>
-        <div *ngIf="contactIds">
+    <div class="col-3 col-lg-2">
+      <div class="contacts-list fixed-sidebar" style="top: 200px;">
+        <div class="search-user-outer mb-2">
+          <span><i class="fa-solid fa-magnifying-glass fa-lg"></i></span><input type="text"
+            class="search-user-input w-75" [(ngModel)]="searchUserInput" placeholder="搜尋用戶">
+        </div>
+        <div *ngIf="searchUsers.length>0" style="overflow-y: auto; max-height: 250px;">
+          <div *ngFor="let user of searchUsers" class="contact-card">
+            <a class="text-decoration-none text-middle" role="button" (click)="openChat(user.id,'search')"><img
+                [src]="user.image" class="rounded-circle mr-2"
+                style="width: 30px;height: 30px; object-fit: cover">{{user.nickName}}</a>
+            <div *ngIf="chatRooms.includes(user.id)">
+              <app-chat [currentUser]="currentUser" [chatUser]="chatUser"
+                (closeChatEvent)="closeChat(user.id)"></app-chat>
+            </div>
+          </div>
+        </div>
+        <h4 class="text-uppercase mt-1" style="letter-spacing: 5px;" (click)="defaultSearchUser()">聯絡人</h4>
+        <div *ngIf="contactIds" style="overflow-y: auto; max-height: 300px;">
           <div *ngFor="let contactId of contactIds" class="contact-card">
-            <a class="text-decoration-none text-middle" role="button" (click)="openChat(contactId)"><img
+            <a class="text-decoration-none text-middle" role="button" (click)="openChat(contactId,'normal')"><img
                 [src]="userData[contactId].image" class="rounded-circle mr-2"
                 style="width: 30px;height: 30px; object-fit: cover">{{userData[contactId].nickName}}</a>
             <div *ngIf="chatRooms.includes(contactId)">

@@ -1,3 +1,7 @@
+a:hover {
+  cursor: pointer;
+}
+
 #myArticle img {
   height: 272.5px;
   object-fit: cover;

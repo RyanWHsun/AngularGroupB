@@ -39,6 +39,9 @@ export class SocialmediaComponent {
   chatRooms: number[] = [];
   currentUser = { id: 0, name: '', image: '/assets/images/noImage.jpg' };
   chatUser = { id: 0, name: '', image: '/assets/images/noImage.jpg' };
+  searchUserInput = '';
+  previousSearchUserInput = this.searchUserInput;
+  searchUsers: { id: number, nickName: string, image: string }[] = []
   constructor(private socialmediaService: SocialmediaService, private sanitizer: DomSanitizer, private signalrService: SignalrService, private sweetAlert: SweetAlert2Service, private router: Router) { };
   ngOnInit(): void {
     this.signalrService.startConnection();
@@ -63,7 +66,26 @@ export class SocialmediaComponent {
       this.loadArticles();
       this.previousFilter = { ...this.filter };
     }
+    if (this.searchUserInput != this.previousSearchUserInput) {
+      this.loadSearchUserInfo(this.searchUserInput);
+      this.previousSearchUserInput = this.searchUserInput;
+    }
   }
+  loadSearchUserInfo(keyword: string) {
+    if (!keyword) {
+      this.searchUsers = [];
+      return;
+    }
+    this.socialmediaService.searchUserInfo(keyword).subscribe(userDatas => {
+      this.searchUsers = userDatas.map((user: any) => ({
+        id: user.fUserId,
+        nickName: user.fUserNickName,
+        image: `data:image/jpeg;base64,${user.fUserImage}`
+      }))
+    }
+    );
+  }
+
   resetArticles() {
     this.page = 1;
     this.loading = false;
@@ -230,7 +252,9 @@ export class SocialmediaComponent {
   goToProduct(keyword: string) {
     this.router.navigate(['products'], { queryParams: { keyword: keyword } });
   }
-  openChat(contactId: number) {
+  openChat(contactId: number, type: string) {
+    if (this.loginUserId == contactId)
+      return;
     this.chatRooms = [];
     this.chatRooms.push(contactId);
     this.currentUser = {
@@ -240,8 +264,8 @@ export class SocialmediaComponent {
     }
     this.chatUser = {
       id: contactId,
-      name: this.userData[contactId].nickName,
-      image: this.userData[contactId].image
+      name: type == 'search' ? this.searchUsers.find(e => e.id == contactId)!.nickName : this.userData[contactId].nickName,
+      image: type == 'search' ? this.searchUsers.find(e => e.id == contactId)!.image : this.userData[contactId].image
     }
   }
   closeChat(contactId: number) {
@@ -249,5 +273,18 @@ export class SocialmediaComponent {
     if (index !== -1) {
       this.chatRooms.splice(index, 1);
     }
+  }
+  defaultSearchUser() {
+    this.searchUserInput = '大';
+  }
+  defaultfilter() {
+    this.filter = {
+      popular: false,
+      TypesValue: 2005,
+      keyword: '海'
+    }
+  }
+  defaultComment(postId: number) {
+    this.commentTexts[postId] = '今天是個報告的好日子';
   }
 }

@@ -326,6 +326,28 @@ export class MyarticlesComponent {
   onScroll() {
     this.loadArticles();
   }
+  defaultDataForCreate() {
+    this.articleTitle = '早午餐!!';
+    this.editorData = '<h4><span style="color:hsl(0, 0%, 60%);">中午了</span></h4><h3><span style="color:hsl(0, 0%, 30%);">肚子餓</span></h3><h2>今天吃</h2><h1><span style="background-color:hsl(33, 100%, 84%);color:hsl(31, 100%, 52%);">早午餐</span></h1>';
+    this.articleStatus = true;
+    this.articleTypesValue = 2007;
+  }
+  defaultDataForEdit() {
+    this.articleTitle = '超大便當!!';
+    this.editorData = '<h4><span style="background-color:hsl(0, 0%, 0%);color:hsl(64, 100%, 84%);">中午了</span></h4><h3><span style="background-color:hsl(0, 0%, 0%);color:hsl(64, 100%, 84%);">肚子餓</span></h3><h2><span style="background-color:hsl(0, 0%, 0%);color:hsl(64, 100%, 84%);">今天吃</span></h2><h1><span style="background-color:hsl(0, 0%, 0%);color:hsl(64, 100%, 84%);">超大便當</span></h1>';
+    this.articleStatus = true;
+    this.articleTypesValue = 2007;
+  }
+  defaultFilter() {
+    this.filter = {
+      TypesValue: 2007,
+      afterDate: '2025-01-01',
+      keyword: '早'
+    }
+  }
+  defaultComment() {
+    this.commentTexts = '今天是個報告的好日子';
+  }
   //
   private _setupEditor(cloud: CKEditorCloudResult<typeof cloudConfig>) {
     const {

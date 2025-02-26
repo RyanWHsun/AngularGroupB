@@ -2,7 +2,7 @@
 <div class="container-fluid page-header">
   <div class="container">
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
-      <h3 class="display-4 text-white text-uppercase">個人文章</h3>
+      <h3 class="display-4 text-white text-uppercase" (click)="defaultFilter()">個人文章</h3>
       <div class="d-inline-flex text-white">
         <p class="m-0 text-uppercase"><a class="text-white" routerLink="/socialmedia">社群</a></p>
         <i class="fa fa-angle-double-left pt-1 px-3"></i>
@@ -76,7 +76,7 @@
   <div class="modal-dialog modal-custom modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <strong>建立新貼文</strong>
+        <strong (click)="defaultDataForCreate()">建立新貼文</strong>
         <button type="button" class="close" data-dismiss="modal">
           <span>&times;</span>
         </button>
@@ -175,8 +175,8 @@
             <!-- Comment Section -->
             <div #commentContainer class="comment-container border rounded p-3 mb-2">
               <p *ngIf="userData[currentData['fUserId']]"><img [src]="userData[currentData['fUserId']].image"
-                  class="rounded-circle mr-2"
-                  style="width: 30px;height: 30px; object-fit: cover"><strong>{{userData[currentData['fUserId']].nickName}}
+                  class="rounded-circle mr-2" style="width: 30px;height: 30px; object-fit: cover"><strong
+                  (click)="defaultComment()">{{userData[currentData['fUserId']].nickName}}
                 </strong>{{articleTitle}}</p>
               <div [innerHTML]="finalData">
               </div>
@@ -210,7 +210,7 @@
   <div class="modal-dialog modal-custom modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <strong>編輯貼文</strong>
+        <strong (click)="defaultDataForEdit()">編輯貼文</strong>
         <button type="button" class="close" data-dismiss="modal">
           <span>&times;</span>
         </button>
