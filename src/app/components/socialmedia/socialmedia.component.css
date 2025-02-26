@@ -199,9 +199,9 @@ strong {
 }
 
 .responsive-width {
-  width: 100%;
+  width: 90%;
 
-  @media (max-width: 960px) {
-    width: 90%;
+  @media (max-width: 992px) {
+    width: 100%;
   }
 }
