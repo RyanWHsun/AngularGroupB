@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { addProductToCart, ShoppingCartItem, userInfo } from '../interfaces/shoppingCart';
+import { addProductToCart, ShoppingCartItem, storeSelected, userInfo } from '../interfaces/shoppingCart';
 import { BehaviorSubject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Injectable({
@@ -62,15 +62,22 @@ export class CartService {
     return this.http.get<userInfo>(url, { withCredentials: true })
   }
 
+  //old
   openStoreMap(): Observable<{ mapUrl: string }> {
     const url = `${this.baseAddress}api/ECPayLogistics/openStoreMap`
     return this.http.post<{ mapUrl: string }>(url, {});
   }
 
+  //取得門市網站(Uni)
+  openUniStoreMap(): Observable<any> {
+    const url = `${this.baseAddress}api/UniLogistic/openStoreMap`
+    return this.http.post<any>(url, {});
+  }
+
   // 取得選擇的門市資訊
-  getSelectedStore(): Observable<{ storeName: string, storeID: string }> {
-    const url = `${this.baseAddress}api/ECPayLogistics/StoreSelection`;
-    return this.http.post<{ storeName: string, storeID: string }>(url, {});
+  getSelectedStore(): Observable<storeSelected> {
+    const url = `${this.baseAddress}api/UniLogistic/uniPay/storeInfoCache`
+    return this.http.get<storeSelected>(url);
   }
 }
 

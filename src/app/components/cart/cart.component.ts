@@ -1,3 +1,4 @@
+import { storeSelected } from './../../interfaces/shoppingCart';
 import { CartService } from './../../services/cart.service';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CheckoutRequest, itemsForOrder, Seller, ShoppingCartItem, userInfo } from 'src/app/interfaces/shoppingCart';
@@ -34,10 +35,12 @@ export class CartComponent {
   totalPrice = 0;
   selectedCount = 0;
   fPaymentMethod: string = ''; // 預設付款方式
-  storeName: string = '';
-  storeID: string = '';
-  storeInfo: string = '';
   windowClosed: boolean = false;
+  storeSelected: storeSelected = {
+    storeID: '',
+    storeName: '',
+    address: ''
+  }
 
   constructor(private cartService: CartService, private authService: AuthService, private router: Router, private orderService: OrderService, private swal: SweetAlert2Service, private linePayService: LinePayService) { }
   @ViewChild('popoverButton', { static: false }) popoverButton!: ElementRef;
@@ -254,33 +257,39 @@ export class CartComponent {
     this.fPaymentMethod = method;
   }
 
-  openStoreMap() {
-    this.cartService.openStoreMap().subscribe({
+  openUniStoreMap() {
+    this.cartService.openUniStoreMap().subscribe({
       next: (response) => {
-        if (response.mapUrl) {
-          window.open(response.mapUrl, '_blank');
-          this.getSelectedStore();
+        //console.log(response);
+        const fullUrl = `${response.redirectUrl}?tempvar=${encodeURIComponent(response.tempvar)}&url=${encodeURIComponent(response.reMapUrl)}`;
+        // 在新視窗開啟門市選擇頁面**
+        const popup = window.open(fullUrl, '_blank', 'width=800,height=600');
+        if (popup) {
+          const timer = setInterval(() => {
+            if (popup.closed) {
+              clearInterval(timer);
+              this.getStoreInfo();
+              this.swal.showEasySuccess('超商選取成功')
+            }
+          }, 1000);
         } else {
-          console.error('無法獲取門市選擇 URL');
+          console.error('無法開啟門市選擇視窗');
         }
-      },
-      error: (error) => {
-        console.error('API錯誤', error)
+      }, error: (error) => {
+        this.swal.showEasyError('開啟選擇畫面失敗，請稍後再試')
+        console.error('請求失敗', error);
       }
-    });
+    })
   }
 
-
-  // 取得選擇的門市資訊
-  getSelectedStore() {
+  getStoreInfo() {
     this.cartService.getSelectedStore().subscribe({
-      next: (data) => {
-        this.storeName = data.storeName;
-        this.storeID = data.storeID;
-        this.storeInfo = `${this.storeID}  ${this.storeName}`
-        this.userInfo.fUserAddress = this.storeInfo;
+      next: (response) => {
+        this.storeSelected = response;
+        console.log(this.storeSelected);
       }, error: (error) => {
-        console.error('無法獲取選擇的門市資訊:', error)
+        this.swal.showEasyError('回傳失敗')
+        console.error('請求失敗', error);
       }
     })
   }
@@ -390,7 +399,7 @@ export class CartComponent {
       return;
     }
 
-    if (this.fPaymentMethod === 'Store' && this.storeInfo === '') {
+    if (this.fPaymentMethod === 'Store' && this.storeSelected.storeName === '') {
       this.swal.showEasyWarning('請先選擇超商');
       return;
     }

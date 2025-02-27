@@ -52,3 +52,9 @@ export interface itemsForOrder {
   fProductName?: string;
   fPrice?: number;
 }
+
+export interface storeSelected {
+  storeID: string;
+  storeName: string;
+  address: string;
+}
