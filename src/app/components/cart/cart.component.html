@@ -231,7 +231,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">取貨超商</span>
           </div>
-          <input type="text" class="form-control form-control-lg" value={{this.storeSelected.storeName}}>
+          <input type="text" class="form-control form-control-lg" value={{this.storeFullName}}>
           <button class="btn btn-primary" (click)="openUniStoreMap()">請選擇取貨門市</button>
         </div>
       </div>
@@ -250,7 +250,7 @@
             <input type="radio" name="paymentMethod" value="Wallet" (click)="updatePaymentMethod('Wallet')"> 平台錢包
           </label>
           <label class="btn btn-outline-primary rounded btn-lg" [class.active]="fPaymentMethod === 'Store'">
-            <input type="radio" name="paymentMethod" value="LinePay" (click)="updatePaymentMethod('Store')"> 全家貨到付款
+            <input type="radio" name="paymentMethod" value="LinePay" (click)="updatePaymentMethod('Store')"> 7-11貨到付款
           </label>
         </div>
 

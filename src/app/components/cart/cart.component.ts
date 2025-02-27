@@ -41,6 +41,7 @@ export class CartComponent {
     storeName: '',
     address: ''
   }
+  storeFullName = '';
 
   constructor(private cartService: CartService, private authService: AuthService, private router: Router, private orderService: OrderService, private swal: SweetAlert2Service, private linePayService: LinePayService) { }
   @ViewChild('popoverButton', { static: false }) popoverButton!: ElementRef;
@@ -263,7 +264,7 @@ export class CartComponent {
         //console.log(response);
         const fullUrl = `${response.redirectUrl}?tempvar=${encodeURIComponent(response.tempvar)}&url=${encodeURIComponent(response.reMapUrl)}`;
         // 在新視窗開啟門市選擇頁面**
-        const popup = window.open(fullUrl, '_blank', 'width=800,height=600');
+        const popup = window.open(fullUrl, '_blank');
         if (popup) {
           const timer = setInterval(() => {
             if (popup.closed) {
@@ -286,6 +287,7 @@ export class CartComponent {
     this.cartService.getSelectedStore().subscribe({
       next: (response) => {
         this.storeSelected = response;
+        this.storeFullName = `${this.storeSelected.storeID} ${this.storeSelected.storeName}`;
         console.log(this.storeSelected);
       }, error: (error) => {
         this.swal.showEasyError('回傳失敗')
