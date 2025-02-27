@@ -146,41 +146,66 @@
             [alt]="buyTicketModal.attractionName"
           />
           <div class="tags">{{ buyTicketModal.attractionDescription }}</div>
-          <!-- 票種下拉式選單 -->
-          <select #ticketTypeSelect (change)="setTicketPrice($event)">
-            <option value="">請選擇分類</option>
-            <option
-              *ngFor="let type of buyTicketModal.attractionTicketType"
-              [value]="type"
+
+          <div class="ticket-type-qty-container">
+            <!-- 票種下拉式選單 -->
+            <select
+              #ticketTypeSelect
+              (change)="setTicketPrice($event)"
+              class="ticket-dropdown"
             >
-              {{ type }}
-            </option>
-          </select>
-          <div class="tags">
-            {{ selectedPrice | currency : "TWD" : "symbol" : "1.0-0" }}
+              <option value="">請選擇分類</option>
+              <option
+                *ngFor="let type of buyTicketModal.attractionTicketType"
+                [value]="type"
+              >
+                {{ type }}
+              </option>
+            </select>
           </div>
-          <button (click)="subTicketQuantity()">
-            <i class="fa-solid fa-minus"></i>
-          </button>
-          <input
-            type="text"
-            [(ngModel)]="buyTicketModal.attractionTicketQuantity"
-            (change)="changeTicketQty()"
-          />
-          <button (click)="addTicketQuantity()">
-            <i class="fa-solid fa-plus"></i>
-          </button>
-          <div>
-            {{
-              selectedPrice! * buyTicketModal.attractionTicketQuantity!
-                | currency : "TWD" : "symbol" : "1.0-0"
-            }}
+
+          <div class="display-price-container">
+            <div class="price-labels">
+              <div class="single-price">單價</div>
+              <div class="total-price">總價</div>
+            </div>
+            <div class="price-values">
+              <div class="single-price-num">
+                <i class="fa-solid fa-dollar-sign dollar-sign"></i>
+                {{ selectedPrice }}
+                <!-- | currency: 管道（Pipe） 用於將 selectedPrice 轉換為貨幣格式 -->
+                <!-- "TWD": 貨幣的 ISO 代碼
+                "symbol"：顯示貨幣符號
+                "code": 只顯示貨幣數字
+                1.0-0: 1：至少有 1 位整數 0：最少 0 位小數 0：最多 0 位小數。 -->
+                <!-- {{ selectedPrice | currency : "TWD" : "code" : "1.0-0" }} -->
+              </div>
+              <div class="toal-price-num">
+                <i class="fa-solid fa-dollar-sign dollar-sign"></i>
+                {{ selectedPrice! * buyTicketModal.attractionTicketQuantity! }}
+                <!-- {{
+                  selectedPrice! * buyTicketModal.attractionTicketQuantity!
+                    | currency : "TWD" : "code" : "1.0-0"
+                }} -->
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            取消
-          </button>
+          <div class="changeQty-container">
+            <button (click)="subTicketQuantity()" class="changeQtyBtn">
+              <i class="fa-solid fa-minus"></i>
+            </button>
+            <input
+              class="inputQty"
+              type="text"
+              [(ngModel)]="buyTicketModal.attractionTicketQuantity"
+              (change)="changeTicketQty()"
+            />
+            <button (click)="addTicketQuantity()" class="changeQtyBtn">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
           <button
             type="button"
             class="btn btn-outline-success"
@@ -188,6 +213,9 @@
             [disabled]="isDisabled"
           >
             <i class="fa-solid fa-cart-shopping"></i>加入購物車
+          </button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            取消
           </button>
         </div>
       </div>

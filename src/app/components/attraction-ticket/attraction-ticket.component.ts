@@ -9,6 +9,7 @@ import { catchError, forkJoin, map, Observable, of, take } from 'rxjs';
 import { tick } from '@angular/core/testing';
 import { IBuyTicketModal } from 'src/app/interfaces/IBuyTicketModal';
 import { IAttractionTicketShoppingCart } from 'src/app/interfaces/IAttractionTicketShoppingCart';
+import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
 
 @Component({
   selector: 'app-attraction-ticket',
@@ -65,7 +66,8 @@ export class AttractionTicketComponent {
     private attractionTicketService: AttractionTicketService,
     private attractionService: AttractionService,
     private attractionImageService: AttractionImageService,
-    private attractionTicketShoppingCartService: AttractionTicketShoppingCartService
+    private attractionTicketShoppingCartService: AttractionTicketShoppingCartService,
+    private sweetAlert2Service:SweetAlert2Service
   ) {}
 
   setAddToCartBtn() {
@@ -207,6 +209,9 @@ export class AttractionTicketComponent {
       this.selectedPrice =
         this.buyTicketModal.attractionTicketPrice![selectedIndex!];
     }
+
+    // tucket type 或 ticket quantity 改變，都要檢查總價是否為 0，不為 0 加入購物車的按鈕就要設定可以點擊
+    this.setAddToCartBtn();
   }
 
   // 把訂購的門票加入購物車
@@ -216,21 +221,15 @@ export class AttractionTicketComponent {
       .postAttractionTicketToShoppingCart(this.shoppingCartTicket)
       .subscribe({
         next: () => {
+          this.sweetAlert2Service.showEasySuccess("成功加入購物車!");
           console.log('Order ticket success!');
         },
         error: () => {
+          this.sweetAlert2Service.showEasyError("加入購物車失敗!")
           console.log('Order ticket failed!');
         },
       });
   }
-
-  showAllTickets() {
-    this.attractionTicketService.getAllAttractionTickets().subscribe((data) => {
-      //this.setPages(Math.ceil(data.length / 9));
-    });
-  }
-
-  showPopularTickets(index: number) {}
 
   showPartialAttractionTickets(index: number) {
     this.partialAttractionTickets = [];
@@ -331,49 +330,8 @@ export class AttractionTicketComponent {
     );
   }
 
-  // 把 attraction description 的資料填入 attractionDescription 陣列
-  // setAttractionDescriptionArray(index: number) {
-  //   this.showPartialAttractionTickets(index).subscribe((tickets) => {
-  //     const request = tickets
-  //       .filter(
-  //         (ticket) =>
-  //           ticket !== null && typeof ticket.fAttractionId === 'number'
-  //       )
-  //       .map((ticket) => {
-  //         return this.getAttractionDescription(ticket.fAttractionId!).pipe(
-  //           catchError(() => of(''))
-  //         );
-  //       });
-
-  //     // forkJoin 是 RxJS 提供的一個操作符，用於並行執行多個 Observable，並在所有 Observable 完成後返回它們的結果。返回值是一個包含每個 Observable 最終值的陣列。
-  //     //
-  //     // request 是一個 Observable 陣列。其中每個元素都是一個 Observable<string>。
-  //     // const request = [
-  //     //     this.getAttractionDescription(1),
-  //     //     this.getAttractionDescription(2),
-  //     //     this.getAttractionDescription(3),
-  //     // ];
-  //     //
-  //     // forkJoin(request)：
-  //     // 開始執行所有 Observable，即所有請求將同時並行發送。
-  //     // 當所有 Observable 都完成時，會將每個 Observable 的結果收集為一個陣列，並將此陣列作為輸出。
-  //     // 如果任意一個 Observable 發生錯誤，整個 forkJoin 會進入 error，除非有使用 catchError 來處理錯誤。
-  //     //
-  //     // subscribe() 訂閱 Observable
-  //     // subscribe((descriptions) => {...})：
-  //     // 當所有請求完成後，forkJoin 的結果（即所有 Observable 的結果）會以陣列形式傳遞給 subscribe 的回呼函式。
-  //     // descriptions 是一個陣列，包含每個請求的最終值。
-  //     forkJoin(request).subscribe((descriptions) => {
-  //       this.attractionDescription = descriptions;
-  //     });
-  //   });
-  // }
-
   ngOnInit() {
     this.toggleAll();
-
-    // 把 attraction description 的資料填入 attractionDescription 陣列
-    //this.setAttractionDescriptionArray(0);
   }
 
   ngAfterViewInit() {
