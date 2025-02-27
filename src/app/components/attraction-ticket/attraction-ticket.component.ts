@@ -10,6 +10,7 @@ import { tick } from '@angular/core/testing';
 import { IBuyTicketModal } from 'src/app/interfaces/IBuyTicketModal';
 import { IAttractionTicketShoppingCart } from 'src/app/interfaces/IAttractionTicketShoppingCart';
 import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
+import { CartService } from 'src/app/services/cart.service';
 
 @Component({
   selector: 'app-attraction-ticket',
@@ -35,12 +36,14 @@ export class AttractionTicketComponent {
   buyTicketModal: IBuyTicketModal = {
     attractionName: '',
     attractionDescription: '',
+    attractionTicketId: [],
     attractionTicketType: [],
     attractionTicketPrice: [],
     attractionTicketQuantity: 0,
     imageSrc: '',
   };
 
+  selectedId: number = 0; // 被選中的票種的 ID
   selectedType: string = ''; // 被選中的票種
   selectedPrice: number = 0; // 被選中的票種的價格
   //selectedQuantity: number = 0;
@@ -67,7 +70,8 @@ export class AttractionTicketComponent {
     private attractionService: AttractionService,
     private attractionImageService: AttractionImageService,
     private attractionTicketShoppingCartService: AttractionTicketShoppingCartService,
-    private sweetAlert2Service:SweetAlert2Service
+    private sweetAlert2Service: SweetAlert2Service,
+    private cartService:CartService
   ) {}
 
   setAddToCartBtn() {
@@ -121,17 +125,20 @@ export class AttractionTicketComponent {
     });
   }
 
-  // 顯示購買票券的 modal 畫面
+  // 顯示購買票券的 modal 畫面，會顯示某個景點的所有票券資料
   showTicketModal(ticket: IAttractionTicket, attractionDescription: string) {
     this.selectedPrice = 0;
     this.buyTicketModal.attractionName = ticket.fAttractionName
       ? ticket.fAttractionName
       : '';
-    this.buyTicketModal.attractionDescription = attractionDescription;
+    //this.buyTicketModal.attractionDescription = attractionDescription;
     try {
       this.attractionTicketService
         .getAttractionTicketsById(ticket.fAttractionId!)
         .subscribe((data) => {
+          this.buyTicketModal.attractionTicketId = data.map(
+            (item) => item.fAttractionTicketId!
+          );
           this.buyTicketModal.attractionTicketType = data.map(
             (item) => item.fTicketType!
           );
@@ -144,6 +151,7 @@ export class AttractionTicketComponent {
     }
     this.buyTicketModal.attractionTicketQuantity = 0;
     this.buyTicketModal.imageSrc = ticket.fimageSrc;
+    console.log('showTicketModal', this.buyTicketModal);
     this.setShoppingCartTicket(ticket);
   }
 
@@ -156,6 +164,7 @@ export class AttractionTicketComponent {
   setShoppingCartTicket(param: IAttractionTicket | IBuyTicketModal): void {
     if (this.isTicket(param)) {
       //this.shoppingCartTicket.fUserId = 0;
+      console.log('param: ', param);
       this.shoppingCartTicket.fTicketId = param.fAttractionTicketId;
       this.shoppingCartTicket.fAttractionId = param.fAttractionId;
       this.shoppingCartTicket.fAttractionName = param.fAttractionName;
@@ -168,6 +177,7 @@ export class AttractionTicketComponent {
       localTime.setHours(localTime.getHours() + 8);
       this.shoppingCartTicket.fCreatedDate = localTime.toISOString();
     } else if (this.isModal(param)) {
+      this.shoppingCartTicket.fTicketId = this.selectedId;
       this.shoppingCartTicket.fTicketType = this.selectedType;
       this.shoppingCartTicket.fPrice = this.selectedPrice;
       this.shoppingCartTicket.fQuantity = param.attractionTicketQuantity;
@@ -198,34 +208,45 @@ export class AttractionTicketComponent {
 
   setTicketPrice(event: Event) {
     const selectedElement = event.target as HTMLSelectElement; // 將 target 斷言為 HTMLSelectElement
-    this.selectedType = selectedElement.value;
-    if (!this.selectedType) {
+    this.selectedId = parseInt(selectedElement.value, 10); // 取得所選票種對應的 ticket Id
+    this.selectedType =
+      selectedElement.options[selectedElement.selectedIndex].text; // 取得選單顯示的文字
+    console.log('selectedId', this.selectedId);
+    console.log('selectedType', this.selectedType);
+    console.log('selectedElement.selectedIndex', selectedElement.selectedIndex);
+
+    if (isNaN(this.selectedId) || !this.selectedType){
+      this.selectedPrice = 0;
       return;
     }
-    let selectedIndex = this.buyTicketModal.attractionTicketType?.findIndex(
-      (type) => type === this.selectedType
-    );
-    if (selectedIndex !== -1) {
+
+    // selectedElement.selectedIndex 是下拉式選單的索引值。當我選擇"請選擇分類"，對應到的 index 是 0
+    if (selectedElement.selectedIndex > 0) {
       this.selectedPrice =
-        this.buyTicketModal.attractionTicketPrice![selectedIndex!];
+        this.buyTicketModal.attractionTicketPrice![
+          selectedElement.selectedIndex! - 1
+        ];
     }
 
-    // tucket type 或 ticket quantity 改變，都要檢查總價是否為 0，不為 0 加入購物車的按鈕就要設定可以點擊
+    // ticket type 或 ticket quantity 改變，都要檢查總價是否為 0，不為 0 加入購物車的按鈕就要設定可以點擊
     this.setAddToCartBtn();
   }
 
   // 把訂購的門票加入購物車
   addTicketToShoppingCart(buyTicketModal: IBuyTicketModal) {
+    console.log('buyTicketModal', buyTicketModal);
     this.setShoppingCartTicket(buyTicketModal);
+    console.log('shoppingCartTicket', this.shoppingCartTicket);
     this.attractionTicketShoppingCartService
       .postAttractionTicketToShoppingCart(this.shoppingCartTicket)
       .subscribe({
         next: () => {
-          this.sweetAlert2Service.showEasySuccess("成功加入購物車!");
+          this.sweetAlert2Service.showEasySuccess('成功加入購物車!');
+          this.cartService.loadCartCount();
           console.log('Order ticket success!');
         },
         error: () => {
-          this.sweetAlert2Service.showEasyError("加入購物車失敗!")
+          this.sweetAlert2Service.showEasyError('加入購物車失敗!');
           console.log('Order ticket failed!');
         },
       });
@@ -240,7 +261,8 @@ export class AttractionTicketComponent {
           this.partialAttractionTickets = data;
           this.setImage(data);
         })
-      ).subscribe();;
+      )
+      .subscribe();
   }
 
   getTicketQuantities(): Observable<number> {

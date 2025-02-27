@@ -1,3 +1,23 @@
+<!-- Header Start -->
+<div class="container-fluid page-header">
+  <div class="container">
+    <div
+      class="d-flex flex-column align-items-center justify-content-center"
+      style="min-height: 400px"
+    >
+      <h3 class="display-4 text-white text-uppercase">景點</h3>
+      <div class="d-inline-flex text-white">
+        <p class="m-0 text-uppercase">
+          <a class="text-white" routerLink="">首頁</a>
+        </p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase">景點票券</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Header End -->
+
 <!-- ticket.component.html -->
 <div class="container mt-4">
   <!-- Menu -->
@@ -156,8 +176,8 @@
             >
               <option value="">請選擇分類</option>
               <option
-                *ngFor="let type of buyTicketModal.attractionTicketType"
-                [value]="type"
+                *ngFor="let type of buyTicketModal.attractionTicketType; let i = index"
+                [value]="buyTicketModal.attractionTicketId![i]"
               >
                 {{ type }}
               </option>

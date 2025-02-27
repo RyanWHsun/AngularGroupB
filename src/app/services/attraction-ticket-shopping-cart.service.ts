@@ -16,6 +16,7 @@ export class AttractionTicketShoppingCartService {
   // 1. 前端和後端不同網域（CORS，跨域請求）。
   // 2. 後端驗證使用者身份（例如 Session 或 JWT 存在 HttpOnly Cookie）。
   postAttractionTicketToShoppingCart(ticket: IAttractionTicketShoppingCart) {
+    console.log("ticket ", ticket);
     return this.client.post<void>(`${this.baseUrl}`, ticket, {
       withCredentials: true,
     });
