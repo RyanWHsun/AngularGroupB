@@ -10,7 +10,10 @@ import Swal from 'sweetalert2';
   styleUrls: ['./event-management.component.css']
 })
 export class EventManagementComponent implements OnInit {
-  events: Event[] = [];
+  events: Event[] = []; // 所有活動
+  paginatedEvents: Event[] = []; // 當前分頁顯示的活動
+  currentPage: number = 1; // 當前頁數
+  itemsPerPage: number = 5; // 每頁顯示筆數
   private userApiUrl = 'https://localhost:7112/api/TUsers/loginUser'; // ✅ 取得當前登入用戶的 API
 
   constructor(private eventService: EventService, private router: Router, private http: HttpClient) { }
@@ -51,13 +54,42 @@ export class EventManagementComponent implements OnInit {
     );
   }
 
-
   /** 📌 取得所有活動 */
   loadEvents() {
     this.eventService.getEvents().subscribe(
-      (data) => { this.events = data; },
+      (data) => {
+        this.events = data;
+        this.updatePagination();
+      },
       (error) => { console.error('🚨 無法獲取活動:', error); }
     );
+  }
+
+  /** ✅ 更新分頁 */
+  updatePagination() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    this.paginatedEvents = this.events.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  /** ✅ 上一頁 */
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePagination();
+    }
+  }
+
+  /** ✅ 下一頁 */
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePagination();
+    }
+  }
+
+  /** ✅ 計算總頁數 */
+  get totalPages(): number {
+    return Math.ceil(this.events.length / this.itemsPerPage);
   }
 
   /** ✅ 跳轉至「新增活動」頁面 */
@@ -107,6 +139,7 @@ export class EventManagementComponent implements OnInit {
     });
   }
 }
+
 
 
 

@@ -1,39 +1,59 @@
-<h2 class="text-center my-4">{{ isEditMode ? '編輯活動' : '新增活動' }}</h2>
+<div class="container mt-5">
+  <div class="card shadow-lg p-4 border-0">
+    <!-- ✅ 點擊標題觸發自動填充 -->
+    <h2 class="text-center fw-bold mb-4 text-primary" (click)="fillRandomData()" style="cursor: pointer;">
+      📅 {{ isEditMode ? '編輯活動' : '新增活動' }}
+    </h2>
 
-<div class="container card p-4 shadow-sm">
-  <div class="mb-3">
-    <label class="form-label">活動名稱：</label>
-    <input type="text" class="form-control" [(ngModel)]="event.fEventName" placeholder="請輸入活動名稱">
-  </div>
-
-  <div class="mb-3">
-    <label class="form-label">活動描述：</label>
-    <textarea class="form-control" [(ngModel)]="event.fEventDescription" placeholder="請輸入活動描述"></textarea>
-  </div>
-
-  <!-- ✅ 圖片預覽與上傳 -->
-  <div class="mb-3 text-center">
-    <label class="form-label">活動圖片：</label>
-    <img *ngIf="imagePreview" [src]="imagePreview" alt="活動圖片" width="200">
-    <input type="file" class="form-control mt-2" (change)="onFileSelected($event)">
-  </div>
-
-  <div class="row">
-    <div class="col-md-6 mb-3">
-      <label class="form-label">開始日期：</label>
-      <input type="datetime-local" class="form-control" [(ngModel)]="event.fEventStartDate">
+    <!-- 活動名稱 -->
+    <div class="mb-3">
+      <label class="form-label fw-bold">活動名稱：</label>
+      <input type="text" class="form-control shadow-sm" [(ngModel)]="event.fEventName" placeholder="請輸入活動名稱">
     </div>
-    <div class="col-md-6 mb-3">
-      <label class="form-label">結束日期：</label>
-      <input type="datetime-local" class="form-control" [(ngModel)]="event.fEventEndDate">
-    </div>
-  </div>
 
-  <div class="text-end">
-    <button class="btn btn-secondary me-2" (click)="router.navigate(['/events'])">取消</button>
-    <button class="btn btn-success" (click)="submitEvent()">
-      {{ isEditMode ? '更新活動' : '提交活動' }}
-    </button>
+    <!-- 活動描述 -->
+    <div class="mb-3">
+      <label class="form-label fw-bold">活動描述：</label>
+      <textarea class="form-control shadow-sm" [(ngModel)]="event.fEventDescription" rows="4" placeholder="請輸入活動描述"></textarea>
+    </div>
+
+    <!-- 活動圖片 -->
+    <div class="mb-4 text-center">
+      <label class="form-label fw-bold">活動圖片：</label>
+      <div class="d-flex flex-column align-items-center">
+        <img *ngIf="imagePreview || event.fEventImageUrl"
+             [src]="imagePreview || event.fEventImageUrl || 'assets/default-placeholder.png'"
+             alt="活動圖片" class="rounded shadow-sm mb-2"
+             style="width: 250px; height: 150px; object-fit: cover;">
+
+        <input type="file" class="form-control w-50 shadow-sm" (change)="onFileSelected($event)">
+      </div>
+    </div>
+
+    <!-- 開始 & 結束日期 -->
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label fw-bold">開始日期：</label>
+        <input type="datetime-local" class="form-control shadow-sm" [(ngModel)]="event.fEventStartDate">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label fw-bold">結束日期：</label>
+        <input type="datetime-local" class="form-control shadow-sm" [(ngModel)]="event.fEventEndDate">
+      </div>
+    </div>
+
+    <!-- 按鈕區 -->
+    <div class="d-flex justify-content-between mt-4">
+      <button class="btn btn-outline-secondary px-4 py-2 shadow-sm" (click)="router.navigate(['/events'])">
+        ❌ 取消
+      </button>
+      <button class="btn btn-success px-4 py-2 shadow-sm" (click)="submitEvent()">
+        {{ isEditMode ? '✅ 更新活動' : '📌 提交活動' }}
+      </button>
+    </div>
   </div>
 </div>
+
+
+
 

@@ -1,0 +1,7 @@
+.event-preview {
+  width: 100%; /* 讓圖片適應區塊 */
+  max-width: 300px; /* 限制圖片最大寬度 */
+  margin-top: 10px; /* 增加與輸入框的間距 */
+  border-radius: 8px; /* 圓角讓圖片更美觀 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 增加陰影 */
+}

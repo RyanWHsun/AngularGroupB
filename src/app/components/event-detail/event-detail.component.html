@@ -33,15 +33,19 @@
       <!-- ✅ 修正活動費用顯示 -->
       <p><strong>活動費用:</strong>
         <span *ngIf="event.fPrice !== null && event.fPrice !== undefined && event.fPrice > 0">
-          NT$ {{ event.fPrice | number: '1.2-2' }}
-        </span>
+          {{ event.fPrice | number: '1.0-0' }}
+      </span>
         <span *ngIf="event.fPrice === 0 || event.fPrice === null || event.fPrice === undefined">
           免費
         </span>
       </p>
 
 
-      <p><strong>活動描述:</strong> {{ event.fEventDescription }}</p>
+      <p class="event-description">
+        <strong>活動描述:</strong>
+        {{ event.fEventDescription }}
+      </p>
+
     </div>
 
     <!-- ✅ 報名按鈕 -->
