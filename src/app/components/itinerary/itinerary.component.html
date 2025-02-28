@@ -1,10 +1,10 @@
 <ng-container *ngFor="let item of cItineraryData; let last = last">
   <div class="itinerary-container">
-    <!-- ✅ 最左側時間線與時間點 -->
-    <!-- <div class="timeline-middle">
+    <!-- 左側時間線與時間點 -->
+    <div class="timeline-middle">
       <div class="timeline-dot"></div>
-      <div class="timeline-line"></div>
-    </div> -->
+      <div class="timeline-line" *ngIf="!last"></div>
+    </div>
 
     <!-- 中間圖片 -->
     <div class="timeline-left">
