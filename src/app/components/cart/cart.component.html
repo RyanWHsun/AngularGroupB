@@ -221,7 +221,7 @@
           <input type="text" class="form-control form-control-lg" [(ngModel)]="userInfo.fUserPhone">
         </div>
 
-        <div class="input-group mx-3 mb-2" style="width: 600px;" *ngIf="this.fPaymentMethod=='Wallet'">
+        <div class="input-group mx-3 mb-2" style="width: 600px;" *ngIf="this.fPaymentMethod!='Store'">
           <div class="input-group-prepend">
             <span class="input-group-text">收件地址</span>
           </div>
@@ -250,13 +250,13 @@
             <input type="radio" name="paymentMethod" value="Wallet" (click)="updatePaymentMethod('Wallet')"> 平台錢包
           </label>
           <label class="btn btn-outline-primary rounded btn-lg" [class.active]="fPaymentMethod === 'Store'">
-            <input type="radio" name="paymentMethod" value="LinePay" (click)="updatePaymentMethod('Store')"> 7-11貨到付款
+            <input type="radio" name="paymentMethod" value="Store" (click)="updatePaymentMethod('Store')"> 7-11貨到付款
           </label>
         </div>
 
         <!-- 總金額 -->
         <div class="mx-3 mb-2">
-          <span class="font-weight-bold">總金額 ({{ selectedCount }} 個商品): </span>
+          <span class="font-weight-bold">總金額 ({{ selectedCount }} 個項目): </span>
           <span class="text-danger font-weight-bold display-6">NT${{ totalPrice | number:'1.0-0' }}</span>
         </div>
 
