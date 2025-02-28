@@ -1,3 +1,7 @@
 <button class="floating-btn" (click)="onClick(cAttractionName)">
-  {{ btnContent }}
+  <svg width="100%" height="100%" viewBox="0 0 180 60" class="border">
+    <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
+    <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
+  </svg>
+  <span>{{ btnContent }}</span>
 </button>
