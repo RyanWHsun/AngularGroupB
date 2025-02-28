@@ -1,60 +1,65 @@
-@import url('https://fonts.googleapis.com/css?family=Lato:100&display=swap');
-
 .floating-btn {
-  width: 100%;
-  height: 60px;
-  margin: 20px 0 20px 0;
-  position: relative;
-  top: 50%;
-  padding: 0;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  outline: none;
-  transition: 1s ease-in-out;
-  border-radius: 10px;
-}
-
-.floating-btn svg {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  fill: none;
-  transition: 1s ease-in-out;
-}
-
-.floating-btn .border-line {
-  stroke: #cccccc; /* 淡灰色邊框 */
-  stroke-width: 2;
-  fill: transparent;
-  stroke-dasharray: 450 450; /* 調整為適合矩形的值 */
-  stroke-dashoffset: 0;
-  transition: 1s ease-in-out;
-}
-
-.floating-btn span {
-  position: relative;
-  z-index: 1;
-  color: #cccccc; /* 淡灰色文字 */
-  font-size: 18px;
-  font-weight: 100;
-  font-family: 'Lato', sans-serif;
-  transition: color 1s ease-in-out;
+  text-decoration: none; /* 移除底線 */
+  padding: 15px 40px; /* 設定內邊距 */
+  display: inline-block; /* 讓按鈕保持行內區塊顯示 */
+  border-radius: 10px; /* 設定圓角 */
+  transition: all 0.2s; /* 動畫過渡時間 */
+  position: relative; /* 設定相對定位，方便內部元素定位 */
+  background-color: #fff; /* 設定背景色為白色 */
+  color: #7AB730; /* 設定按鈕文字顏色為綠色 */
+  font-size: 18px; /* 設定字體大小 */
+  font-weight: bold; /* 設定字體加粗 */
+  font-family: 'Lato', sans-serif; /* 使用 Lato 字體 */
+  cursor: pointer; /* 設定滑鼠指標為手形 */
+  border: 1px solid #7AB730; /* 設定按鈕邊框顏色與粗細 */
+  outline: none; /* 移除點擊時的輪廓 */
+  width: 100%; /* 按鈕寬度設為 100% */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* 設定按鈕陰影 */
+  margin:20px 0 20px 0;
 }
 
 .floating-btn:hover {
-  transition: 1s ease-in-out;
-  background: transparent; /* 保持背景透明 */
+  transform: translateY(-3px); /* 滑鼠懸停時上移 3px */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* 增加陰影效果 */
 }
 
-.floating-btn:hover span {
-  color: #7AB730; /* 修改為綠色 */
+.floating-btn:active {
+  transform: translateY(-1px); /* 按下時稍微下移 1px */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* 調整陰影大小 */
 }
 
-.floating-btn:hover .border-line {
-  stroke-dashoffset: 900; /* 調整為適合矩形的值 */
+/* 添加偽元素 */
+.floating-btn::after {
+  content: ""; /* 添加偽元素，但不顯示內容 */
+  display: inline-block;
+  height: 100%; /* 高度與按鈕相同 */
+  width: 100%; /* 寬度與按鈕相同 */
+  border-radius: 10px;
+  position: absolute; /* 絕對定位，使其重疊於按鈕 */
+  top: 0;
+  left: 0;
+  z-index: -1; /* 設定在按鈕文字的後面 */
+  transition: all 0.4s; /* 設定過渡動畫時間 */
+  background-color: #fff; /* 設定偽元素背景色 */
+}
+
+.floating-btn:hover::after {
+  transform: scaleX(1.45) scaleY(1.5); /* 懸停時擴大偽元素 */
+  opacity: 0; /* 逐漸消失，營造波紋效果 */
+}
+
+@keyframes moveInBottom {
+  0% {
+      opacity: 0; /* 動畫開始時透明 */
+      transform: translateY(30px); /* 向下偏移 30px */
+  }
+  100% {
+      opacity: 1; /* 動畫結束時完全顯示 */
+      transform: translateY(0px); /* 移回原位置 */
+  }
+}
+
+.floating-btn.animated {
+  animation: moveInBottom 0.5s ease-out; /* 應用從底部移入的動畫 */
+  animation-fill-mode: backwards; /* 保持動畫起始狀態 */
 }

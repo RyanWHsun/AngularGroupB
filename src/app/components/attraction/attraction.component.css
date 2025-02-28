@@ -452,3 +452,67 @@
   max-width: 400px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
+
+button {
+  outline: none; /* 移除點擊時的輪廓 */
+}
+
+.spinner-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* 讓 spinner 之間有間距 */
+}
+
+.spinner-grow {
+  width: 40px; /* 增加大小 */
+  height: 40px;
+  animation: fadeInOut 5s infinite;
+  border-radius: 50%;
+}
+
+/* 讓 spinner 依序出現 */
+.spinner-1 {
+  background-color: rgba(144, 238, 144);
+  /* 定義動畫延遲 (animation-delay)，控制動畫開始時間 */
+  /* 0s 開始 */
+  animation-delay: 0s;
+}
+.spinner-2 {
+  background-color: rgba(144, 238, 144);
+  /* 1s 開始 */
+  animation-delay: 0.625s;
+}
+.spinner-3 {
+  background-color: rgba(144, 238, 144);
+  animation-delay: 1.25s;
+}
+.spinner-4 {
+  background-color: rgba(144, 238, 144);
+  animation-delay: 1.875s;
+}
+.spinner-5 {
+  background-color: rgba(144, 238, 144);
+  animation-delay: 2.5s;
+}
+
+/* 定義動畫，讓 spinner 變亮然後淡出 */
+/* 開始 (0%)：縮小 (scale(0.5))、透明效果 (opacity: 0.1)。
+到 50% 時：放大 (scale(1.2)) 並完全顯示 (opacity: 1)。
+到 100%（結束）：再次縮小 (scale(0.5)) 透明效果 (opacity: 0.1)。
+循環播放（因為 animation: fadeInOut 5s infinite;） */
+@keyframes fadeInOut {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(0.5);
+    opacity: 0.1;
+  }
+}

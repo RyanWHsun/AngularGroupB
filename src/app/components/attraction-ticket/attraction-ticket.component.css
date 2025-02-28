@@ -287,3 +287,7 @@
   border-radius: 10px;
   text-align: right;
 }
+
+button{
+  outline: none; /* 移除點擊時的輪廓 */
+}
