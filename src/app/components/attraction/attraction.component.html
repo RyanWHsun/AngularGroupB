@@ -21,11 +21,20 @@
 <!-- Search Bar Start -->
 <div class="container-fluid booking mt-5 pb-1">
   <div class="container pb-5">
-    <div class="bg-light shadow" style="padding: 20px;">
+    <div class="bg-light shadow" style="padding: 20px">
       <div class="input-group">
-        <input type="text" class="form-control form-control-lg border-1" [(ngModel)]="keyword" placeholder="請輸入關鍵字">
+        <input
+          type="text"
+          class="form-control form-control-lg border-1"
+          [(ngModel)]="keyword"
+          placeholder="請輸入關鍵字"
+        />
         <div class="input-group-append">
-          <button class="btn btn-primary px-4" type="button" (click)="searchAttraction()">
+          <button
+            class="btn btn-primary px-4"
+            type="button"
+            (click)="searchAttraction()"
+          >
             <i class="fa fa-search"></i>
           </button>
         </div>
@@ -215,6 +224,16 @@
             class="ai-btn"
           ></app-ai-button>
           <!-- AI Button End -->
+
+          <!-- bootstrap spinner start -->
+          <div class="spinner-container" *ngIf="isClickedAiBtn && (!pItineraryData || pItineraryData.length===0)">
+            <div class="spinner-grow spinner-1" role="status"></div>
+            <div class="spinner-grow spinner-2" role="status"></div>
+            <div class="spinner-grow spinner-3" role="status"></div>
+            <div class="spinner-grow spinner-4" role="status"></div>
+            <div class="spinner-grow spinner-5" role="status"></div>
+          </div>
+          <!-- bootstrap spinner end -->
 
           <!-- AI 生成的 Itinerary start-->
           <app-itinerary

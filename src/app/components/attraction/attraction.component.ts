@@ -38,6 +38,7 @@ import { ICommenter } from 'src/app/interfaces/ICommenter';
 import { OpenWeatherAPIService } from 'src/app/services/open-weather-api.service';
 import { OpenAIService } from 'src/app/services/ai.service';
 import { IItineraryItem } from 'src/app/interfaces/IItineraryItem';
+import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
 
 // 宣告全域變數 google
 // 在 Google Maps JavaScript API 中，google 這個物件是由 API 動態載入的，而不是直接在 TypeScript 環境中定義的。
@@ -137,7 +138,8 @@ export class AttractionComponent implements AfterViewInit {
     private googleMapsService: GoogleMapAPIService,
     private attractionViewCookieService: AttractionViewCookieService,
     private attractionTagService: AttractionTagService,
-    private openWeatherService: OpenWeatherAPIService
+    private openWeatherService: OpenWeatherAPIService,
+    private sweetAlert2Service: SweetAlert2Service
   ) {}
 
   clickAiBtn(isClick: boolean) {
@@ -236,7 +238,7 @@ export class AttractionComponent implements AfterViewInit {
       this.commentComponent.inputContent === '' ||
       this.selectedRating === 0
     ) {
-      alert('評論還未填寫');
+      this.sweetAlert2Service.showEasyWarning("評論還未填寫");
       return;
     }
     const comment: IAttractionComment = {
@@ -258,6 +260,7 @@ export class AttractionComponent implements AfterViewInit {
         switchMap(() => {
           console.log('Comment submitted successfully!');
           this.commentComponent.inputContent = ''; // 清空輸入框
+          this.highlightStars(0);
           // 接著執行 showCommentsByCondition$
           return this.showCommentsByCondition$(
             this.attraction.fAttractionId!,
