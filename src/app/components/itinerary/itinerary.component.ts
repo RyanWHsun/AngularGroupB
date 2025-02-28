@@ -18,7 +18,7 @@ export class ItineraryComponent {
 
   async ngOnChanges(): Promise<void> {
     this.places = [];
-    console.log('after click, c:', this.cItineraryData);
+    //console.log('after click, c:', this.cItineraryData);
     if (!this.cItineraryData || this.cItineraryData.length <= 0) return;
 
     this.places = this.cItineraryData.map((data) => data.location);
@@ -37,7 +37,7 @@ export class ItineraryComponent {
         });
 
         // 4. 在所有請求完成後才執行 console.log
-        console.log('所有照片取得後的 cItineraryData:', this.cItineraryData);
+        //console.log('所有照片取得後的 cItineraryData:', this.cItineraryData);
 
         this.initMap(); // 初始化地圖
         await this.loadLocations(); // 取得地點並標記
