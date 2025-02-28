@@ -14,6 +14,7 @@
   border: none;
   outline: none;
   transition: 1s ease-in-out;
+  border-radius: 10px;
 }
 
 .floating-btn svg {
@@ -23,37 +24,44 @@
   width: 100%;
   height: 100%;
   fill: none;
-  stroke: #91C9FF;
+  stroke: #cccccc; /* 淡灰色邊框 */
   stroke-width: 1;
-  stroke-dasharray: 150 480;
-  stroke-dashoffset: 150;
+  stroke-dasharray: 450 450; /* 調整為適合矩形的值 */
+  stroke-dashoffset: 0;
   transition: 1s ease-in-out;
 }
 
 .floating-btn .bg-line {
-  stroke: #91C9FF;
+  stroke: #cccccc; /* 淡灰色邊框 */
   stroke-width: 1;
+  fill: transparent;
 }
 
 .floating-btn .hl-line {
-  stroke: #fff;
+  stroke: #dddddd; /* 淡灰色高亮邊框 */
   stroke-width: 2;
+  fill: transparent;
 }
 
 .floating-btn span {
   position: relative;
   z-index: 1;
-  color: white;
+  color: #cccccc; /* 淡灰色文字 */
   font-size: 18px;
   font-weight: 100;
   font-family: 'Lato', sans-serif;
+  transition: color 1s ease-in-out;
 }
 
 .floating-btn:hover {
   transition: 1s ease-in-out;
-  background: #4F95DA;
+  background: transparent; /* 保持背景透明 */
+}
+
+.floating-btn:hover span {
+  color: #7AB730; /* 修改為綠色 */
 }
 
 .floating-btn:hover svg {
-  stroke-dashoffset: -480;
+  stroke-dashoffset: 900; /* 調整為適合矩形的值 */
 }
