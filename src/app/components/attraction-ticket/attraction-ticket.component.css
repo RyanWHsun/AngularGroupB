@@ -134,6 +134,7 @@
   margin: 20px;
 }
 
+/* 條列顯示票券 */
 .list-item {
   display: flex;
   align-items: flex-start;

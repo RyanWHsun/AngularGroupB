@@ -1,16 +1,22 @@
 .floating-btn {
+  width:100%;
+  margin: 20px 0 20px 0;
   position: relative; /* 讓按鈕相對於 .modal-dialog 定位 */
-  top: 30%;
-  left: 80%;
+  top: 50%;
   padding: 12px 20px;
   font-size: 16px;
   font-weight: bold;
-  color: white;
-  background-color: #007bff;
+  /* color: white;
+  background-color: #007bff; */
   border: none;
-  border-radius: 50px;
+  border-radius: 40px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   cursor: pointer;
+
+  background: transparent;
+  border: 1px solid #91C9FF;
+  outline: none;
+  transition: 1s ease-in-out;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
