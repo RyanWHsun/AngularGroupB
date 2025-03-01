@@ -7,7 +7,6 @@ import { environment } from 'src/environments/environment'; // ✅ 確保引入 
   providedIn: 'root'
 })
 export class LinePayService {
-  private linePayApiUrl = `${environment.linePayApiUrl}/payment`; // ✅ 確保 API 路徑正確
 
   constructor(private http: HttpClient) { }
 
@@ -16,6 +15,5 @@ export class LinePayService {
     return this.http.post('https://localhost:7112/api/payment/request', paymentRequest, { withCredentials: true })
   }
 }
-
 
 
