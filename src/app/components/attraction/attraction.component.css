@@ -6,7 +6,8 @@
 }
 
 .card-img-container {
-  overflow: hidden; /* 防止圖片放大時超出 */
+  overflow: hidden;
+  /* 防止圖片放大時超出 */
 }
 
 .card-img-container img {
@@ -32,21 +33,30 @@
 }
 
 .card-body button {
-  width: 100%; /* 讓按鈕填滿父容器 */
-  border-radius: 10px; /* 讓按鈕的圓角與卡片一致 */
-  padding: 10px; /* 增加按鈕的內邊距 */
-  background-color: white; /* 設定按鈕背景顏色，可依需求調整 */
-  color: #7ab730; /* 設定文字顏色 */
+  width: 100%;
+  /* 讓按鈕填滿父容器 */
+  border-radius: 10px;
+  /* 讓按鈕的圓角與卡片一致 */
+  padding: 10px;
+  /* 增加按鈕的內邊距 */
+  background-color: white;
+  /* 設定按鈕背景顏色，可依需求調整 */
+  color: #8cae78;
+  /* 設定文字顏色 */
   border-style: solid;
-  border-color: #7ab730;
-  font-size: 1rem; /* 設定字體大小 */
-  cursor: pointer; /* 鼠標變成手型 */
+  border-color: #8cae78;
+  font-size: 1rem;
+  /* 設定字體大小 */
+  cursor: pointer;
+  /* 鼠標變成手型 */
   margin-top: 10px;
 }
 
 .card-body button:hover {
-  background-color: #7ab730; /* 設定按鈕背景顏色，可依需求調整 */
-  color: white; /* 設定文字顏色 */
+  background-color: #8cae78;
+  /* 設定按鈕背景顏色，可依需求調整 */
+  color: white;
+  /* 設定文字顏色 */
 }
 
 .views {
@@ -62,10 +72,14 @@
 
 .tags {
   margin-top: 10px;
-  white-space: nowrap; /* 防止換行 */
-  overflow: hidden; /* 超出範圍隱藏 */
-  text-overflow: ellipsis; /* 顯示省略號 */
-  max-width: 100%; /* 確保不會超出容器範圍 */
+  white-space: nowrap;
+  /* 防止換行 */
+  overflow: hidden;
+  /* 超出範圍隱藏 */
+  text-overflow: ellipsis;
+  /* 顯示省略號 */
+  max-width: 100%;
+  /* 確保不會超出容器範圍 */
 }
 
 .tags span {
@@ -78,28 +92,36 @@
 }
 
 .modal-dialog {
-  position: relative; /* 讓內部的絕對定位元素（按鈕）相對於它擺放 */
+  position: relative;
+  /* 讓內部的絕對定位元素（按鈕）相對於它擺放 */
 }
 
 .modal-custom-width {
   max-width: 45%;
   min-width: 1100px;
 }
+
 /* 設定 Modal 內容區塊的最大寬度為 80% 並置中 */
 .modal-content-wrapper {
   max-width: 80%;
-  margin: 0 auto; /* 水平置中 */
+  margin: 0 auto;
+  /* 水平置中 */
 }
+
 /* 調整 Modal 標題下方的灰線 */
 .modal-header {
-  border-bottom: 1px solid #ddd; /* 保留 Bootstrap 原本的灰線 */
-  width: 80%; /* 設定與 Modal 內容一致的寬度 */
-  margin: 0 auto; /* 讓標題區置中 */
+  border-bottom: 1px solid #ddd;
+  /* 保留 Bootstrap 原本的灰線 */
+  width: 80%;
+  /* 設定與 Modal 內容一致的寬度 */
+  margin: 0 auto;
+  /* 讓標題區置中 */
 }
 
 .modal-content-grid {
   display: grid;
-  grid-template-columns: 55% 43%; /* 左右 55:43 比例 */
+  grid-template-columns: 55% 43%;
+  /* 左右 55:43 比例 */
   gap: 20px;
 }
 
@@ -111,7 +133,8 @@
   max-height: 315px;
   padding: 5px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.6); /* 半透明背景 */
+  background: rgba(255, 255, 255, 0.6);
+  /* 半透明背景 */
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 
@@ -142,6 +165,7 @@
   flex: 1;
   min-width: 43%;
 }
+
 .carousel-inner {
   border-radius: 10px;
   border: 2px solid rgba(0, 0, 0, 0.1);
@@ -158,10 +182,12 @@
 
 .map-content {
   width: 100%;
-  height: 300px; /* 預設高度 */
+  height: 300px;
+  /* 預設高度 */
   max-height: 400px;
   min-height: 200px;
 }
+
 .info-section {
   font-size: 1rem;
   line-height: 1.5;
@@ -222,7 +248,8 @@
 .comment-line {
   width: 100%;
   height: 2px;
-  background-color: #ccc; /* 灰色底線 */
+  background-color: #ccc;
+  /* 灰色底線 */
   margin-bottom: 15px;
 }
 
@@ -300,23 +327,29 @@
 
 .pagination .page-link {
   cursor: pointer;
-  color: #000; /* 預設按鈕文字顏色 */
+  color: #000;
+  /* 預設按鈕文字顏色 */
 }
 
 .pagination {
-  margin-top: 20px; /* 調整與其他內容的垂直間距 */
+  margin-top: 20px;
+  /* 調整與其他內容的垂直間距 */
 }
 
 .pagination .page-item.active .page-link {
-  background-color: #7ab730; /* 當前頁面的背景色 */
-  border-color: #7ab730; /* 當前頁面的邊框色 */
+  background-color: #8cae78;
+  /* 當前頁面的背景色 */
+  border-color: #8cae78;
+  /* 當前頁面的邊框色 */
 }
 
 /* comment box */
 .comment-box {
   display: flex;
-  align-items: center; /* 垂直置中 */
-  gap: 15px; /* 左中右間距 */
+  align-items: center;
+  /* 垂直置中 */
+  gap: 15px;
+  /* 左中右間距 */
   padding: 15px;
   background: #f8f9fa;
   border-radius: 10px;
@@ -325,9 +358,11 @@
 
 .comment-content {
   display: flex;
-  flex-direction: column; /* 讓評分區在輸入框上方 */
+  flex-direction: column;
+  /* 讓評分區在輸入框上方 */
   flex: 1;
-  gap: 5px; /* 讓評分和輸入框之間有間距 */
+  gap: 5px;
+  /* 讓評分和輸入框之間有間距 */
 }
 
 .rating {
@@ -343,11 +378,13 @@
 }
 
 .star:hover {
-  text-shadow: 0 0 10px gold; /* 滑鼠懸停時，星星邊緣發光 */
+  text-shadow: 0 0 10px gold;
+  /* 滑鼠懸停時，星星邊緣發光 */
 }
 
 .selected {
-  color: gold; /* 點擊後變黃色 */
+  color: gold;
+  /* 點擊後變黃色 */
 }
 
 .comment-input {
@@ -367,8 +404,10 @@
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
-  height: 100%; /* 讓按鈕與輸入框高度一致 */
-  align-self: flex-end; /* 確保按鈕對齊 */
+  height: 100%;
+  /* 讓按鈕與輸入框高度一致 */
+  align-self: flex-end;
+  /* 確保按鈕對齊 */
 }
 
 .comment-submit:hover {
@@ -378,9 +417,12 @@
 /* 天氣元件 */
 .weather-Container {
   display: flex;
-  align-items: center; /* 垂直置中 */
-  justify-content: space-between; /* 左右對齊 */
-  background: rgba(255, 255, 255, 0.6); /* 半透明背景 */
+  align-items: center;
+  /* 垂直置中 */
+  justify-content: space-between;
+  /* 左右對齊 */
+  background: rgba(255, 255, 255, 0.6);
+  /* 半透明背景 */
   padding: 15px;
   border-radius: 10px;
   width: 100%;
@@ -392,20 +434,23 @@
 
 /* 左側天氣圖示 */
 .weather-icon {
-  flex: 1; /* 佔據可用空間 */
+  flex: 1;
+  /* 佔據可用空間 */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .weather-icon img {
-  width: 80px; /* 天氣圖示大小 */
+  width: 80px;
+  /* 天氣圖示大小 */
   height: auto;
 }
 
 /* 右側氣溫 & 濕度資訊 */
 .weather-info {
-  flex: 2; /* 佔據較大空間 */
+  flex: 2;
+  /* 佔據較大空間 */
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -415,13 +460,16 @@
 .temperature,
 .humidity {
   display: flex;
-  align-items: center; /* 圖片 & 文字對齊 */
-  gap: 10px; /* 間距 */
+  align-items: center;
+  /* 圖片 & 文字對齊 */
+  gap: 10px;
+  /* 間距 */
 }
 
 .temperature img,
 .humidity img {
-  width: 30px; /* 小圖示 */
+  width: 30px;
+  /* 小圖示 */
   height: auto;
 }
 
@@ -433,7 +481,8 @@
 }
 
 .uri-Container {
-  background: rgba(255, 255, 255, 0.6); /* 半透明背景 */
+  background: rgba(255, 255, 255, 0.6);
+  /* 半透明背景 */
   padding: 15px;
   border-radius: 10px;
   width: 100%;
@@ -444,7 +493,8 @@
 }
 
 .address-Container {
-  background: rgba(255, 255, 255, 0.6); /* 半透明背景 */
+  background: rgba(255, 255, 255, 0.6);
+  /* 半透明背景 */
   padding: 15px;
   border-radius: 10px;
   width: 100%;
@@ -454,7 +504,8 @@
 }
 
 button {
-  outline: none; /* 移除點擊時的輪廓 */
+  outline: none;
+  /* 移除點擊時的輪廓 */
 }
 
 .spinner-container {
@@ -462,11 +513,13 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px; /* 讓 spinner 之間有間距 */
+  gap: 10px;
+  /* 讓 spinner 之間有間距 */
 }
 
 .spinner-grow {
-  width: 40px; /* 增加大小 */
+  width: 40px;
+  /* 增加大小 */
   height: 40px;
   animation: fadeInOut 5s infinite;
   border-radius: 50%;
@@ -479,19 +532,23 @@ button {
   /* 0s 開始 */
   animation-delay: 0s;
 }
+
 .spinner-2 {
   background-color: rgba(144, 238, 144);
   /* 1s 開始 */
   animation-delay: 0.625s;
 }
+
 .spinner-3 {
   background-color: rgba(144, 238, 144);
   animation-delay: 1.25s;
 }
+
 .spinner-4 {
   background-color: rgba(144, 238, 144);
   animation-delay: 1.875s;
 }
+
 .spinner-5 {
   background-color: rgba(144, 238, 144);
   animation-delay: 2.5s;
@@ -507,10 +564,12 @@ button {
     transform: scale(0.5);
     opacity: 0.1;
   }
+
   50% {
     transform: scale(1.2);
     opacity: 0.5;
   }
+
   100% {
     transform: scale(0.5);
     opacity: 0.1;

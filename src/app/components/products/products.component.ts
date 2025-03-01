@@ -36,6 +36,7 @@ export class ProductsComponent {
     this.loadProductsByKeywordOrDefault(); //來自其他網站的query或初始化加載商品
     this.loadCategories(); // 加載分類數據
     this.loadLatestProducts();//加載最新商品
+    this.scrollToTop();//加載頁面回到頁首
   }
 
   // 加載分類
@@ -193,6 +194,9 @@ export class ProductsComponent {
         this.loadProducts();
       }
     });
+  }
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
 

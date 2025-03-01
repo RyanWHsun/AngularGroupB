@@ -55,6 +55,7 @@ export class SocialmediaComponent {
     this.loadArticles();
     this.loadTypes();
     this.loadContactId();
+    this.scrollToTop();
   }
   ngDoCheck(): void {
     if (
@@ -286,5 +287,8 @@ export class SocialmediaComponent {
   }
   defaultComment(postId: number) {
     this.commentTexts[postId] = '今天是個報告的好日子';
+  }
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

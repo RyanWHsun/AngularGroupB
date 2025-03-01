@@ -140,11 +140,11 @@ export class AttractionComponent implements AfterViewInit {
     private attractionTagService: AttractionTagService,
     private openWeatherService: OpenWeatherAPIService,
     private sweetAlert2Service: SweetAlert2Service
-  ) {}
+  ) { }
 
-  inputDemoData(){
+  inputDemoData() {
     this.commentComponent.inputContent = "太魯閣國家公園壯麗非凡，峽谷險峻秀麗，溪水清澈蜿蜒，奇岩峭壁令人驚嘆。步道穿梭山林，瀑布飛瀉如畫，動植物生態豐富，是探索大自然奧秘的絕佳勝地，讓人流連忘返，讚嘆不已！";
-    this.selectedRating=4;
+    this.selectedRating = 4;
     this.highlightStars(4);
   }
 
@@ -184,7 +184,7 @@ export class AttractionComponent implements AfterViewInit {
         console.log(attraction);
         this.partialAttractions = attraction;
       },
-      error: (err) => {},
+      error: (err) => { },
     });
   }
 
@@ -227,9 +227,8 @@ export class AttractionComponent implements AfterViewInit {
       tap((commenter) => {
         // 轉換 Base64 為 data:image/jpeg;base64 或 data:image/png;base64 格式
         commenter.fUserImage = commenter.fUserImage
-          ? `data:image/${
-              commenter.fUserImage.startsWith('/9j/') ? 'jpeg' : 'png'
-            };base64,${commenter.fUserImage}`
+          ? `data:image/${commenter.fUserImage.startsWith('/9j/') ? 'jpeg' : 'png'
+          };base64,${commenter.fUserImage}`
           : 'assets/images/head002.jpg';
 
         this.loginCommenter = commenter;
@@ -525,9 +524,8 @@ export class AttractionComponent implements AfterViewInit {
           this.attractionComment = data.map((comment) => ({
             ...comment,
             fUserImage: comment.fUserImage
-              ? `data:image/${
-                  comment.fUserImage.startsWith('/9j/') ? 'jpeg' : 'png'
-                };base64,${comment.fUserImage}`
+              ? `data:image/${comment.fUserImage.startsWith('/9j/') ? 'jpeg' : 'png'
+              };base64,${comment.fUserImage}`
               : 'assets/images/head002.jpg',
           }));
           console.log(this.attractionComment);
@@ -726,6 +724,8 @@ export class AttractionComponent implements AfterViewInit {
         switchMap(() => this.setCommenter$())
       )
       .subscribe();
+    //載入頁面回到頁首
+    this.scrollToTop();
   }
 
   ngAfterViewInit() {

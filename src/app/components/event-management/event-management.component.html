@@ -4,8 +4,8 @@
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
       <h3 class="display-4 text-white text-uppercase">活動管理</h3>
       <div class="d-inline-flex text-white">
-        <p class="m-0 text-uppercase"><a class="text-white" routerLink="/">首頁</a></p>
-        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase"><a class="text-white" routerLink="/event">活動推薦</a></p>
+        <i class="fa fa-angle-double-left pt-1 px-3"></i>
         <p class="m-0 text-uppercase">活動管理</p>
       </div>
     </div>
@@ -31,8 +31,8 @@
   <div class="row">
     <div class="col-md-6 col-lg-4 mb-4" *ngFor="let event of paginatedEvents">
       <div class="card shadow-lg border-0 rounded-4">
-        <img *ngIf="event.fEventImageUrl" [src]="event.fEventImageUrl" alt="活動圖片"
-          class="card-img-top rounded-top-4" style="height: 200px; object-fit: cover;">
+        <img *ngIf="event.fEventImageUrl" [src]="event.fEventImageUrl" alt="活動圖片" class="card-img-top rounded-top-4"
+          style="height: 200px; object-fit: cover;">
 
         <div class="card-body">
           <h5 class="card-title fw-bold text-dark">{{ event.fEventName }}</h5>
@@ -67,11 +67,3 @@
     </button>
   </div>
 </div>
-
-
-
-
-
-
-
-

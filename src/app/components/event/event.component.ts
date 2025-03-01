@@ -28,7 +28,7 @@ export class EventComponent implements OnInit {
     maxPrice: ''
   };
 
-  constructor(private http: HttpClient, private router: Router, private cdRef: ChangeDetectorRef) {}
+  constructor(private http: HttpClient, private router: Router, private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.loadSavedEvents();
@@ -38,6 +38,11 @@ export class EventComponent implements OnInit {
     // setInterval(() => {
     //   this.nextEvent();
     // }, 8000);
+    this.scrollToTop();
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   /** 🚀 從 API 載入活動 */
@@ -71,9 +76,9 @@ export class EventComponent implements OnInit {
   /** 🏷️ 取得所有篩選選項 */
   extractUniqueFilters() {
     this.uniqueLocations = [...new Set(this.events.map(e => e.fLocation))]
-    .sort((a, b) => a.length - b.length);
+      .sort((a, b) => a.length - b.length);
     this.uniqueDurations = [...new Set(this.events.map(e => e.fDuration))]
-    .sort((a, b) => a - b);
+      .sort((a, b) => a - b);
   }
 
   /** 🔍 依據篩選條件搜尋活動 */
@@ -142,8 +147,8 @@ export class EventComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-   /** 📌 點擊圖片，觸發 input file */
-   triggerFileInput(eventId: number) {
+  /** 📌 點擊圖片，觸發 input file */
+  triggerFileInput(eventId: number) {
     const fileInput = document.querySelector(`#fileInput${eventId}`) as HTMLInputElement;
     if (fileInput) {
       fileInput.click();

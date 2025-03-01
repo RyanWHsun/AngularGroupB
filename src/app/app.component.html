@@ -53,9 +53,9 @@
             <a routerLink="attraction" routerLinkActive="active" class="nav-link dropdown-toggle"
               data-toggle="dropdown">景點</a>
             <div class="dropdown-menu border-0 rounded-0 m-0">
+              <a routerLink="attraction/tickets" class="dropdown-item">景點票券</a>
               <!-- 登入者為管理者才可以顯示 -->
               <a *ngIf="isAdmin" routerLink="attraction/admin" class="dropdown-item">景點(Admin)</a>
-              <a routerLink="attraction/tickets" class="dropdown-item">景點票券</a>
             </div>
           </div>
           <!-- 景點end -->
@@ -66,7 +66,8 @@
               data-toggle="dropdown">活動</a>
             <div class="dropdown-menu border-0 rounded-0 m-0">
               <a routerLink="event" class="dropdown-item">活動推薦</a>
-              <a routerLink="/events" class="dropdown-item">活動管理</a>
+              <!-- 登入者為管理者才可以顯示 -->
+              <a *ngIf="isAdmin" routerLink="/events" class="dropdown-item">活動(Admin)</a>
             </div>
           </div>
           <!-- 活動end -->
@@ -97,7 +98,7 @@
             <a *ngIf="isLogin" [routerLink]="['/user/page']" routerLinkActive="active" class="nav-link dropdown-toggle"
               data-toggle="dropdown">個人主頁</a>
             <div class="dropdown-menu border-0 rounded-0 m-0">
-              <a *ngIf="isLogin" (click)="logOut()" class="dropdown-item">登出</a>
+              <a *ngIf="isLogin" role="button" (click)="logOut()" class="dropdown-item">登出</a>
               <!-- <a *ngIf="isLogin" [routerLink]="['/user/page']" class="dropdown-item">帳戶顯示</a>
               <a *ngIf="isLogin" routerLink="/user/edit" class="dropdown-item">帳戶修改</a>
               <a *ngIf="isLogin" routerLink="/user/login" class="dropdown-item">帳戶登入</a> -->

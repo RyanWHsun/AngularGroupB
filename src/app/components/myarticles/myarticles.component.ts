@@ -72,6 +72,7 @@ export class MyarticlesComponent {
         this.commentDatas[comment.fPostId].unshift(comment);
       }
     });
+    this.scrollToTop();
   }
   ngDoCheck(): void {
 
@@ -347,6 +348,9 @@ export class MyarticlesComponent {
   }
   defaultComment() {
     this.commentTexts = '今天是個報告的好日子';
+  }
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   //
   private _setupEditor(cloud: CKEditorCloudResult<typeof cloudConfig>) {

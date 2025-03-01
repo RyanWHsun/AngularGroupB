@@ -1,16 +1,13 @@
 <!-- Header Start -->
 <div class="container-fluid page-header">
   <div class="container">
-    <div
-      class="d-flex flex-column align-items-center justify-content-center"
-      style="min-height: 400px"
-    >
-      <h3 class="display-4 text-white text-uppercase">景點</h3>
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+      <h3 class="display-4 text-white text-uppercase">景點票券</h3>
       <div class="d-inline-flex text-white">
         <p class="m-0 text-uppercase">
-          <a class="text-white" routerLink="">首頁</a>
+          <a class="text-white" routerLink="/attraction">景點</a>
         </p>
-        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <i class="fa fa-angle-double-left pt-1 px-3"></i>
         <p class="m-0 text-uppercase">景點票券</p>
       </div>
     </div>
@@ -23,20 +20,12 @@
   <!-- Menu -->
   <ul class="nav nav-tabs">
     <li class="nav-item">
-      <button
-        class="nav-link"
-        [ngClass]="{ 'active-tab': menuIsActive }"
-        (click)="toggleAll()"
-      >
+      <button class="nav-link" [ngClass]="{ 'active-tab': menuIsActive }" (click)="toggleAll()">
         全部票券
       </button>
     </li>
     <li class="nav-item">
-      <button
-        class="nav-link"
-        [ngClass]="{ 'active-tab': !menuIsActive }"
-        (click)="toggleRecentSell(0)"
-      >
+      <button class="nav-link" [ngClass]="{ 'active-tab': !menuIsActive }" (click)="toggleRecentSell(0)">
         最近開賣
       </button>
     </li>
@@ -44,18 +33,11 @@
 
   <!-- View Mode Toggle -->
   <div class="d-flex justify-content-end mt-3">
-    <button
-      class="btn btn-outline-primary"
-      [ngClass]="{ active: viewModeIsActive }"
-      (click)="setViewMode('grid')"
-    >
+    <button class="btn btn-outline-primary" [ngClass]="{ active: viewModeIsActive }" (click)="setViewMode('grid')">
       <img src="assets/images/menu.png" alt="格狀顯示" />
     </button>
-    <button
-      class="btn btn-outline-primary ml-2"
-      [ngClass]="{ active: !viewModeIsActive }"
-      (click)="setViewMode('list')"
-    >
+    <button class="btn btn-outline-primary ml-2" [ngClass]="{ active: !viewModeIsActive }"
+      (click)="setViewMode('list')">
       <img src="assets/images/list.png" alt="條列顯示" />
     </button>
   </div>
@@ -67,26 +49,17 @@
       <div class="row" *ngSwitchCase="'grid'">
         <!-- Card -->
         <!-- 使用 let i = index 獲取目前的索引。 -->
-        <div
-          class="col-md-4"
-          *ngFor="let ticket of partialAttractionTickets; let i = index"
-        >
+        <div class="col-md-4" *ngFor="let ticket of partialAttractionTickets; let i = index">
           <div class="card">
             <div class="card-img-container">
-              <img
-                [src]="ticket.fimageSrc || 'assets/images/noImage.jpg'"
-                class="card-img-top"
-                [alt]="ticket.fAttractionName"
-              />
+              <img [src]="ticket.fimageSrc || 'assets/images/noImage.jpg'" class="card-img-top"
+                [alt]="ticket.fAttractionName" />
             </div>
             <div class="card-body">
               <h5 class="card-title">{{ ticket.fAttractionName }}</h5>
               <div class="tags">{{ attractionDescription[i] }}</div>
-              <button
-                (click)="showTicketModal(ticket, attractionDescription[i])"
-                data-toggle="modal"
-                data-target="#exampleModalCenter"
-              >
+              <button (click)="showTicketModal(ticket, attractionDescription[i])" data-toggle="modal"
+                data-target="#exampleModalCenter">
                 <i class="fa-solid fa-cart-shopping"></i>
                 購買
               </button>
@@ -100,15 +73,9 @@
     <div class="container mt-4">
       <div *ngSwitchCase="'list'">
         <div class="list-container">
-          <div
-            class="list-item"
-            *ngFor="let ticket of partialAttractionTickets; let i = index"
-          >
+          <div class="list-item" *ngFor="let ticket of partialAttractionTickets; let i = index">
             <div class="image">
-              <img
-                [src]="ticket.fimageSrc || 'assets/images/noImage.jpg'"
-                [alt]="ticket.fAttractionName"
-              />
+              <img [src]="ticket.fimageSrc || 'assets/images/noImage.jpg'" [alt]="ticket.fAttractionName" />
             </div>
             <div class="details">
               <!-- <div class="views"><i class="fas fa-eye"></i> {{ 99999 }}</div> -->
@@ -118,13 +85,8 @@
                 {{ ticket.fPrice | currency : "TWD" : "symbol" : "1.0-0" }}
               </p> -->
               <div class="button-container">
-                <button
-                  type="button"
-                  class="btn"
-                  (click)="showTicketModal(ticket, attractionDescription[i])"
-                  data-toggle="modal"
-                  data-target="#exampleModalCenter"
-                >
+                <button type="button" class="btn" (click)="showTicketModal(ticket, attractionDescription[i])"
+                  data-toggle="modal" data-target="#exampleModalCenter">
                   購買
                 </button>
               </div>
@@ -136,49 +98,29 @@
   </div>
 
   <!-- Modal -->
-  <div
-    class="modal fade"
-    id="exampleModalCenter"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="exampleModalCenterTitle"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalCenterTitle">
             {{ buyTicketModal.attractionName }}
           </h5>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <img
-            [src]="buyTicketModal.imageSrc || 'assets/images/noImage.jpg'"
-            class="modal-image"
-            [alt]="buyTicketModal.attractionName"
-          />
+          <img [src]="buyTicketModal.imageSrc || 'assets/images/noImage.jpg'" class="modal-image"
+            [alt]="buyTicketModal.attractionName" />
           <div class="tags">{{ buyTicketModal.attractionDescription }}</div>
 
           <div class="ticket-type-qty-container">
             <!-- 票種下拉式選單 -->
-            <select
-              #ticketTypeSelect
-              (change)="setTicketPrice($event)"
-              class="ticket-dropdown"
-            >
+            <select #ticketTypeSelect (change)="setTicketPrice($event)" class="ticket-dropdown">
               <option value="">請選擇分類</option>
-              <option
-                *ngFor="let type of buyTicketModal.attractionTicketType; let i = index"
-                [value]="buyTicketModal.attractionTicketId![i]"
-              >
+              <option *ngFor="let type of buyTicketModal.attractionTicketType; let i = index"
+                [value]="buyTicketModal.attractionTicketId![i]">
                 {{ type }}
               </option>
             </select>
@@ -216,22 +158,14 @@
             <button (click)="subTicketQuantity()" class="changeQtyBtn">
               <i class="fa-solid fa-minus"></i>
             </button>
-            <input
-              class="inputQty"
-              type="text"
-              [(ngModel)]="buyTicketModal.attractionTicketQuantity"
-              (change)="changeTicketQty()"
-            />
+            <input class="inputQty" type="text" [(ngModel)]="buyTicketModal.attractionTicketQuantity"
+              (change)="changeTicketQty()" />
             <button (click)="addTicketQuantity()" class="changeQtyBtn">
               <i class="fa-solid fa-plus"></i>
             </button>
           </div>
-          <button
-            type="button"
-            class="btn btn-outline-success"
-            (click)="addTicketToShoppingCart(buyTicketModal)"
-            [disabled]="isDisabled"
-          >
+          <button type="button" class="btn btn-outline-success" (click)="addTicketToShoppingCart(buyTicketModal)"
+            [disabled]="isDisabled">
             <i class="fa-solid fa-cart-shopping"></i>加入購物車
           </button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -254,11 +188,7 @@
       </li>
       <!-- 頁碼 -->
       <div *ngFor="let index of pages">
-        <li
-          class="page-item"
-          [ngClass]="{ active: selectedPageIndex === index }"
-          (click)="setSelectedPageIndex(index)"
-        >
+        <li class="page-item" [ngClass]="{ active: selectedPageIndex === index }" (click)="setSelectedPageIndex(index)">
           <a class="page-link">{{ index + 1 }}</a>
         </li>
       </div>

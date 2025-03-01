@@ -4,9 +4,9 @@
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
       <h3 class="display-4 text-white text-uppercase">活動推薦</h3>
       <div class="d-inline-flex text-white">
-        <p class="m-0 text-uppercase"><a class="text-white" routerLink="/">首頁</a></p>
-        <i class="fa fa-angle-double-right pt-1 px-3"></i>
         <p class="m-0 text-uppercase">活動推薦</p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
+        <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
       </div>
     </div>
   </div>
@@ -84,29 +84,27 @@
           <div class="package-item bg-white shadow-sm rounded-lg mb-2">
 
             <!-- ✅ 圖片 (點擊可上傳) -->
-            <img class="img-fluid event-image rounded-top"
-                 [src]="event.fEventImageUrl || 'assets/images/noImage.jpg'"
-                 alt="活動圖片"
-                 (click)="triggerFileInput(event.fEventId)"
-                 title="點擊上傳新圖片"
-                 style="cursor: pointer; transition: transform 0.2s ease-in-out;">
+            <img class="img-fluid event-image rounded-top" [src]="event.fEventImageUrl || 'assets/images/noImage.jpg'"
+              alt="活動圖片" (click)="triggerFileInput(event.fEventId)" title="點擊上傳新圖片"
+              style="cursor: pointer; transition: transform 0.2s ease-in-out;">
 
             <!-- ✅ 隱藏的 input file，綁定 eventId -->
-            <input type="file"
-                   [id]="'fileInput' + event.fEventId"
-                   (change)="onFileSelected($event, event.fEventId)"
-                   style="display: none;">
+            <input type="file" [id]="'fileInput' + event.fEventId" (change)="onFileSelected($event, event.fEventId)"
+              style="display: none;">
 
             <div class="p-4">
               <div class="d-flex justify-content-between mb-3">
                 <small><i class="fa fa-map-marker-alt text-primary mr-2"></i>{{ event.fLocation || '未知地點' }}</small>
-                <small *ngIf="event.fDuration"><i class="fa fa-calendar-alt text-primary mr-2"></i>{{ event.fDuration }} 天</small>
-                <small *ngIf="event.fParticipant"><i class="fa fa-user text-primary mr-2"></i>{{ event.fParticipant }} 人</small>
+                <small *ngIf="event.fDuration"><i class="fa fa-calendar-alt text-primary mr-2"></i>{{ event.fDuration }}
+                  天</small>
+                <small *ngIf="event.fParticipant"><i class="fa fa-user text-primary mr-2"></i>{{ event.fParticipant }}
+                  人</small>
               </div>
 
               <h5 class="text-dark">{{ event.fEventName }}</h5>
               <p class="text-muted">
-                {{ event.fEventDescription.length > 20 ? (event.fEventDescription | slice:0:20) + '...' : event.fEventDescription }}
+                {{ event.fEventDescription.length > 20 ? (event.fEventDescription | slice:0:20) + '...' :
+                event.fEventDescription }}
               </p>
 
 
@@ -115,7 +113,8 @@
               </div>
 
               <button class="btn btn-outline-warning mt-3" (click)="toggleSaveEvent(event)">
-                <i class="fa" [ngClass]="{'fa-star': isEventSaved(event.fEventId), 'fa-star-o': !isEventSaved(event.fEventId)}"></i>
+                <i class="fa"
+                  [ngClass]="{'fa-star': isEventSaved(event.fEventId), 'fa-star-o': !isEventSaved(event.fEventId)}"></i>
                 收藏
               </button>
 
@@ -130,4 +129,3 @@
     </div>
   </div>
 </div>
-

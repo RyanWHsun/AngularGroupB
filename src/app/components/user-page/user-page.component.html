@@ -2,13 +2,11 @@
 <div class="container-fluid page-header">
   <div class="container">
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
-      <h3 class="display-4 text-white text-uppercase">帳戶</h3>
+      <h3 class="display-4 text-white text-uppercase">個人主頁</h3>
       <div class="d-inline-flex text-white">
+        <p class="m-0 text-uppercase">個人主頁</p>
+        <i class="fa fa-angle-double-right pt-1 px-3"></i>
         <p class="m-0 text-uppercase"><a class="text-white" routerLink="">首頁</a></p>
-        <i class="fa fa-angle-double-right pt-1 px-3"></i>
-        <p class="m-0 text-uppercase">帳戶</p>
-        <i class="fa fa-angle-double-right pt-1 px-3"></i>
-        <p class="m-0 text-uppercase">帳戶主頁</p>
       </div>
     </div>
   </div>
@@ -246,7 +244,7 @@
       </div>
     </a>
 
-    <a (click)="setRank()">
+    <a role="button" (click)="setRank()">
       <div class="w-100 p-1 mb-3 topBtn"
         style="border-radius:15px;border: solid 3px; border-color:#b0b0b0; background-color: #ffffff;">
         <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #b0b0b0;">
@@ -260,7 +258,7 @@
       </div>
     </a>
     <!-- 登出 -->
-    <a (click)="logOut()">
+    <a role="button" (click)="logOut()">
       <div class="w-100 p-1 mb-3 nav-link topBtn"
         style="border-radius:15px;border: solid 3px; border-color:#ebbaba; background-color: #ffffff;">
         <div class="p-3 d-flex justify-content-between" style="border-radius:15px;background-color: #ebbaba;">
