@@ -38,6 +38,7 @@ import { ICommenter } from 'src/app/interfaces/ICommenter';
 import { OpenWeatherAPIService } from 'src/app/services/open-weather-api.service';
 import { OpenAIService } from 'src/app/services/ai.service';
 import { IItineraryItem } from 'src/app/interfaces/IItineraryItem';
+import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
 
 // 宣告全域變數 google
 // 在 Google Maps JavaScript API 中，google 這個物件是由 API 動態載入的，而不是直接在 TypeScript 環境中定義的。
@@ -137,8 +138,15 @@ export class AttractionComponent implements AfterViewInit {
     private googleMapsService: GoogleMapAPIService,
     private attractionViewCookieService: AttractionViewCookieService,
     private attractionTagService: AttractionTagService,
-    private openWeatherService: OpenWeatherAPIService
+    private openWeatherService: OpenWeatherAPIService,
+    private sweetAlert2Service: SweetAlert2Service
   ) {}
+
+  inputDemoData(){
+    this.commentComponent.inputContent = "太魯閣國家公園壯麗非凡，峽谷險峻秀麗，溪水清澈蜿蜒，奇岩峭壁令人驚嘆。步道穿梭山林，瀑布飛瀉如畫，動植物生態豐富，是探索大自然奧秘的絕佳勝地，讓人流連忘返，讚嘆不已！";
+    this.selectedRating=4;
+    this.highlightStars(4);
+  }
 
   clickAiBtn(isClick: boolean) {
     this.isClickedAiBtn = isClick;
@@ -236,7 +244,7 @@ export class AttractionComponent implements AfterViewInit {
       this.commentComponent.inputContent === '' ||
       this.selectedRating === 0
     ) {
-      alert('評論還未填寫');
+      this.sweetAlert2Service.showEasyWarning("評論還未填寫");
       return;
     }
     const comment: IAttractionComment = {
@@ -258,6 +266,7 @@ export class AttractionComponent implements AfterViewInit {
         switchMap(() => {
           console.log('Comment submitted successfully!');
           this.commentComponent.inputContent = ''; // 清空輸入框
+          this.highlightStars(0);
           // 接著執行 showCommentsByCondition$
           return this.showCommentsByCondition$(
             this.attraction.fAttractionId!,
