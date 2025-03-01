@@ -142,6 +142,12 @@ export class AttractionComponent implements AfterViewInit {
     private sweetAlert2Service: SweetAlert2Service
   ) {}
 
+  inputDemoData(){
+    this.commentComponent.inputContent = "太魯閣國家公園壯麗非凡，峽谷險峻秀麗，溪水清澈蜿蜒，奇岩峭壁令人驚嘆。步道穿梭山林，瀑布飛瀉如畫，動植物生態豐富，是探索大自然奧秘的絕佳勝地，讓人流連忘返，讚嘆不已！";
+    this.selectedRating=4;
+    this.highlightStars(4);
+  }
+
   clickAiBtn(isClick: boolean) {
     this.isClickedAiBtn = isClick;
     if (!this.isClickedAiBtn) {
