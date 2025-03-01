@@ -35,9 +35,8 @@
             <div class="col-1 text-center">
               <input type="checkbox" [(ngModel)]="selectAllTickets" (click)="toggleAllTickets()" />
             </div>
-            <div class="col-3 text-left">景點票券
+            <div class="col-4 text-left">景點票券
             </div>
-            <div class="col-1 text-center">票種</div>
             <div class="col-2 text-center">單價</div>
             <div class="col-2 text-center">數量</div>
             <div class="col-2 text-center">小計</div>
@@ -52,11 +51,8 @@
               <img *ngIf="item.fSingleImage" [src]="'data:image/png;base64,' + item.fSingleImage"
                 class="img-fluid rounded" alt="商品圖片" />
             </div>
-            <div class="col-2 text-left">
-              <p class="h6">{{ item.fItemName }}</p>
-            </div>
-            <div class="col-1 text-center">
-              <p class="h6">{{ item.fSpecification}}</p>
+            <div class="col-3 text-left">
+              <p class="h6">{{ item.fItemName }}&nbsp;&nbsp;{{ item.fSpecification}}</p>
             </div>
             <div class="col-2 text-center">
               <p class="text-danger font-weight-bold" style="font-size: 16px;">NT${{ item.fPrice | number:'1.0-0' }}</p>
@@ -97,11 +93,7 @@
             <div class="col-1 text-center">
               <input type="checkbox" [(ngModel)]="selectAllEvents" (click)="toggleAllEvents()" />
             </div>
-            <div class="col-1 text-center">
-              <strong class="h6">活動</strong>
-            </div>
-            <div class="col-2 text-left">活動名稱</div>
-            <div class="col-1 text-center">活動日期</div>
+            <div class="col-4 text-left">活動報名</div>
             <div class="col-2 text-center">單價</div>
             <div class="col-2 text-center">數量</div>
             <div class="col-2 text-center">小計</div>
@@ -116,11 +108,9 @@
               <img *ngIf="item.fSingleImage" [src]="'data:image/png;base64,' + item.fSingleImage"
                 class="img-fluid rounded" alt="商品圖片" />
             </div>
-            <div class="col-2  text-left">
-              <p class="h6">{{ item.fItemName }}</p>
-            </div>
-            <div class="col-1 text-center">
-              <p class="h6">{{ item.fSpecification}}</p>
+            <div class="col-3  text-left">
+              <p class="h6">{{ item.fItemName }}
+              </p>
             </div>
             <div class="col-2 text-center">
               <p class="text-danger font-weight-bold" style="font-size: 16px;">NT${{ item.fPrice | number:'1.0-0' }}</p>
@@ -212,7 +202,7 @@
 
   <!-- 固定在底部的結帳欄位 -->
   <div class="row fixed-bottom bg-white shadow-lg p-3 d-flex flex-wrap justify-content-between align-items-start"
-    style="height: 15vh; overflow-y: auto;">
+    style="min-height: 10vh; max-height: 20vh; overflow-y: auto;">
 
     <div class="d-flex flex-wrap w-100">
       <!-- 收件人資訊 -->
@@ -231,7 +221,7 @@
           <input type="text" class="form-control form-control-lg" [(ngModel)]="userInfo.fUserPhone">
         </div>
 
-        <div class="input-group mx-3 mb-2" style="width: 600px;" *ngIf="this.fPaymentMethod=='Wallet'">
+        <div class="input-group mx-3 mb-2" style="width: 600px;" *ngIf="this.fPaymentMethod!='Store'">
           <div class="input-group-prepend">
             <span class="input-group-text">收件地址</span>
           </div>
@@ -241,8 +231,8 @@
           <div class="input-group-prepend">
             <span class="input-group-text">取貨超商</span>
           </div>
-          <input type="text" class="form-control form-control-lg" value={{this.storeInfo}}>
-          <button class="btn btn-primary" (click)="openStoreMap()">請選擇取貨門市</button>
+          <input type="text" class="form-control form-control-lg" value={{this.storeFullName}}>
+          <button class="btn btn-primary" (click)="openUniStoreMap()">請選擇取貨門市</button>
         </div>
       </div>
 
@@ -260,13 +250,13 @@
             <input type="radio" name="paymentMethod" value="Wallet" (click)="updatePaymentMethod('Wallet')"> 平台錢包
           </label>
           <label class="btn btn-outline-primary rounded btn-lg" [class.active]="fPaymentMethod === 'Store'">
-            <input type="radio" name="paymentMethod" value="LinePay" (click)="updatePaymentMethod('Store')"> 全家貨到付款
+            <input type="radio" name="paymentMethod" value="Store" (click)="updatePaymentMethod('Store')"> 7-11貨到付款
           </label>
         </div>
 
         <!-- 總金額 -->
         <div class="mx-3 mb-2">
-          <span class="font-weight-bold">總金額 ({{ selectedCount }} 個商品): </span>
+          <span class="font-weight-bold">總金額 ({{ selectedCount }} 個項目): </span>
           <span class="text-danger font-weight-bold display-6">NT${{ totalPrice | number:'1.0-0' }}</span>
         </div>
 

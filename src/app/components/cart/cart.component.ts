@@ -1,3 +1,4 @@
+import { storeSelected } from './../../interfaces/shoppingCart';
 import { CartService } from './../../services/cart.service';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CheckoutRequest, itemsForOrder, Seller, ShoppingCartItem, userInfo } from 'src/app/interfaces/shoppingCart';
@@ -8,6 +9,7 @@ import { LinePayService } from 'src/app/services/line-pay.service';
 declare var $: any; // 宣告 jQuery
 import Swal from 'sweetalert2';
 import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-cart',
@@ -33,19 +35,21 @@ export class CartComponent {
   totalPrice = 0;
   selectedCount = 0;
   fPaymentMethod: string = ''; // 預設付款方式
-  storeName: string = '';
-  storeID: string = '';
-  storeInfo: string = '';
   windowClosed: boolean = false;
+  storeSelected: storeSelected = {
+    storeID: '',
+    storeName: '',
+    address: ''
+  }
+  storeFullName = '';
 
   constructor(private cartService: CartService, private authService: AuthService, private router: Router, private orderService: OrderService, private swal: SweetAlert2Service, private linePayService: LinePayService) { }
   @ViewChild('popoverButton', { static: false }) popoverButton!: ElementRef;
 
 
   ngOnInit(): void {
-    this.loadCart();
-    //console.log("初始化付款方式:", this.fPaymentMethod);
     this.isLoading = true;
+    this.loadCart();
   };
 
   ngAfterViewInit() {
@@ -53,7 +57,13 @@ export class CartComponent {
   }
 
   loadUserWallet() {
-    this.cartService.getUserInfo().subscribe({
+    this.cartService.getUserInfo().pipe(
+      finalize(() => {
+        setTimeout(() => {
+          this.isLoading = false; // 延遲關閉動畫
+        }, 3000);
+      })
+    ).subscribe({
       next: (response) => {
         //console.log('用戶資訊', response);
         this.userInfo = { ...response };  // 確保userInfo是完整的物件
@@ -248,33 +258,41 @@ export class CartComponent {
     this.fPaymentMethod = method;
   }
 
-  openStoreMap() {
-    this.cartService.openStoreMap().subscribe({
+  openUniStoreMap() {
+    this.cartService.openUniStoreMap().subscribe({
       next: (response) => {
-        if (response.mapUrl) {
-          window.open(response.mapUrl, '_blank');
-          this.getSelectedStore();
+        //console.log(response);
+        const fullUrl = `${response.redirectUrl}?tempvar=${encodeURIComponent(response.tempvar)}&url=${encodeURIComponent(response.reMapUrl)}`;
+        // 在新視窗開啟門市選擇頁面**
+        const popup = window.open(fullUrl, '_blank');
+        if (popup) {
+          const timer = setInterval(() => {
+            if (popup.closed) {
+              clearInterval(timer);
+              this.getStoreInfo();
+              this.swal.showEasySuccess('超商選取成功')
+            }
+          }, 1000);
         } else {
-          console.error('無法獲取門市選擇 URL');
+          console.error('無法開啟門市選擇視窗');
         }
-      },
-      error: (error) => {
-        console.error('API錯誤', error)
+      }, error: (error) => {
+        this.swal.showEasyError('開啟選擇畫面失敗，請稍後再試')
+        console.error('請求失敗', error);
       }
-    });
+    })
   }
 
-
-  // 取得選擇的門市資訊
-  getSelectedStore() {
+  getStoreInfo() {
     this.cartService.getSelectedStore().subscribe({
-      next: (data) => {
-        this.storeName = data.storeName;
-        this.storeID = data.storeID;
-        this.storeInfo = `${this.storeID}+${this.storeName}`
-        this.userInfo.fUserAddress = this.storeInfo;
+      next: (response) => {
+        this.storeSelected = response;
+        this.storeFullName = `${this.storeSelected.storeID} ${this.storeSelected.storeName}`;
+        //console.log(this.storeSelected);
+        this.userInfo.fUserAddress = `7-11#${this.storeFullName}`;
       }, error: (error) => {
-        console.error('無法獲取選擇的門市資訊:', error)
+        this.swal.showEasyError('回傳失敗')
+        console.error('請求失敗', error);
       }
     })
   }
@@ -384,7 +402,7 @@ export class CartComponent {
       return;
     }
 
-    if (this.fPaymentMethod === 'Store' && this.storeInfo === '') {
+    if (this.fPaymentMethod === 'Store' && this.storeSelected.storeName === '') {
       this.swal.showEasyWarning('請先選擇超商');
       return;
     }

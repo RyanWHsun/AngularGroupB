@@ -105,8 +105,8 @@ export class BuyerOrderComponent {
 
     const progressMap: { [key: number]: number } = {
       0: 25,  // 訂單成立
-      1: 50,  // 待出貨
-      2: 75,  // 待收貨
+      1: 37,  // 待出貨
+      2: 73,  // 待收貨
       3: 100  // 訂單完成
     };
 
