@@ -187,6 +187,10 @@ export class CreateProductComponent implements OnInit {
       this.swal.showEasyWarning('請填寫完整的商品資訊');
       return;
     }
+
+    // 確保 selectedImages 只包含有效的 File
+    this.selectedImages = this.selectedImages.filter(file => this.imagePreviews.includes(URL.createObjectURL(file)));
+
     // 轉換圖片為 Base64
     let base64Images = await this.convertImagesToBase64();
 
