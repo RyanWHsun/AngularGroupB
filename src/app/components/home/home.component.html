@@ -1,5 +1,57 @@
 <!-- Carousel Start -->
-<div class="container-fluid p-0 ">
+<div class="container-fluid p-0">
+
+  <div id="header-carousel" class="carousel slide" data-ride="carousel">
+
+    <div class="row">
+      <div class="hostImgDiv" routerLink="/attraction">
+        <img class="hostImg" src="assets/images/景點.jpg" alt="">
+
+        <div class="hostTxtDiv">
+          <span class="hostTxtW">景點</span>
+          <hr>
+          <span class="hostTxtG">將推薦熱門景點</span>
+        </div>
+
+      </div>
+      <div class="hostImgDiv" routerLink="/event">
+        <img class="hostImg" src="assets/images/活動.jpeg" alt="">
+
+        <div class="hostTxtDiv">
+          <span class="hostTxtW">活動</span>
+          <hr>
+          <span class="hostTxtG">點擊參與活動</span>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="row">
+      <div class="hostImgDiv" routerLink="/products">
+        <img class="hostImg" src="assets/images/商品.jpg" alt="">
+        <div class="hostTxtDiv">
+          <span class="hostTxtW">商品</span>
+          <hr>
+          <span class="hostTxtG">去商場逛逛</span>
+        </div>
+      </div>
+      <div class="hostImgDiv" routerLink="/socialmedia">
+        <img class="hostImg" src="assets/images/社群.jpeg" alt="">
+        <div class="hostTxtDiv">
+          <span class="hostTxtW">社群</span>
+          <hr>
+          <span class="hostTxtG">前人的智慧</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hostCircle">
+      <img class="hostCircleImg" src="assets/images/logo-2.png" alt="">
+    </div>
+
+  </div>
+</div>
+<!-- <div class="container-fluid p-0 ">
   <div id="header-carousel" class="carousel slide" data-ride="carousel">
 
     <div class="carousel-inner">
@@ -44,8 +96,10 @@
       </div>
     </a>
   </div>
-</div>
+</div> -->
 <!-- Carousel End -->
+
+
 
 <!-- Booking Start -->
 <div class="container-fluid booking mt-5 pb-5">
@@ -57,17 +111,17 @@
             <div class="col-md-3">
               <div class="mb-3 mb-md-0">
                 <select class="custom-select px-4" style="height: 47px">
-                  <option selected>Destination</option>
-                  <option value="1">Destination 1</option>
-                  <option value="2">Destination 1</option>
-                  <option value="3">Destination 1</option>
+                  <option selected>請選擇旅行方式</option>
+                  <option value="1">跟團</option>
+                  <option value="2">自由行(自駕)</option>
+                  <option value="3">自由行(大眾運輸)</option>
                 </select>
               </div>
             </div>
             <div class="col-md-3">
               <div class="mb-3 mb-md-0">
                 <div class="date" id="date1" data-target-input="nearest">
-                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Depart Date"
+                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="啟程日期"
                     data-target="#date1" data-toggle="datetimepicker" />
                 </div>
               </div>
@@ -75,7 +129,7 @@
             <div class="col-md-3">
               <div class="mb-3 mb-md-0">
                 <div class="date" id="date2" data-target-input="nearest">
-                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Return Date"
+                  <input type="text" class="form-control p-4 datetimepicker-input" placeholder="返家日期"
                     data-target="#date2" data-toggle="datetimepicker" />
                 </div>
               </div>
@@ -83,10 +137,12 @@
             <div class="col-md-3">
               <div class="mb-3 mb-md-0">
                 <select class="custom-select px-4" style="height: 47px">
-                  <option selected>Duration</option>
-                  <option value="1">Duration 1</option>
-                  <option value="2">Duration 1</option>
-                  <option value="3">Duration 1</option>
+                  <option selected>旅行區域</option>
+                  <option value="1">不限</option>
+                  <option value="2">北部</option>
+                  <option value="3">中部</option>
+                  <option value="4">南部</option>
+                  <option value="5">東部</option>
                 </select>
               </div>
             </div>
@@ -94,7 +150,7 @@
         </div>
         <div class="col-md-2">
           <button class="btn btn-primary btn-block" type="submit" style="height: 47px; margin-top: -2px">
-            Submit
+            搜尋行程
           </button>
         </div>
       </div>
