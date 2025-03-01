@@ -1,32 +1,93 @@
-/* 讓標題置中 */
+/* 讓標題置中，增加底部間距，並讓字體更醒目 */
 .event-title {
   text-align: center;
-  margin-bottom: 20px;
+  font-size: 30px; /* 加大標題字體，提高可讀性 */
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333; /* 讓標題更有層次感 */
 }
 
 /* 主要內容區域 - 讓圖片與文字內容排成左右兩欄 */
 .event-content {
   display: flex;
-  align-items: flex-start; /* 讓文字區塊與圖片對齊 */
-  gap: 20px; /* 讓圖片和文字有間距 */
+  align-items: stretch; /* 讓左右區塊等高 */
+  gap: 40px; /* 增加間距，讓版面更開闊 */
+  justify-content: center; /* 讓內容區塊置中 */
+  max-width: 1100px; /* 限制最大寬度，避免內容過寬 */
+  margin: 0 auto; /* 讓內容區塊置中 */
+  padding: 25px;
 }
 
 /* 圖片區塊 */
 .event-image {
   flex: 1; /* 讓圖片區塊自適應 */
-  max-width: 50%; /* 限制圖片區塊最大寬度 */
+  max-width: 50%; /* 限制最大寬度，確保與右邊區塊等大 */
+  display: flex;
+  align-items: center; /* 讓圖片垂直置中 */
+  justify-content: center;
 }
 
 .event-image img {
   width: 100%; /* 讓圖片填滿區塊 */
-  border-radius: 8px; /* 讓圖片有圓角更美觀 */
+  height: 100%; /* 讓圖片與右邊等高 */
+  object-fit: cover; /* 確保圖片不變形，且填滿區塊 */
+  border-radius: 10px; /* 讓圖片有圓角更美觀 */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15); /* 增加陰影，讓圖片更立體 */
 }
 
-/* 文字內容區塊 */
+/* 文字內容區塊（活動資訊） */
 .event-info {
-  flex: 1; /* 讓文字區塊自適應 */
+  flex: 1; /* 讓資訊區塊自適應 */
+  max-width: 50%; /* 限制最大寬度，確保與左邊等大 */
   text-align: left; /* 讓文字靠左對齊 */
-  padding-left: 10px; /* 增加內距，讓文字不要太靠近圖片 */
+  padding: 25px; /* 增加內距，讓內容不會太擠 */
+  background-color: #fff; /* 讓區塊更乾淨 */
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05); /* 添加陰影，讓區塊更有層次 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 讓內容垂直置中 */
+}
+
+/* 活動描述樣式 */
+.event-description {
+  text-align: left; /* 讓內容靠左對齊 */
+  line-height: 1.9; /* 增加行距，提高可讀性 */
+  letter-spacing: 0.4px; /* 增加字母間距 */
+  word-spacing: 2px; /* 增加單詞間距，使文字更均勻分布 */
+  text-indent: 0; /* 移除首行縮進 */
+  margin-top: 20px; /* 與標題或其他內容區塊保持適當距離 */
+  padding: 18px; /* 內邊距，讓內容不會貼邊 */
+  background-color: #f8f8f8; /* 淺灰色背景，讓文字更突出 */
+  border-radius: 8px; /* 圓角讓區塊更美觀 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* 增加陰影，讓區塊更有層次 */
+  max-width: 100%; /* 讓描述區塊填滿 `event-info` */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 讓內容垂直置中 */
+}
+
+/* 讓 "活動描述:" 靠左對齊 */
+.event-description strong {
+  display: block; /* 讓標題獨立一行 */
+  font-size: 18px; /* 調整字體大小 */
+  font-weight: bold; /* 加粗 */
+  margin-bottom: 10px; /* 增加標題與內容的間距 */
+  color: #333; /* 讓標題更醒目 */
+  text-align: left; /* 讓標題靠左對齊 */
+}
+
+/* 讓活動資訊（例如地點、時間、價格）靠左 */
+.event-details {
+  text-align: left; /* 讓資訊文字靠左對齊 */
+  font-size: 17px;
+  line-height: 1.7;
+  color: #444; /* 字體顏色較深，提升可讀性 */
+  margin-bottom: 15px; /* 增加間距 */
+}
+
+.event-details strong {
+  color: #222; /* 讓標題更有層次感 */
 }
 
 /* 在小螢幕時，改為直向排列 */
@@ -34,10 +95,24 @@
   .event-content {
     flex-direction: column;
     align-items: center;
+    padding: 15px;
   }
 
-  .event-image, .event-info {
+  .event-image {
+    max-width: 100%; /* 讓圖片在手機上與內容等寬 */
+  }
+
+  .event-info {
     max-width: 100%;
-    text-align: center;
+    text-align: left;
+    padding: 20px;
+  }
+
+  .event-description {
+    text-align: left;
+    max-width: 100%;
+    padding: 15px;
+    margin-left: 0;
   }
 }
+

@@ -1,6 +1,6 @@
 export const environment = {
-  production: true,
-  apiUrl: 'http://localhost:7112/api',
-  googleAIKey: 'YOUR_API_KEY',
-  ckeditorLicenseKey: 'your-license-key-here'
+  production: false,
+  apiUrl: 'https://localhost:7112/api',
+  ckeditorLicenseKey: '你的 CKEditor 授權金鑰', // 這裡填入你的 CKEditor 金鑰
+  googleAIKey: '你的 Google AI API 金鑰' // 這裡填入你的 Google API 金鑰
 };

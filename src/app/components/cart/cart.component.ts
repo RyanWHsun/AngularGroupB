@@ -102,7 +102,7 @@ export class CartComponent {
     this.cartService.getCartItems().subscribe({
       next: (items) => {
         this.carItems = items;
-        //console.log(this.carItems);
+        console.log(this.carItems);
         this.sortItems();
         this.isLoading = false;
       }, error: (error) => {
@@ -346,7 +346,9 @@ export class CartComponent {
             fItemType: product.fItemType,
             fItemId: product.fItemId,
             fQuantity: product.fQuantity,
-            fSellerId: product.fSellerId
+            fSellerId: product.fSellerId,
+            fProductName: product.fItemName,
+            fPrice: product.fPrice
           });
         }
       });
@@ -359,7 +361,9 @@ export class CartComponent {
           fItemType: ticket.fItemType,
           fItemId: ticket.fItemId,
           fQuantity: ticket.fQuantity,
-          fSellerId: ticket.fSellerId
+          fSellerId: ticket.fSellerId,
+          fProductName: ticket.fItemName,
+          fPrice: ticket.fPrice
         });
       }
     });
@@ -371,9 +375,12 @@ export class CartComponent {
           fItemType: event.fItemType,
           fItemId: event.fItemId,
           fQuantity: event.fQuantity,
-          fSellerId: event.fSellerId
+          fSellerId: event.fSellerId,
+          fProductName: event.fItemName,
+          fPrice: event.fPrice
         });
       }
+      console.log("這裡", this.eventFee)
     });
 
     const userInfo: userInfo = {
@@ -384,19 +391,25 @@ export class CartComponent {
       totalBalance: this.userInfo?.totalBalance ?? 0,
     };
 
-
     // 檢查是否有選擇商品
     if (selectedItems.length === 0) {
       this.swal.showEasyWarning('請選擇至少一個商品進行結帳');
       return;
     }
+
     // 檢查是否有選擇付款方式
     if (!this.fPaymentMethod) {
       this.swal.showEasyWarning('請選擇付款方式');
       return;
     }
 
-    //如果選擇Wallet付款，檢查餘額
+    // ✅ 如果選擇 LINE Pay，則使用 LINE Pay API
+    if (this.fPaymentMethod === 'LinePay') {
+      this.processLinePay(selectedItems);
+      return;
+    }
+
+    // 如果選擇 Wallet 付款，檢查餘額
     if (this.fPaymentMethod === 'Wallet' && this.totalPrice > (this.userInfo?.totalBalance || 0)) {
       this.swal.showEasyError(`您的錢包餘額為 NT$${this.userInfo?.totalBalance}\n餘額不足!請修改支付方式`);
       return;
@@ -427,57 +440,59 @@ export class CartComponent {
           position: 'center',
           icon: 'success',
           showConfirmButton: false,
-          timer: 2000, // 1秒後自動關閉
+          timer: 2000,
         }).then(() => {
           window.location.reload();
-          this.loadUserWallet(); // 這裡確保彈窗關閉後才刷新頁面
+          this.loadUserWallet();
         });
       },
       error: (error) => {
         const errorMessage = error.error?.message || "訂單建立失敗，請稍後再試";
         this.swal.showEasyError(errorMessage);
         console.log('訂單建立失敗', error);
-        window.location.reload(); //刷新頁面
+        window.location.reload();
       }
     });
   }
 
   processLinePay(selectedItems: itemsForOrder[]) {
+    console.log("我在這", selectedItems)
     if (!this.userInfo?.fUserId) {
       this.swal.showEasyError('使用者資訊載入錯誤，請重新登入');
       return;
     }
 
-    const orderId = 'ORDER_' + new Date().getTime() + '_' + Math.floor(Math.random() * 10000);
-    console.log("📌 送出的 orderId：", orderId);  // ✅ 檢查是否為有效 ID
-
-    const confirmUrl = 'https://yourfrontend.com/payment-success?orderId=' + orderId;
-    const cancelUrl = 'https://yourfrontend.com/payment-failed';
-
-    const totalAmount = selectedItems.reduce((sum, item) => {
-      const price = this.carItems.find(ci => ci.fCartItemId === item.fCartItemId)?.fPrice ?? 0;
-      return sum + (price * item.fQuantity);
-    }, 0);
+    const orderId = new Date().getTime().toString(); // 以時間戳產生訂單號
+    console.log("📌 送出的 orderId：", orderId);
 
     const paymentRequest = {
-      totalAmount: totalAmount,
-      orderId: orderId,
+      amount: selectedItems.reduce((sum, item) => {
+        const price = this.carItems.find(ci => ci.fCartItemId === item.fCartItemId)?.fPrice ?? 1;
+        return sum + (price * item.fQuantity);
+      }, 0),
+      currency: "TWD", // ✅ 新增 `currency`
+      orderId: orderId, // ✅ 訂單 ID
       packages: [
         {
-          id: "PKG001",
-          amount: totalAmount,
+          id: orderId, // ✅ 讓 `id` 也跟 `orderId` 一致
+          amount: selectedItems.reduce((sum, item) => {
+            const price = this.carItems.find(ci => ci.fCartItemId === item.fCartItemId)?.fPrice ?? 1;
+            return sum + (price * item.fQuantity);
+
+          }, 0),
           name: "購物車結帳",
           products: selectedItems.map(item => ({
-            id: item.fItemId.toString(),
-            name: item.fProductName?.trim() || "未命名商品",
-            imageUrl: "https://example.com/default-product.jpg",
+            name: (item.fProductName || "未命名商品").trim(),
+            imageUrl: "https://static.accupass.com/org/2011051025162614811630.jpg",
             quantity: item.fQuantity,
-            price: (typeof item.fPrice === "number" ? item.fPrice : 0)
+            price: Math.max(item.fPrice ?? 1, 1)
           }))
         }
       ],
-      confirmUrl: confirmUrl,
-      cancelUrl: cancelUrl
+      redirectUrls: { // ✅ 改成 `redirectUrls` 物件
+        confirmUrl: `https://28e9-1-160-19-244.ngrok-free.app/event/detail/2007${orderId}`,
+        cancelUrl: "https://28e9-1-160-19-244.ngrok-free.app/products/cart"
+      }
     };
 
     console.log("📦 發送的付款請求：", JSON.stringify(paymentRequest, null, 2));
@@ -485,8 +500,8 @@ export class CartComponent {
     this.linePayService.requestPayment(paymentRequest).subscribe({
       next: (response) => {
         console.log("🟢 LINE Pay API 回應：", JSON.stringify(response, null, 2));
-        if (response.returnCode === "0000") {
-          window.location.href = response.info.paymentUrl.web;
+        if (response.paymentUrl) {
+          window.location.href = response.paymentUrl;
         } else {
           this.swal.showEasyError('付款失敗，請檢查資訊');
         }
@@ -498,3 +513,4 @@ export class CartComponent {
     });
   }
 }
+

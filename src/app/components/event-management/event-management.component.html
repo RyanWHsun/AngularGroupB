@@ -12,37 +12,63 @@
   </div>
 </div>
 <!-- Header End -->
-<h2 class="text-center my-4">活動管理</h2>
 
-<!-- 新增活動按鈕 -->
+<h2 class="text-center my-4 fw-bold text-primary">📅 活動管理</h2>
+
+<!-- 🔥 新增活動按鈕 -->
 <div class="container mb-4 text-end">
-  <button class="btn btn-success" (click)="goToCreateEvent()">新增活動</button>
+  <button class="btn btn-lg btn-success px-4 py-2 shadow" (click)="goToCreateEvent()">
+    ➕ 新增活動
+  </button>
 </div>
 
-<!-- 活動列表 -->
+<!-- 🔥 活動列表 -->
 <div class="container">
-  <h3 class="mb-3">活動列表</h3>
+  <h3 class="mb-3 fw-bold text-dark">活動列表</h3>
 
-  <div *ngIf="events.length === 0" class="alert alert-info text-center">目前沒有活動</div>
+  <div *ngIf="events.length === 0" class="alert alert-info text-center fw-bold py-3">目前沒有活動</div>
 
-  <div class="list-group">
-    <div class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let event of events">
-      <div>
-        <!-- ✅ 顯示活動圖片 -->
-        <img *ngIf="event.fEventImageUrl" [src]="event.fEventImageUrl" alt="活動圖片" width="100">
-        <h5 class="mb-1">{{ event.fEventName }}</h5>
-        <p class="mb-1 text-muted">
-          {{ event.fEventStartDate | date:'yyyy-MM-dd HH:mm' }} ~
-          {{ event.fEventEndDate | date:'yyyy-MM-dd HH:mm' }}
-        </p>
-      </div>
-      <div>
-        <button class="btn btn-sm btn-warning me-2" (click)="goToEditEvent(event.fEventId)">編輯</button>
-        <button class="btn btn-sm btn-danger" (click)="deleteEvent(event.fEventId)">刪除</button>
+  <div class="row">
+    <div class="col-md-6 col-lg-4 mb-4" *ngFor="let event of paginatedEvents">
+      <div class="card shadow-lg border-0 rounded-4">
+        <img *ngIf="event.fEventImageUrl" [src]="event.fEventImageUrl" alt="活動圖片"
+          class="card-img-top rounded-top-4" style="height: 200px; object-fit: cover;">
+
+        <div class="card-body">
+          <h5 class="card-title fw-bold text-dark">{{ event.fEventName }}</h5>
+          <p class="card-text text-muted small">
+            📅 {{ event.fEventStartDate | date:'yyyy-MM-dd HH:mm' }} ~
+            {{ event.fEventEndDate | date:'yyyy-MM-dd HH:mm' }}
+          </p>
+        </div>
+
+        <div class="card-footer bg-white border-0 d-flex justify-content-between">
+          <button class="btn btn-sm btn-outline-warning px-3 fw-bold shadow-sm" (click)="goToEditEvent(event.fEventId)">
+            ✏️ 編輯
+          </button>
+          <button class="btn btn-sm btn-outline-danger px-3 fw-bold shadow-sm" (click)="deleteEvent(event.fEventId)">
+            🗑️ 刪除
+          </button>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- ✅ 分頁控制 -->
+  <div class="d-flex justify-content-center mt-4" *ngIf="totalPages > 1">
+    <button class="btn btn-outline-secondary px-4 py-2 me-2 fw-bold shadow-sm" (click)="previousPage()"
+      [disabled]="currentPage === 1">
+      ◀️ 上一頁
+    </button>
+    <span class="align-self-center fs-5 fw-bold">第 {{ currentPage }} / {{ totalPages }} 頁</span>
+    <button class="btn btn-outline-secondary px-4 py-2 ms-2 fw-bold shadow-sm" (click)="nextPage()"
+      [disabled]="currentPage === totalPages">
+      下一頁 ▶️
+    </button>
+  </div>
 </div>
+
+
 
 
 
