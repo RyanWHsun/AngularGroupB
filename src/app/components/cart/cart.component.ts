@@ -288,7 +288,8 @@ export class CartComponent {
       next: (response) => {
         this.storeSelected = response;
         this.storeFullName = `${this.storeSelected.storeID} ${this.storeSelected.storeName}`;
-        console.log(this.storeSelected);
+        //console.log(this.storeSelected);
+        this.userInfo.fUserAddress = `7-11#${this.storeFullName}`;
       }, error: (error) => {
         this.swal.showEasyError('回傳失敗')
         console.error('請求失敗', error);
