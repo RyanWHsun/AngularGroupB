@@ -1,12 +1,17 @@
 <!-- Header Start -->
 <div class="container-fluid page-header">
   <div class="container">
-    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+    <div
+      class="d-flex flex-column align-items-center justify-content-center"
+      style="min-height: 400px"
+    >
       <h3 class="display-4 text-white text-uppercase">景點</h3>
       <div class="d-inline-flex text-white">
         <p class="m-0 text-uppercase">景點</p>
         <i class="fa fa-angle-double-right pt-1 px-3"></i>
-        <p class="m-0 text-uppercase"><a class="text-white" routerLink="/attraction/tickets">景點票券</a></p>
+        <p class="m-0 text-uppercase">
+          <a class="text-white" routerLink="/attraction/tickets">景點票券</a>
+        </p>
       </div>
     </div>
   </div>
@@ -18,9 +23,18 @@
   <div class="container pb-5">
     <div class="bg-light shadow" style="padding: 20px">
       <div class="input-group">
-        <input type="text" class="form-control form-control-lg border-1" [(ngModel)]="keyword" placeholder="請輸入關鍵字" />
+        <input
+          type="text"
+          class="form-control form-control-lg border-1"
+          [(ngModel)]="keyword"
+          placeholder="請輸入關鍵字"
+        />
         <div class="input-group-append">
-          <button class="btn btn-primary px-4" type="button" (click)="searchAttraction()">
+          <button
+            class="btn btn-primary px-4"
+            type="button"
+            (click)="searchAttraction()"
+          >
             <i class="fa fa-search"></i>
           </button>
         </div>
@@ -37,14 +51,20 @@
   <div class="row">
     <!-- Card -->
     <!-- 使用 let i = index 獲取目前的索引。 -->
-    <div class="col-md-4" *ngFor="let attraction of partialAttractions; let i = index">
+    <div
+      class="col-md-4"
+      *ngFor="let attraction of partialAttractions; let i = index"
+    >
       <div class="card">
         <div class="views">
           <i class="fas fa-eye"></i> {{ attraction.fattractionViewCount }}
         </div>
         <div class="card-img-container">
-          <img [src]="imageSrc[i] || 'assets/images/noImage.jpg'" class="card-img-top"
-            [alt]="attraction.fAttractionName" />
+          <img
+            [src]="imageSrc[i] || 'assets/images/noImage.jpg'"
+            class="card-img-top"
+            [alt]="attraction.fAttractionName"
+          />
         </div>
         <div class="card-body">
           <h5 class="card-title">{{ attraction.fAttractionName }}</h5>
@@ -56,8 +76,11 @@
               </span>
             </ng-container>
           </div>
-          <button (click)="clickShowDetail(attraction.fAttractionId!)" data-toggle="modal"
-            data-target="#attractionModal">
+          <button
+            (click)="clickShowDetail(attraction.fAttractionId!)"
+            data-toggle="modal"
+            data-target="#attractionModal"
+          >
             <i class="fa-solid fa-circle-info"></i>
             詳細資訊
           </button>
@@ -68,16 +91,30 @@
 </div>
 
 <!-- Modal Start-->
-<div class="modal fade" id="attractionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg modal-custom-width" role="document">
+<div
+  class="modal fade"
+  id="attractionModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-lg modal-custom-width"
+    role="document"
+  >
     <div class="modal-content">
       <!-- Modal Header -->
       <div class="modal-header">
         <h2 class="modal-title w-100" id="FAttractionName">
           {{ attraction.fAttractionName }}
         </h2>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -91,16 +128,36 @@
             <!-- 左側：圖片 -->
             <div class="image-container">
               <!-- carousel 顯示已經存進的圖片 -->
-              <div id="carouselExampleInterval" class="carousel slide carousel-fade" data-ride="carousel">
+              <div
+                id="carouselExampleInterval"
+                class="carousel slide carousel-fade"
+                data-ride="carousel"
+              >
                 <div id="displayImageContainer" class="carousel-inner">
                   <!-- 動態載入圖片 -->
                 </div>
-                <a class="carousel-control-prev" href="#carouselExampleInterval" role="button" data-slide="prev">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <a
+                  class="carousel-control-prev"
+                  href="#carouselExampleInterval"
+                  role="button"
+                  data-slide="prev"
+                >
+                  <span
+                    class="carousel-control-prev-icon"
+                    aria-hidden="true"
+                  ></span>
                   <span class="sr-only">Previous</span>
                 </a>
-                <a class="carousel-control-next" href="#carouselExampleInterval" role="button" data-slide="next">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <a
+                  class="carousel-control-next"
+                  href="#carouselExampleInterval"
+                  role="button"
+                  data-slide="next"
+                >
+                  <span
+                    class="carousel-control-next-icon"
+                    aria-hidden="true"
+                  ></span>
                   <span class="sr-only">Next</span>
                 </a>
               </div>
@@ -120,7 +177,10 @@
                   <div class="weather-info">
                     <!-- 溫度 -->
                     <div class="temperature">
-                      <img src="assets/images/thermometer.png" alt="thermometer" />
+                      <img
+                        src="assets/images/thermometer.png"
+                        alt="thermometer"
+                      />
                       <div class="temp-text">
                         {{ temp_min }}°C ~ {{ temp_max }}°C
                       </div>
@@ -137,7 +197,7 @@
                   <h5 class="info-title">網址</h5>
                   <a [href]="attraction.fWebsiteUrl" target="_blank">{{
                     attraction.fWebsiteUrl
-                    }}</a>
+                  }}</a>
                 </div>
                 <div class="address-Container">
                   <h5 class="info-title">地址</h5>
@@ -157,12 +217,21 @@
 
           <!-- AI Button Start -->
           <!-- [aiBtnIsClicked]="isShowingItinerary" -->
-          <app-ai-button (clickAiBtnEvent)="clickAiBtn($event)" [cAttractionName]="pAttractionName"
-            (newPlanEvent)="showPlan($event)" class="ai-btn"></app-ai-button>
+          <app-ai-button
+            (clickAiBtnEvent)="clickAiBtn($event)"
+            [cAttractionName]="pAttractionName"
+            (newPlanEvent)="showPlan($event)"
+            class="ai-btn"
+          ></app-ai-button>
           <!-- AI Button End -->
 
           <!-- bootstrap spinner start -->
-          <div class="spinner-container" *ngIf="isClickedAiBtn && (!pItineraryData || pItineraryData.length===0)">
+          <div
+            class="spinner-container"
+            *ngIf="
+              isClickedAiBtn && (!pItineraryData || pItineraryData.length === 0)
+            "
+          >
             <div class="spinner-grow spinner-1" role="status"></div>
             <div class="spinner-grow spinner-2" role="status"></div>
             <div class="spinner-grow spinner-3" role="status"></div>
@@ -172,7 +241,10 @@
           <!-- bootstrap spinner end -->
 
           <!-- AI 生成的 Itinerary start-->
-          <app-itinerary [cItineraryData]="pItineraryData" *ngIf="isClickedAiBtn"></app-itinerary>
+          <app-itinerary
+            [cItineraryData]="pItineraryData"
+            *ngIf="isClickedAiBtn"
+          ></app-itinerary>
           <!-- AI 生成的 Itinerary end-->
 
           <!-- 評論 -->
@@ -180,10 +252,16 @@
             <div class="comment-header">
               <h3 class="comment-title">評論</h3>
               <div class="comment-buttons">
-                <button (click)="toggleSort(attraction.fAttractionId!)" class="btn btn-sort">
+                <button
+                  (click)="toggleSort(attraction.fAttractionId!)"
+                  class="btn btn-sort"
+                >
                   {{ commentComponent.sortButtonText }}
                 </button>
-                <button (click)="toggleCollapse(attraction.fAttractionId!)" class="btn btn-toggle">
+                <button
+                  (click)="toggleCollapse(attraction.fAttractionId!)"
+                  class="btn btn-toggle"
+                >
                   {{ commentComponent.collapseButtonText }}
                 </button>
               </div>
@@ -193,7 +271,11 @@
             <!-- 撰寫評論 start -->
             <div class="comment-box">
               <!-- 左側 使用者頭像 -->
-              <img [src]="loginCommenter.fUserImage" class="comment-img" alt="user image" />
+              <img
+                [src]="loginCommenter.fUserImage"
+                class="comment-img"
+                alt="user image"
+              />
 
               <!-- 中間區域 (包含評分和輸入框) -->
               <div class="comment-content">
@@ -204,8 +286,11 @@
                   <span class="star" data-value="4">&#9733;</span>
                   <span class="star" data-value="5">&#9733;</span>
                 </div>
-                <textarea class="comment-input" [(ngModel)]="commentComponent.inputContent"
-                  placeholder="撰寫評論..."></textarea>
+                <textarea
+                  class="comment-input"
+                  [(ngModel)]="commentComponent.inputContent"
+                  placeholder="撰寫評論..."
+                ></textarea>
               </div>
 
               <button class="comment-submit" (click)="inputDemoData()">
@@ -219,8 +304,15 @@
             </div>
             <!-- 撰寫評論 end -->
             <!-- 顯示評論 start -->
-            <div *ngFor="let comment of attractionComment" class="comment-container">
-              <img [src]="comment.fUserImage" class="comment-img" alt="user image" />
+            <div
+              *ngFor="let comment of attractionComment"
+              class="comment-container"
+            >
+              <img
+                [src]="comment.fUserImage"
+                class="comment-img"
+                alt="user image"
+              />
               <div class="comment-details">
                 <div class="comment-header">
                   <span class="comment-username">{{ comment.fUserName }}</span>
@@ -228,10 +320,16 @@
                 </div>
                 <div class="comment-rank">
                   <!-- [].constructor(comment.fRating) 會建立一個長度為 comment.fRating 的陣列 -->
-                  <span *ngFor="
+                  <span
+                    *ngFor="
                       let star of [].constructor(comment.fRating);
                       let i = index
-                    "><img src="assets/images/star.png" alt="評分" class="star" />
+                    "
+                    ><img
+                      src="assets/images/star.png"
+                      alt="評分"
+                      class="star"
+                    />
                   </span>
                 </div>
                 <div class="comment-text">{{ comment.fComment }}</div>
@@ -258,8 +356,11 @@
     </li>
     <!-- 頁碼 -->
     <div *ngFor="let index of Page.pages">
-      <li class="page-item" [ngClass]="{ active: Page.selectedPageIndex === index }"
-        (click)="setSelectedPageIndex(index)">
+      <li
+        class="page-item"
+        [ngClass]="{ active: Page.selectedPageIndex === index }"
+        (click)="setSelectedPageIndex(index)"
+      >
         <a class="page-link">{{ index + 1 }}</a>
       </li>
     </div>

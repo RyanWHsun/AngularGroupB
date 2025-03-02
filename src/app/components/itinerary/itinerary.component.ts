@@ -1,3 +1,4 @@
+import { SweetAlert2Service } from './../../services/sweet-alert2.service';
 import { Component, Input } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
 import { IItineraryItem } from 'src/app/interfaces/IItineraryItem';
@@ -14,7 +15,15 @@ export class ItineraryComponent {
   places: string[] = [];
   map: any;
 
-  constructor(private gMapService: GoogleMapAPIService) {}
+  // add new
+  directionsService = new google.maps.DirectionsService();
+  directionsRenderer = new google.maps.DirectionsRenderer();
+  // add new
+
+  constructor(
+    private gMapService: GoogleMapAPIService,
+    private sweetAlert2Service: SweetAlert2Service
+  ) {}
 
   async ngOnChanges(): Promise<void> {
     this.places = [];
@@ -48,11 +57,53 @@ export class ItineraryComponent {
     });
   }
 
+  // 計算兩點路徑 & 顯示路線
+  calculateAndDisplayRoute(
+    start: string,
+    end: string,
+    directionsService: google.maps.DirectionsService,
+    directionsRenderer: google.maps.DirectionsRenderer
+  ) {
+    directionsService
+      .route({
+        origin: {
+          query: start,
+        },
+        destination: {
+          query: end,
+        },
+        travelMode: google.maps.TravelMode.DRIVING,
+      })
+      .then((response) => {
+        directionsRenderer.setDirections(response);
+      })
+      .catch((e) => {
+        this.sweetAlert2Service.showEasyWarning('尚未有路線可供行駛');
+      });
+  }
+
+  // 傳遞兩點資料
+  passTwoPointData(i: number) {
+    console.log('passTwoPointData i= ', i);
+    if (i === this.cItineraryData.length - 1) {
+      console.log('超過界線');
+      return;
+    }
+    this.calculateAndDisplayRoute(
+      this.cItineraryData[i].location,
+      this.cItineraryData[i + 1].location,
+      this.directionsService,
+      this.directionsRenderer
+    );
+  }
+
   initMap() {
     this.map = new google.maps.Map(document.getElementById('map')!, {
       zoom: 12,
       center: { lat: 25.033964, lng: 121.564472 }, // 預設台北中心點
     });
+
+    this.directionsRenderer.setMap(this.map);
   }
 
   async loadLocations() {
