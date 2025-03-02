@@ -181,9 +181,10 @@
                         src="assets/images/thermometer.png"
                         alt="thermometer"
                       />
-                      <div class="temp-text">
+                      <div class="temp-text">{{ temp_min }}°C</div>
+                      <!-- <div class="temp-text">
                         {{ temp_min }}°C ~ {{ temp_max }}°C
-                      </div>
+                      </div> -->
                     </div>
 
                     <!-- 濕度 -->
@@ -221,6 +222,7 @@
             (clickAiBtnEvent)="clickAiBtn($event)"
             [cAttractionName]="pAttractionName"
             (newPlanEvent)="showPlan($event)"
+            [cWeather]="pWeather"
             class="ai-btn"
           ></app-ai-button>
           <!-- AI Button End -->

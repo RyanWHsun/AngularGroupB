@@ -40,6 +40,7 @@ import { IItineraryItem } from 'src/app/interfaces/IItineraryItem';
 import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
+import { IWeather } from 'src/app/interfaces/IWeather';
 
 // 宣告全域變數 google
 // 在 Google Maps JavaScript API 中，google 這個物件是由 API 動態載入的，而不是直接在 TypeScript 環境中定義的。
@@ -119,6 +120,7 @@ export class AttractionComponent implements AfterViewInit {
   selectedRating = 0;
   commentLimit = 5; // 一開始顯示 5 則評論
 
+  pWeather: IWeather | null = null;
   temp_min = 0; // 最低溫度
   temp_max = 0; // 最高溫度
   humidity = 0; // 濕度
@@ -198,7 +200,8 @@ export class AttractionComponent implements AfterViewInit {
       .getCurrentWeather(this.latitude, this.longitude)
       .pipe(
         tap((weather) => {
-          console.log(weather);
+          this.pWeather = weather;
+          //console.log('this.weather: ', this.pWeather);
           if (weather) {
             this.temp_min = Math.trunc(weather.main.temp_min - 273.15);
             this.temp_max = Math.trunc(weather.main.temp_max - 273.15);
