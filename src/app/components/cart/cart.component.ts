@@ -490,8 +490,8 @@ export class CartComponent {
         }
       ],
       redirectUrls: { // ✅ 改成 `redirectUrls` 物件
-        confirmUrl: `https://special-publicly-humpback.ngrok-free.app/`,
-        cancelUrl: "https://special-publicly-humpback.ngrok-free.app/"
+        confirmUrl: `http://localhost:4200`,
+        cancelUrl: "http://localhost:4200"
       }
     };
 
