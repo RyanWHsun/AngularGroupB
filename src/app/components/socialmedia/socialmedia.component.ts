@@ -281,12 +281,12 @@ export class SocialmediaComponent {
   defaultfilter() {
     this.filter = {
       popular: false,
-      TypesValue: 2005,
-      keyword: '海'
+      TypesValue: 2007,
+      keyword: ''
     }
   }
   defaultComment(postId: number) {
-    this.commentTexts[postId] = '今天是個報告的好日子';
+    this.commentTexts[postId] = '中午了,肚子好餓喔';
   }
   scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });

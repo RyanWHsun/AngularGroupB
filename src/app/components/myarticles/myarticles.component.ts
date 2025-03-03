@@ -347,7 +347,7 @@ export class MyarticlesComponent {
     }
   }
   defaultComment() {
-    this.commentTexts = '今天是個報告的好日子';
+    this.commentTexts = '中午了,肚子好餓喔';
   }
   scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });

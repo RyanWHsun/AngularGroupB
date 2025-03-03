@@ -65,4 +65,8 @@ export class ChatComponent {
       }
     }, 100);
   }
+
+  defaultMessage() {
+    this.messageText = '你是說 RIWAWA行李箱?';
+  }
 }

@@ -2,7 +2,7 @@
   <div class="chat-header">
     <div>
       <img [src]="chatUser.image" class="rounded-circle mr-2 user-image" />
-      <span>{{ chatUser.name }}</span>
+      <span (click)="defaultMessage();">{{ chatUser.name }}</span>
     </div>
     <a class="mr-2" role="button" (click)="closeChat()"><i class="fa-solid fa-xmark"></i></a>
   </div>
