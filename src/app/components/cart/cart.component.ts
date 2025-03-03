@@ -490,8 +490,8 @@ export class CartComponent {
         }
       ],
       redirectUrls: { // ✅ 改成 `redirectUrls` 物件
-        confirmUrl: `https://28e9-1-160-19-244.ngrok-free.app/event/detail/2007${orderId}`,
-        cancelUrl: "https://28e9-1-160-19-244.ngrok-free.app/products/cart"
+        confirmUrl: `https://special-publicly-humpback.ngrok-free.app/`,
+        cancelUrl: "https://special-publicly-humpback.ngrok-free.app/"
       }
     };
 
