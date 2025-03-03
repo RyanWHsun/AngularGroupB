@@ -1,17 +1,19 @@
-<ng-container *ngFor="let item of cItineraryData; let last = last">
+<ng-container
+  *ngFor="let item of cItineraryData; let i = index; let last = last"
+  ;
+>
   <div class="itinerary-container">
-
     <!-- 中間圖片 -->
     <div class="timeline-left">
       <img
-        [src]="item.imgSrc || 'assets/images/noImage.jpg'"
+        [src]="item.imgSrc || '/assets/images/noImage.jpg'"
         alt="行程圖片"
         class="timeline-img"
       />
     </div>
 
     <!-- 右側內容 -->
-    <div class="timeline-right">
+    <div class="timeline-right" (click)="passTwoPointData(i)">
       <h3>{{ item.startTime }} - {{ item.endTime }}</h3>
       <h4>{{ item.location }}</h4>
       <p>{{ item.schedule }}</p>

@@ -36,9 +36,11 @@ import { IAttractionTag } from 'src/app/interfaces/IAttractionTag';
 import { AttractionTagService } from 'src/app/services/attraction-tag.service';
 import { ICommenter } from 'src/app/interfaces/ICommenter';
 import { OpenWeatherAPIService } from 'src/app/services/open-weather-api.service';
-import { OpenAIService } from 'src/app/services/ai.service';
 import { IItineraryItem } from 'src/app/interfaces/IItineraryItem';
 import { SweetAlert2Service } from 'src/app/services/sweet-alert2.service';
+import { UserService } from 'src/app/services/user.service';
+import { Router } from '@angular/router';
+import { IWeather } from 'src/app/interfaces/IWeather';
 
 // 宣告全域變數 google
 // 在 Google Maps JavaScript API 中，google 這個物件是由 API 動態載入的，而不是直接在 TypeScript 環境中定義的。
@@ -118,6 +120,7 @@ export class AttractionComponent implements AfterViewInit {
   selectedRating = 0;
   commentLimit = 5; // 一開始顯示 5 則評論
 
+  pWeather: IWeather | null = null;
   temp_min = 0; // 最低溫度
   temp_max = 0; // 最高溫度
   humidity = 0; // 濕度
@@ -139,11 +142,14 @@ export class AttractionComponent implements AfterViewInit {
     private attractionViewCookieService: AttractionViewCookieService,
     private attractionTagService: AttractionTagService,
     private openWeatherService: OpenWeatherAPIService,
-    private sweetAlert2Service: SweetAlert2Service
-  ) { }
+    private sweetAlert2Service: SweetAlert2Service,
+    private userService: UserService,
+    private router: Router
+  ) {}
 
   inputDemoData() {
-    this.commentComponent.inputContent = "太魯閣國家公園壯麗非凡，峽谷險峻秀麗，溪水清澈蜿蜒，奇岩峭壁令人驚嘆。步道穿梭山林，瀑布飛瀉如畫，動植物生態豐富，是探索大自然奧秘的絕佳勝地，讓人流連忘返，讚嘆不已！";
+    this.commentComponent.inputContent =
+      '太魯閣國家公園壯麗非凡，峽谷險峻秀麗，溪水清澈蜿蜒，奇岩峭壁令人驚嘆。步道穿梭山林，瀑布飛瀉如畫，動植物生態豐富，是探索大自然奧秘的絕佳勝地，讓人流連忘返，讚嘆不已！';
     this.selectedRating = 4;
     this.highlightStars(4);
   }
@@ -184,7 +190,7 @@ export class AttractionComponent implements AfterViewInit {
         console.log(attraction);
         this.partialAttractions = attraction;
       },
-      error: (err) => { },
+      error: (err) => {},
     });
   }
 
@@ -194,7 +200,8 @@ export class AttractionComponent implements AfterViewInit {
       .getCurrentWeather(this.latitude, this.longitude)
       .pipe(
         tap((weather) => {
-          console.log(weather);
+          this.pWeather = weather;
+          //console.log('this.weather: ', this.pWeather);
           if (weather) {
             this.temp_min = Math.trunc(weather.main.temp_min - 273.15);
             this.temp_max = Math.trunc(weather.main.temp_max - 273.15);
@@ -227,8 +234,9 @@ export class AttractionComponent implements AfterViewInit {
       tap((commenter) => {
         // 轉換 Base64 為 data:image/jpeg;base64 或 data:image/png;base64 格式
         commenter.fUserImage = commenter.fUserImage
-          ? `data:image/${commenter.fUserImage.startsWith('/9j/') ? 'jpeg' : 'png'
-          };base64,${commenter.fUserImage}`
+          ? `data:image/${
+              commenter.fUserImage.startsWith('/9j/') ? 'jpeg' : 'png'
+            };base64,${commenter.fUserImage}`
           : 'assets/images/head002.jpg';
 
         this.loginCommenter = commenter;
@@ -243,7 +251,7 @@ export class AttractionComponent implements AfterViewInit {
       this.commentComponent.inputContent === '' ||
       this.selectedRating === 0
     ) {
-      this.sweetAlert2Service.showEasyWarning("評論還未填寫");
+      this.sweetAlert2Service.showEasyWarning('評論還未填寫');
       return;
     }
     const comment: IAttractionComment = {
@@ -524,8 +532,9 @@ export class AttractionComponent implements AfterViewInit {
           this.attractionComment = data.map((comment) => ({
             ...comment,
             fUserImage: comment.fUserImage
-              ? `data:image/${comment.fUserImage.startsWith('/9j/') ? 'jpeg' : 'png'
-              };base64,${comment.fUserImage}`
+              ? `data:image/${
+                  comment.fUserImage.startsWith('/9j/') ? 'jpeg' : 'png'
+                };base64,${comment.fUserImage}`
               : 'assets/images/head002.jpg',
           }));
           console.log(this.attractionComment);

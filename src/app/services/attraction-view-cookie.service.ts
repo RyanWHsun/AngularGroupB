@@ -28,7 +28,7 @@ export class AttractionViewCookieService {
         viewTime: expireDate.toLocaleString(), // 存入本地時間
       });
 
-      expireDate.setMinutes(expireDate.getMinutes() + 5); // 設定 5 分鐘後過期
+      expireDate.setSeconds(expireDate.getSeconds() + 5); // 設定 5 分鐘後過期
       //expireDate.setDate(expireDate.getDate() + 1); // 設定 1 天後過期
 
       this.cookieService.set(viewedKey, cookieValue, {

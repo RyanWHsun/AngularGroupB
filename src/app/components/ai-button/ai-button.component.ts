@@ -6,6 +6,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { OpenAIService } from '../../services/ai.service';
+import { IWeather } from 'src/app/interfaces/IWeather';
 
 /**
  * AI推薦按鈕元件
@@ -20,6 +21,8 @@ import { OpenAIService } from '../../services/ai.service';
 export class AiButtonComponent {
   // 從父元件接收的景點名稱
   @Input() cAttractionName = '';
+
+  @Input() cWeather: IWeather | null = null;
 
   // 用於向父元件發送AI生成的新推薦計劃
   @Output() newPlanEvent = new EventEmitter<string>();
@@ -60,10 +63,10 @@ export class AiButtonComponent {
     this.clickAiBtnEvent.emit(this.aiBtnIsClicked);
 
     // 如果按鈕被取消點擊，直接返回
-    if(!this.aiBtnIsClicked)return;
+    if (!this.aiBtnIsClicked) return;
 
     // 呼叫AI服務獲取推薦內容
-    this.plan = await this.aiService.recommend(attraction);
+    this.plan = await this.aiService.recommend(attraction, this.cWeather);
 
     // 如果成功獲取推薦內容，將其發送給父元件
     if (this.plan !== '') {
