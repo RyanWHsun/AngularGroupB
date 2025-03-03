@@ -489,9 +489,9 @@ export class CartComponent {
           }))
         }
       ],
-      redirectUrls: { // ✅ 改成 `redirectUrls` 物件
-        confirmUrl: `http://localhost:4200`,
-        cancelUrl: "http://localhost:4200"
+      redirectUrls: {
+        confirmUrl: `http://localhost:4200/line-pay-redirect`, // ✅ 付款成功後跳轉到 line-pay-redirect
+        cancelUrl: `http://localhost:4200/` // 取消付款仍回首頁
       }
     };
 

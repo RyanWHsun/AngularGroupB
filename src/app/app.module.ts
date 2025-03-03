@@ -47,6 +47,7 @@ import { ImageBrowserComponent } from './share-components/image-browser/image-br
 import { ChatComponent } from './components/chat/chat.component';
 import { AiButtonComponent } from './components/ai-button/ai-button.component';
 import { ItineraryComponent } from './components/itinerary/itinerary.component';
+import { LinePayRedirectComponent } from './components/line-pay-redirect/line-pay-redirect.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import { ItineraryComponent } from './components/itinerary/itinerary.component';
     ChatComponent,
     AiButtonComponent,
     ItineraryComponent,
+    LinePayRedirectComponent,
   ],
   imports: [
     BrowserModule,
