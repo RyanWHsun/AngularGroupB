@@ -29,6 +29,8 @@ import { SellerCenterComponent } from './components/seller-center/seller-center.
 import { BuyerOrderComponent } from './components/buyer-order/buyer-order.component';
 import { WalletComponent } from './components/wallet/wallet.component';
 import { UserPasswordComponent } from './components/user-password/user-password.component';
+import { LinePayRedirectComponent } from './components/line-pay-redirect/line-pay-redirect.component';
+
 
 
 const routes: Routes = [
@@ -169,6 +171,11 @@ const routes: Routes = [
       path: 'UserPassword',
       component: UserPasswordComponent
     }]
+  },
+  // ✅ 加入 LINE Pay 付款成功頁面
+  {
+    path: 'line-pay-redirect',
+    component: LinePayRedirectComponent
   },
   {
     path: '**',
